@@ -55,12 +55,18 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 ### Toward a journal paper
 
 - [ ] Performance measurement
+	- [x] implementation
+	- [ ] analysis
 - [ ] Logging and generating summary automatically (but don't spend too much time on it)
+	- [x] implementation
+	- [ ] analysis script
 - [ ] Configuration
 	- [ ] Switcing a model, a formula and predicates
+		- [x] implementation
+		- [ ] test
 	- [ ] Automatically setup s-taliro etc.
 - [ ] PTC model and more
-- [ ] Compare other methods
+- [ ] Compare to other methods
 	- [ ] S-Taliro, Breach
 	- [ ] automate logging and summary generation for these methods, too (but don't...)
 - [ ] Experiments
@@ -71,7 +77,8 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 ### Toward distrubing tools 
 
 - [ ] Create a patch for s-taliro, or make a bug report
-- [ ] Run the entire experiments by one script? (but don't ...)
+- [x] Run the entire experiments by one script? (but don't ...)
+	 - use metascript
 - [ ] Documentation
 - [ ] Check copyrights
 
@@ -82,5 +89,7 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 - [ ] Milestones and roadmap
 - [ ] Move to WeChat?  Connection to Tianjin was not stable using Skype
 - [ ] Data sharing (Git is not suitable for large data.  What service can you guys in China use?
-	
+- [ ] Computing resources 
+	- [x] ordered a multicore machine.  
+	- [ ] Check the equipments of Tianjin side.
 	
