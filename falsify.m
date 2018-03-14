@@ -9,9 +9,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     end
 
     function [xout, yout] = runsim(config)
-        mws = get_param(config.mdl, 'modelworkspace');
-        mws.assignin('Phi', config.monitoringFormula);
-        mws.assignin('Preds', config.preds);
+        %mws = get_param(config.mdl, 'modelworkspace');
+        assignin('base', 'Phi', config.monitoringFormula);
+        assignin('base', 'Pred', config.preds);
         set_param([config.mdl, '/MATLAB Function'], 'SystemSampleTime', num2str(config.sampleTime));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
                      'SaveState','on','StateSaveName','xout',...
@@ -26,7 +26,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         [T,Y] = yout2TY(yout, outputs);
         rob =  dp_taliro(target, preds, Y, T, [], [], []);
     end
-        
+    
     bestRob = inf;
     py.driver.start_learning();
     tic;
