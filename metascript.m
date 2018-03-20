@@ -193,7 +193,7 @@ end
      results = cell(size(configs ,2));
      
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(@falsify,1,configs{idx});
+        F(idx) = parfeval(@experiment_rl,1,configs{idx});
      end
      % Build a waitbar to track progress
      h = waitbar(0,'Waiting for FevalFutures to complete...');
@@ -202,7 +202,7 @@ end
         % store the result
         results{completedIdx} = thisResult;
         % update waitbar
-        waitbar(idx/size(configs, 2),h,sprintf('Latest result: %d',thisResult));
+        waitbar(idx/size(configs, 2),h);
      end
      delete(h)
      
