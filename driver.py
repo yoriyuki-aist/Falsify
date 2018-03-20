@@ -60,7 +60,6 @@ action_space_dim = 2 # Dimension of actions
 agent = None
 
 def start_learning():
-    global agent
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
     opt = rmsprop_async.RMSpropAsync(
         lr=7e-4, eps=1e-1, alpha=0.99)
@@ -68,8 +67,9 @@ def start_learning():
     opt.add_hook(chainer.optimizer.GradientClipping(40))
     agent = a3c.A3C(model, opt, t_max=10, gamma=0.80,
                 beta=1e-2, phi=phi)
+    return agent
 
-def driver(r,s,g,Robustness):
+def driver(agent, r,s,g,Robustness):
     reward = math.exp( - Robustness)
     state = np.array([r, s, g], np.float32)
     action = agent.act_and_train(state, reward)
@@ -79,7 +79,7 @@ def driver(r,s,g,Robustness):
     brake = min(max(brake, -1.0), 1.0)
     return array.array('d', [throttle, brake])
 
-def stop_episode():
+def stop_episode(agent):
     agent.stop_episode()
 
 def save(savefiles):
