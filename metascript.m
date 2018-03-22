@@ -18,7 +18,7 @@ config_tmpl = struct('maxIter', maxIter,...
                 'algoName', 'A3C');
 
 algoNames = {'A3C'};
-sampleTimes = [1, 5, 10];
+sampleTimes = [10, 5, 1];
            
 [~, ~, g2L] = normalize(0, 0, 1.5);
 [~, ~, g3L] = normalize(0, 0, 2.5);
@@ -32,12 +32,12 @@ fml1.monitoringFormula = 'p1';
 
 [esp, ~, ~] = normalize(4770, 0, 0);
 fml1.preds(1).str = 'p1';
-fml1.preds(1).A = [0 1 0];
+fml1.preds(1).A = [1 0 0];
 fml1.preds(1).b = esp;
 
 fml1.stopTime = 30;
 
-% Formula 2re
+% Formula 2
 fml2 = struct(config_tmpl);
 fml2.expName = 'fml2';
 fml2.targetFormula = '[](p1 /\ p2)';
@@ -45,7 +45,7 @@ fml2.monitoringFormula = 'p1 /\ p2';
 
 [esp, sp, ~] = normalize(4770, 170, 0);
 fml2.preds(1).str = 'p1';
-fml2.preds(1).A = [0 1 0];
+fml2.preds(1).A = [1 0 0];
 fml2.preds(1).b = esp;
 
 fml2.preds(2).str = 'p2';
@@ -108,11 +108,11 @@ fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
 [esp, sp, ~] = normalize(4500, 130, 0);
 fml6.preds(1).str = 'p1';
-fml6.preds(1).A = [0 1 0];
+fml6.preds(1).A = [1 0 0];
 fml6.preds(1).b = esp;
 
 fml6.preds(2).str = 'p2';
-fml6.preds(2).A = [1 0 0];
+fml6.preds(2).A = [0 1 0];
 fml6.preds(2).b = sp;
 
 fml6.stopTime = 100;
@@ -125,7 +125,7 @@ fml7.monitoringFormula = '!p1';
 
 [~, sp, ~] = normalize(0, 160, 0);
 fml7.preds(1).str = 'p1';
-fml7.preds(1).A = [-1 0 0];
+fml7.preds(1).A = [0 -1 0];
 fml7.preds(1).b = -sp;
 
 fml7.stopTime = 100;
@@ -139,10 +139,10 @@ fml8.monitoringFormula = '<>_[0,25](!(vl/\vu))';
 [~, vl, ~] = normalize(0, 70, 0);
 [~, vu, ~] = normalize(0, 80, 0);
 fml8.preds(1).str = 'vl';
-fml8.preds(1).A = [-1 0 0];
+fml8.preds(1).A = [0 -1 0];
 fml8.preds(1).b = -vl;
 fml8.preds(2).str = 'vu';
-fml8.preds(2).A = [1 0 0];
+fml8.preds(2).A = [0 1 0];
 fml8.preds(2).b = vu;
 
 fml8.stopTime = 100;
@@ -154,13 +154,13 @@ fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
 [rpm, ~, ~] = normalize(3100, 0, 0);
-pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -rpm);
+pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -rpm);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
 formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml6};
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -216,7 +216,7 @@ end
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
-     results = cell(size(configs));
+     results = cell([1, size(configs)]);
      for i = 1:size(configs, 2)
         config = configs{i};
         results{i} = experiment_rl(config);

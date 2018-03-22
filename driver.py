@@ -65,12 +65,12 @@ def start_learning():
         lr=7e-4, eps=1e-1, alpha=0.99)
     opt.setup(model)
     opt.add_hook(chainer.optimizer.GradientClipping(40))
-    agent = a3c.A3C(model, opt, t_max=10, gamma=0.80,
+    agent = a3c.A3C(model, opt, t_max=10, gamma=1,
                 beta=1e-2, phi=phi)
     return agent
 
 def driver(agent, r,s,g,Robustness):
-    reward = math.exp( - Robustness)
+    reward = math.exp( - Robustness) - 1
     state = np.array([r, s, g], np.float32)
     action = agent.act_and_train(state, reward)
     throttle = float(action[0])
