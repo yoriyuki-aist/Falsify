@@ -1,6 +1,9 @@
+%%%%% Configuration %%%%%
 logDir = '../ExperimentData/';
-maxIter = 20;
+maxIter = 1;
 workers_num = 4;
+
+%%%%% Start Body %%%%%%%%%
 
 if ~ 7 == exist(logDir, 'dir')
     mkdir(logDir);
@@ -159,8 +162,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -191,6 +194,7 @@ end
      end
 
      results = cell(size(configs ,2));
+     
      
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(@experiment_rl,1,configs{idx});
