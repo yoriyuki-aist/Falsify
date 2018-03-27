@@ -1,6 +1,6 @@
 # Falsify
 
-Simulink models using deep reinforcement learning
+Falsify Simulink models using deep reinforcement learning
 
 ## Reqiurment
 
