@@ -196,7 +196,8 @@ end
  
  if workers_num > 1
      delete(gcp('nocreate'));
-     parpool(workers_num);    
+     parpool(workers_num);
+     p = gcp();
      spmd
         % Setup tempdir and cd into it
         currDir = pwd;
@@ -211,7 +212,7 @@ end
      end
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(@falsify,5,configs{idx});
+        F(idx) = parfeval(p, @falsify,5,configs{idx});
      end
      % Build a waitbar to track progress
      h = waitbar(0,'Waiting for FevalFutures to complete...');
