@@ -82,6 +82,9 @@ def driver(agent, r,s,g,Robustness):
 def stop_episode(agent):
     agent.stop_episode()
 
+def stop_episode_and_train(agent, state, reward):
+    agent.stop_episode_and_train(state, reward)
+
 def save(savefiles):
     agent.save(savefiles)
 

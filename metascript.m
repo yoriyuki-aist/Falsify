@@ -108,12 +108,12 @@ fml4.stopTime = 30;
 %Formula 5
 fml5 = struct(config_tmpl);
 fml5.expName = 'fml5';
-fml5.targetFormula = ['[]_[0,29]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1)) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
-'[]_[0.1,1.0](g2L/\g2U))) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
-'[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4)))'];
-fml5.monitoringFormula = ['[.]_[1.0,1.0]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1)) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
-'[]_[0.1,1.0](g2L/\g2U))) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
-'[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4)))'];
+fml5.targetFormula = ['[]_[0,29]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
+'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
+'[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4))'];
+fml5.monitoringFormula = ['[.]_[1.0,1.0]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
+'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
+'[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4))'];
 fml5.preds = fml3.preds;
 fml5.stopTime = 30;
 
@@ -151,7 +151,7 @@ fml7.stopTime = 100;
 fml8 = struct(config_tmpl);
 fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
-fml8.monitoringFormula = '<>_[0,25](!(vl/\vu))';
+fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
 [~, vl, ~] = normalize(0, 70, 0);
 [~, vu, ~] = normalize(0, 80, 0);
@@ -176,8 +176,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml1};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml8};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -241,11 +241,18 @@ end
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
-     results = cell([1, size(configs)]);
+     results = cell([1, size(configs,2)]);
      for i = 1:size(configs, 2)
         config = configs{i};
-        results{i} = experiment_rl(config);
-        waitbar(i / size(configs))
+        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
+            falsify(config);
+        result = struct('numEpisode', numEpisode,...
+                    'elapsedTime', elapsedTime,...
+                    'bestRob', bestRob,...
+                    'bestXout', bestXout,...
+                    'bestYout', bestYout);
+        results{i} = result;
+        waitbar(i / size(configs, 2))
      end
      close(h)
  end
