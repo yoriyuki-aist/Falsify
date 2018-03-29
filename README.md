@@ -1,6 +1,6 @@
 # Falsify
 
-Simulink models using deep reinforcement learning
+Falsify Simulink models using deep reinforcement learning
 
 ## Reqiurment
 
@@ -47,8 +47,8 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 
 ## Current status
 
-- Can falsify fml6 in the FM2018 paper
-- No statistics, therefore I cannot check whether the performance is improved
+- Can falsify all formulas in the FM2018 paper
+- Got statistics, need to analyze them
 
 ## Todo
 
@@ -59,11 +59,11 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 	- [ ] analysis
 - [ ] Logging and generating summary automatically (but don't spend too much time on it)
 	- [x] implementation
-	- [ ] analysis script
+	- [x] analysis script
 - [ ] Configuration
-	- [ ] Switcing a model, a formula and predicates
+	- [x] Switcing a model, a formula and predicates
 		- [x] implementation
-		- [ ] test
+		- [x] test
 	- [ ] Automatically setup s-taliro etc.
 - [ ] PTC model and more
 - [ ] Compare to other methods
@@ -84,10 +84,9 @@ If you open autotorans_mod04 model by Simulink, then you can use the scope to in
 
 ### Things to discuss
 
-- [ ] Meeting frequency
-- [ ] Attendees
+- [x] Meeting frequency
+- [x] Attendees
 - [ ] Milestones and roadmap
-- [ ] Move to WeChat?  Connection to Tianjin was not stable using Skype
 - [ ] Data sharing (Git is not suitable for large data.  What service can you guys in China use?
 - [ ] Computing resources 
 	- [x] ordered a multicore machine.  

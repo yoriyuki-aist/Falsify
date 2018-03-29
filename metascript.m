@@ -176,8 +176,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -210,7 +210,13 @@ end
         load_system(mdl);
      end
 
+<<<<<<< HEAD
      results = cell([1, size(configs ,2)]);
+=======
+     results = cell(size(configs ,2));
+     
+     
+>>>>>>> e4b4098ff3e085eec488470e2dc767ea83313d2e
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(@falsify,5,configs{idx});
      end
