@@ -1,7 +1,24 @@
+staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 4;
+workers_num = 3;
 
+if exist('dp_taliro.m', 'file') == 0
+    addpath(staliro_dir);
+    cwd = pwd;
+    cd(staliro_dir);
+    setup_staliro;
+    cd(cwd);
+end
+
+if exist('setup_monitor.m', 'file') == 0
+    addpath(fullfile(staliro_dir, 'monitor'));
+    cwd = pwd;
+    cd(fullfile(staliro_dir, 'monitor'));
+    setup_monitor;
+    cd(pwd);
+end
+    
 if ~ 7 == exist(logDir, 'dir')
     mkdir(logDir);
 end 
@@ -169,13 +186,16 @@ for k = 1:size(formulas, 2)
             config = struct(formulas{k});
             config.algoName = algoNames{i};
             config.sampleTime = sampleTimes(j);
-            configs = [configs, config];
+            for l = 1:maxIter
+              configs = [configs, config];
+            end
         end
     end
 end
  load_system(mdl);
  
  if workers_num > 1
+     delete(gcp('nocreate'));
      parpool(workers_num);    
      spmd
         % Setup tempdir and cd into it
@@ -190,17 +210,23 @@ end
         load_system(mdl);
      end
 
-     results = cell(size(configs ,2));
-     
+     results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(@experiment_rl,1,configs{idx});
+        F(idx) = parfeval(@falsify,5,configs{idx});
      end
      % Build a waitbar to track progress
      h = waitbar(0,'Waiting for FevalFutures to complete...');
      for idx = 1:size(configs, 2)
-        [completedIdx,thisResult] = fetchNext(F);
+        [completedIdx, ...
+            numEpisode, elapsedTime, bestRob, bestXout, bestYout] ...
+            = fetchNext(F);
         % store the result
-        results{completedIdx} = thisResult;
+        result = struct('numEpisode', numEpisode,...
+                    'elapsedTime', elapsedTime,...
+                    'bestRob', bestRob,...
+                    'bestXout', bestXout,...
+                    'bestYout', bestYout);
+        results{completedIdx} = result;
         % update waitbar
         waitbar(idx/size(configs, 2),h);
      end
@@ -229,19 +255,6 @@ end
  
 
 close_system(mdl, 0);
-
-function [iter_result] = experiment_rl(config)
-    iter_result = cell([1, config.maxIter]);
-    for numIter = 1:config.maxIter
-       [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
-       result = struct('numEpisode', numEpisode,...
-                        'elapsedTime', elapsedTime,...
-                        'bestRob', bestRob,...
-                        'bestXout', bestXout,...
-                        'bestYout', bestYout);
-       iter_result{numIter} = result;
-    end
-end
 
 function [esp, sp, g] = normalize(engine_speed, speed, gear)
     esp = (engine_speed - 2500)/2500;
