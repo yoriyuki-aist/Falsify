@@ -176,8 +176,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml8};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml5};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -198,18 +198,18 @@ end
      delete(gcp('nocreate'));
      parpool(workers_num);
      p = gcp();
-     spmd
-        % Setup tempdir and cd into it
-        currDir = pwd;
-        addpath(currDir);
-         P = py.sys.path;
-        insert(P,int32(0),pwd);
-        tmpDir = tempname;
-        mkdir(tmpDir);
-        cd(tmpDir);
-        % Load the model on the worker
-        load_system(mdl);
-     end
+%      spmd
+%         % Setup tempdir and cd into it
+%         currDir = pwd;
+%         addpath(currDir);
+%          P = py.sys.path;
+%         insert(P,int32(0),pwd);
+%         tmpDir = tempname;
+%         mkdir(tmpDir);
+%         cd(tmpDir);
+%         % Load the model on the worker
+%         load_system(mdl);
+%      end
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(p, @falsify,5,configs{idx});
@@ -232,12 +232,12 @@ end
      end
      delete(h)
      
-     spmd
-     cd(currDir);
-     rmdir(tmpDir,'s');
-     rmpath(currDir);
-     close_system(mdl, 0);
-     end
+%      spmd
+%      cd(currDir);
+%      rmdir(tmpDir,'s');
+%      rmpath(currDir);
+%      close_system(mdl, 0);
+%      end
     
      delete(gcp('nocreate'));
  else
