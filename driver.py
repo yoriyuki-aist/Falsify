@@ -65,12 +65,12 @@ def start_learning():
         lr=7e-4, eps=1e-1, alpha=0.99)
     opt.setup(model)
     opt.add_hook(chainer.optimizer.GradientClipping(40))
-    agent = a3c.A3C(model, opt, t_max=10, gamma=1,
+    agent = a3c.A3C(model, opt, t_max=5, gamma=1,
                 beta=1e-2, phi=phi)
     return agent
 
 def driver(agent, r,s,g,Robustness):
-    reward = math.exp( - Robustness) - 1
+    reward = math.exp( - Robustness) - 1.0
     state = np.array([r, s, g], np.float32)
     action = agent.act_and_train(state, reward)
     throttle = float(action[0])
@@ -83,7 +83,8 @@ def stop_episode(agent):
     agent.stop_episode()
 
 def stop_episode_and_train(agent, state, reward):
-    agent.stop_episode_and_train(state, reward)
+    s = np.array(state, np.float32)
+    agent.stop_episode_and_train(s, reward)
 
 def save(savefiles):
     agent.save(savefiles)

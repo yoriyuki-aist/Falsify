@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 3;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -25,7 +25,7 @@ end
 logFile = fullfile(logDir, [datestr(datetime('now')), '.mat']);
 
 mdl = 'autotrans_mod04';
-outputs = [1,2,3];
+outputs = [2,3,4];
 maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
@@ -100,8 +100,8 @@ fml3.stopTime = 30;
 %Formula 4
 fml4 = struct(config_tmpl);
 fml4.expName = 'fml4';
-fml4.targetFormula = '[]_[0,29.0]( (g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](!g1))';
-fml4.monitoringFormula = '[.]_[1.0,1.0]((g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](!g1))';
+fml4.targetFormula = '[]_[0,29.0]( (!g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](g1))';
+fml4.monitoringFormula = '[.]_[1.0,1.0]((!g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](g1))';
 fml4.preds = fml3.preds;
 fml4.stopTime = 30;
 
@@ -176,8 +176,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml5};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml5};
 
 configs = { };
 for k = 1:size(formulas, 2)

@@ -1,9 +1,10 @@
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config)
 
-    function Y = yout2TY(yout, outputs)
+    function [Y, R] = yout2TY(yout, outputs)
         for i=1:length(outputs)
             index = outputs(i);
             Y(:,i) = yout.getElement(index).Values.Data;
+            R = yout.getElement(1).Values.Data;
         end
     end
 
@@ -24,11 +25,6 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         yout = simOut.get('yout');
     end
 
-    function [rob] = robustness(target, preds, tout, yout, outputs)
-        Y = yout2TY(yout, outputs);
-        rob =  dp_taliro(target, preds, Y, tout, [], [], []);
-    end
-    
     currDir = pwd;
     addpath(currDir);
     P = py.sys.path;
@@ -43,8 +39,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     tic;
     for numEpisode=1:config.maxEpisodes
         [tout, xout, yout] = runsim(agent, config);
-        rob = robustness(config.targetFormula, config.preds, tout, yout, config.outputs);
-        py.driver.stop_episode(agent);
+        [Y, R] = yout2TY(yout, config.outputs);
+        rob =  dp_taliro(config.targetFormula, config.preds, Y, tout, [], [], []);
+        py.driver.stop_episode_and_train(agent, Y(end, :), R(end, 1));
         disp(['Current iteration: ', num2str(numEpisode), ', rob = ', num2str(rob)])
         if rob < bestRob
             bestRob = rob;
