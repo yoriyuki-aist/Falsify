@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 1;
+workers_num = 9;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -24,18 +24,17 @@ if ~ 7 == exist(logDir, 'dir')
 end 
 logFile = fullfile(logDir, [datestr(datetime('now')), '.mat']);
 
-mdl = 'autotrans_mod04';
-outputs = [2,3,4];
+mdl = 'falsification';
 maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'mdl', mdl,...
-                'outputs', outputs,...
                 'algoName', 'A3C');
 
 algoNames = {'A3C'};
-sampleTimes = [10, 5, 1];
+%sampleTimes = [10, 5, 1];
+sampleTimes = [5];
            
 [~, ~, g2L] = normalize(0, 0, 1.5);
 [~, ~, g3L] = normalize(0, 0, 2.5);
@@ -47,9 +46,9 @@ fml1.expName = 'fml1';
 fml1.targetFormula = '[]p1';
 fml1.monitoringFormula = 'p1';
 
-[esp, ~, ~] = normalize(4770, 0, 0);
+[esp, ~, ~] = normalize(0, 4770, 0);
 fml1.preds(1).str = 'p1';
-fml1.preds(1).A = [1 0 0];
+fml1.preds(1).A = [0 1 0];
 fml1.preds(1).b = esp;
 
 fml1.stopTime = 30;
@@ -62,7 +61,7 @@ fml2.monitoringFormula = 'p1 /\ p2';
 
 [esp, sp, ~] = normalize(4770, 170, 0);
 fml2.preds(1).str = 'p1';
-fml2.preds(1).A = [1 0 0];
+fml2.preds(1).A = [0 1 0];
 fml2.preds(1).b = esp;
 
 fml2.preds(2).str = 'p2';
@@ -123,13 +122,13 @@ fml6.expName = 'fml6';
 fml6.targetFormula = '[]_[0, 80](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
-[esp, sp, ~] = normalize(4500, 130, 0);
+[esp, sp, ~] = normalize(130, 4500, 0);
 fml6.preds(1).str = 'p1';
-fml6.preds(1).A = [1 0 0];
+fml6.preds(1).A = [0 1 0];
 fml6.preds(1).b = esp;
 
 fml6.preds(2).str = 'p2';
-fml6.preds(2).A = [0 1 0];
+fml6.preds(2).A = [1 0 0];
 fml6.preds(2).b = sp;
 
 fml6.stopTime = 100;
@@ -140,9 +139,9 @@ fml7.expName = 'fml7';
 fml7.targetFormula = '!<>p1';
 fml7.monitoringFormula = '!p1';
 
-[~, sp, ~] = normalize(0, 160, 0);
+[~, sp, ~] = normalize(160, 0, 0);
 fml7.preds(1).str = 'p1';
-fml7.preds(1).A = [0 -1 0];
+fml7.preds(1).A = [-1 0 0];
 fml7.preds(1).b = -sp;
 
 fml7.stopTime = 100;
@@ -153,13 +152,13 @@ fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
-[~, vl, ~] = normalize(0, 70, 0);
-[~, vu, ~] = normalize(0, 80, 0);
+[~, vl, ~] = normalize(70, 0, 0);
+[~, vu, ~] = normalize(80, 0, 0);
 fml8.preds(1).str = 'vl';
-fml8.preds(1).A = [0 -1 0];
+fml8.preds(1).A = [-1 0 0];
 fml8.preds(1).b = -vl;
 fml8.preds(2).str = 'vu';
-fml8.preds(2).A = [0 1 0];
+fml8.preds(2).A = [-1 0 0];
 fml8.preds(2).b = vu;
 
 fml8.stopTime = 100;
@@ -170,14 +169,14 @@ fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
-[rpm, ~, ~] = normalize(3100, 0, 0);
-pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -rpm);
+[rpm, ~, ~] = normalize(0, 3100, 0);
+pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -rpm);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
 formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml5};
+%formulas = {fml7};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -198,18 +197,6 @@ end
      delete(gcp('nocreate'));
      parpool(workers_num);
      p = gcp();
-%      spmd
-%         % Setup tempdir and cd into it
-%         currDir = pwd;
-%         addpath(currDir);
-%          P = py.sys.path;
-%         insert(P,int32(0),pwd);
-%         tmpDir = tempname;
-%         mkdir(tmpDir);
-%         cd(tmpDir);
-%         % Load the model on the worker
-%         load_system(mdl);
-%      end
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(p, @falsify,5,configs{idx});
@@ -231,14 +218,7 @@ end
         waitbar(idx/size(configs, 2),h);
      end
      delete(h)
-     
-%      spmd
-%      cd(currDir);
-%      rmdir(tmpDir,'s');
-%      rmpath(currDir);
-%      close_system(mdl, 0);
-%      end
-    
+         
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
@@ -263,7 +243,7 @@ end
 
 close_system(mdl, 0);
 
-function [esp, sp, g] = normalize(engine_speed, speed, gear)
+function [sp, esp, g] = normalize(speed, engine_speed, gear)
     esp = (engine_speed - 2500)/2500;
     sp = (speed - 80)/80;
     g = (gear - 2.5)/1.5;
