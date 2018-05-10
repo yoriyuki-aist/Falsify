@@ -8,6 +8,7 @@ standard_library.install_aliases()
 from os import path
 import math
 import array
+import random 
 
 import chainer
 from chainer import functions as F
@@ -26,7 +27,7 @@ from chainerrl import v_function
 
 
 def phi(obs):
-    return obs.astype(np.float32)
+    return obs.astype(np.float32, copy=False)
 
 class A3CLSTMGaussian(chainer.ChainList, a3c.A3CModel, RecurrentChainMixin):
     """An example of A3C recurrent Gaussian policy."""
@@ -58,6 +59,7 @@ obs_space_dim = 3 # Dimension of observations
 action_space_dim = 2 # Dimension of actions
 
 agent = None
+misc.set_random_seed(random.randrange(0xFFFF))
 
 def start_learning():
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)

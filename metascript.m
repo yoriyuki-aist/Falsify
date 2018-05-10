@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 9;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -176,7 +176,7 @@ fml9.preds = [fml3.preds, pred];
 fml9.stopTime = 100;
 
 formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml8};
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
