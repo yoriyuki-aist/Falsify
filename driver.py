@@ -15,6 +15,7 @@ from chainer import functions as F
 from chainer import links as L
 import numpy as np
 
+from chainer import optimizers
 from chainerrl.agents import a3c
 from chainerrl import experiments
 from chainerrl import links
@@ -63,8 +64,7 @@ misc.set_random_seed(random.randrange(0xFFFF))
 
 def start_learning():
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
-    opt = rmsprop_async.RMSpropAsync(
-        lr=7e-4, eps=1e-1, alpha=0.99)
+    opt = optimizers.Adam()
     opt.setup(model)
     opt.add_hook(chainer.optimizer.GradientClipping(40))
     agent = a3c.A3C(model, opt, t_max=5, gamma=1,

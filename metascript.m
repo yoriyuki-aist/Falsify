@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -29,16 +29,17 @@ maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
-                'mdl', mdl,...
-                'algoName', 'A3C');
+                'input_range', [0 100; 0 500],...
+                'output_range', [0 160;0 5000;1 4]);
 
-algoNames = {'A3C'};
-sampleTimes = [10, 5, 1];
-%sampleTimes = [5];
+algoNames = {{"A3C", 'falsification'}};
+%algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
+%sampleTimes = [10, 5, 1];
+sampleTimes = [5];
            
-[~, ~, g2L] = normalize(0, 0, 1.5);
-[~, ~, g3L] = normalize(0, 0, 2.5);
-[~, ~, g4L] = normalize(0, 0, 3.5);
+g2L = 1.5;
+g3L = 2.5;
+g4L = 3.5;
 
 % Formula 1
 fml1 = struct(config_tmpl);
@@ -46,10 +47,9 @@ fml1.expName = 'fml1';
 fml1.targetFormula = '[]p1';
 fml1.monitoringFormula = 'p1';
 
-[~, esp, ~] = normalize(0, 4770, 0);
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [0 1 0];
-fml1.preds(1).b = esp;
+fml1.preds(1).b = 4770;
 
 fml1.stopTime = 30;
 
@@ -59,14 +59,13 @@ fml2.expName = 'fml2';
 fml2.targetFormula = '[](p1 /\ p2)';
 fml2.monitoringFormula = 'p1 /\ p2';
 
-[sp, esp, ~] = normalize(170, 4770, 0);
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 1 0];
-fml2.preds(1).b = esp;
+fml2.preds(1).b = 4770;
 
 fml2.preds(2).str = 'p2';
 fml2.preds(2).A = [1 0 0];
-fml2.preds(2).b = sp;
+fml2.preds(2).b = 170;
 fml2.stopTime = 30;
 
 %Formula 3
@@ -122,14 +121,13 @@ fml6.expName = 'fml6';
 fml6.targetFormula = '[]_[0, 80](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
-[sp, esp, ~] = normalize(130, 4500, 0);
 fml6.preds(1).str = 'p1';
 fml6.preds(1).A = [0 1 0];
-fml6.preds(1).b = esp;
+fml6.preds(1).b = 4500;
 
 fml6.preds(2).str = 'p2';
 fml6.preds(2).A = [1 0 0];
-fml6.preds(2).b = sp;
+fml6.preds(2).b = 130;
 
 fml6.stopTime = 100;
 
@@ -139,10 +137,9 @@ fml7.expName = 'fml7';
 fml7.targetFormula = '!<>p1';
 fml7.monitoringFormula = '!p1';
 
-[sp, ~, ~] = normalize(160, 0, 0);
 fml7.preds(1).str = 'p1';
 fml7.preds(1).A = [-1 0 0];
-fml7.preds(1).b = -sp;
+fml7.preds(1).b = -160;
 
 fml7.stopTime = 100;
 
@@ -152,8 +149,8 @@ fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
-[vl, ~, ~] = normalize(70, 0, 0);
-[vu, ~, ~] = normalize(80, 0, 0);
+vl = 70;
+vu = 80;
 fml8.preds(1).str = 'vl';
 fml8.preds(1).A = [-1 0 0];
 fml8.preds(1).b = -vl;
@@ -169,21 +166,21 @@ fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
-[~, rpm, ~] = normalize(0, 3100, 0);
-pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -rpm);
+pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -3100);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
     for i = 1:size(algoNames, 2)
         for j = 1:size(sampleTimes, 2)
             config = struct(formulas{k});
-            config.algoName = algoNames{i};
+            config.algoName = algoNames{i}{1};
+            config.mdl = algoNames{i}{2};
             config.sampleTime = sampleTimes(j);
             for l = 1:maxIter
               configs = [configs, config];
@@ -199,7 +196,7 @@ end
      p = gcp();
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @falsify,5,configs{idx});
+        F(idx) = parfeval(p, @do_experiment,5,configs{idx});
      end
      % Build a waitbar to track progress
      h = waitbar(0,'Waiting for FevalFutures to complete...');
@@ -226,7 +223,7 @@ end
      for i = 1:size(configs, 2)
         config = configs{i};
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
-            falsify(config);
+            do_experiment(config);
         result = struct('numEpisode', numEpisode,...
                     'elapsedTime', elapsedTime,...
                     'bestRob', bestRob,...
@@ -243,8 +240,30 @@ end
 
 close_system(mdl, 0);
 
-function [sp, esp, g] = normalize(speed, engine_speed, gear)
-    esp = (engine_speed - 2500)/2500;
-    sp = (speed - 80)/80;
-    g = (gear - 2.5)/1.5;
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(config)
+    if config.algoName == "SA"
+        opt = staliro_options();
+        opt.optim_params.n_tests = config.maxEpisodes;
+        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+            config.targetFormula, config.preds, config.stopTime, opt);
+        numEpisode = results.run.nTests;
+        elapsedTime = results.run.time;
+        bestRob = results.run.bestRob;
+        bestXout = results.run.bestSample;
+        bestYout = [];
+    elseif config.algoName == "CE"
+        opt = staliro_option();
+        opt.optimization_solver = "CE_Taliro";
+        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+            config.targetFormula, config.preds, config.stopTime, opt);
+        numEpisode = results.run.nTest;
+        elapsedTime = results.run.time;
+        bestRob = results.run.bestRob;
+        bestXout = results.run.bestSample;
+        bestYout = [];        
+    elseif config.algoName == "A3C" || config.algoName == "DDQN"
+        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
+    end
 end

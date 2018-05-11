@@ -5,11 +5,26 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         R = yout.getElement(1).Values.Data;
     end
 
-    function [tout, xout, yout] = runsim(agent, config)
+    function [normal_preds] = normalize_pred(preds, range)
+       normal_preds = [];
+       lower = range(:,1);
+       upper = range(:,2);
+       middle = (lower + upper)/2;
+       d = (upper - lower)/2;
+       for i = 1:size(preds,2)
+          normal_preds(i).str = preds(i).str;
+          normal_preds(i).A = preds(i).A .* d';
+          normal_preds(i).b = preds(i).b - preds(i).A * middle;
+       end
+    end
+
+    function [tout, xout, yout] = runsim(agent, config, preds)
         %mws = get_param(config.mdl, 'modelworkspace');
         assignin('base', 'Phi', config.monitoringFormula);
-        assignin('base', 'Pred', config.preds);
+        assignin('base', 'Pred', preds);
         assignin('base', 'agent', agent);
+        assignin('base', 'input_range', config.input_range);
+        assignin('base', 'output_range', config.output_range);
         set_param([config.mdl, '/MATLAB Function'], 'SystemSampleTime', num2str(config.sampleTime));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
                      'SaveTime', 'on', 'TimeSaveName', 'tout',...
@@ -32,12 +47,13 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     % Load the model on the worker
     load_system(config.mdl);
     bestRob = inf;
+    normal_preds = normalize_pred(config.preds, config.output_range);
     agent = py.driver.start_learning();
     tic;
     for numEpisode=1:config.maxEpisodes
-        [tout, xout, yout] = runsim(agent, config);
+        [tout, xout, yout] = runsim(agent, config, normal_preds);
         [Y, R] = yout2TY(yout);
-        rob =  dp_taliro(config.targetFormula, config.preds, Y, tout, [], [], []);
+        rob =  dp_taliro(config.targetFormula, normal_preds, Y, tout, [], [], []);
         py.driver.stop_episode_and_train(agent, Y(end, :), R(end, 1));
         disp(['Current iteration: ', num2str(numEpisode), ', rob = ', num2str(rob)])
         if rob < bestRob
