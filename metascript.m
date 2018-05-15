@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 1;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -33,9 +33,10 @@ config_tmpl = struct('maxIter', maxIter,...
                 'output_range', [0 160;0 5000;1 4]);
 
 algoNames = {{"A3C", 'falsification'}};
-%algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
-%sampleTimes = [10, 5, 1];
-sampleTimes = [5];
+algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
+%algoNames = {{"CE", 'arch2014_staliro'}};
+sampleTimes = [10, 5, 1];
+%sampleTimes = [5];
            
 g2L = 1.5;
 g3L = 2.5;
@@ -171,8 +172,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml1};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml9};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -234,7 +235,11 @@ end
      end
      close(h)
  end
-   
+ 
+ data = load('../ExperimentData/14-May-2018 16:29:04.mat');
+
+ configs = cellfun(@convert_string, data.configs);
+ results = data.results;
  save(logFile, 'configs', 'results');
  
 
@@ -253,12 +258,13 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(
         bestXout = results.run.bestSample;
         bestYout = [];
     elseif config.algoName == "CE"
-        opt = staliro_option();
-        opt.optimization_solver = "CE_Taliro";
+        opt = staliro_options();
+        opt.optimization_solver = 'CE_Taliro';
+        opt.optim_params.n_tests = config.maxEpisodes;
         [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
             repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
             config.targetFormula, config.preds, config.stopTime, opt);
-        numEpisode = results.run.nTest;
+        numEpisode = results.run.nTests;
         elapsedTime = results.run.time;
         bestRob = results.run.bestRob;
         bestXout = results.run.bestSample;
@@ -266,4 +272,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(
     elseif config.algoName == "A3C" || config.algoName == "DDQN"
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
     end
+end
+
+function [new_config] = convert_string(config)
+    new_config = struct(config);
+    new_config.algoName = char(config.algoName);
 end
