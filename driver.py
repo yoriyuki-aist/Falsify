@@ -63,15 +63,16 @@ agent = None
 misc.set_random_seed(random.randrange(0xFFFF))
 
 def start_learning():
+    global agent
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
-    opt = optimizers.Adam()
+    opt = rmsprop_async.RMSpropAsync(
+        lr=7e-4, eps=1e-1, alpha=0.99)
     opt.setup(model)
     opt.add_hook(chainer.optimizer.GradientClipping(40))
     agent = a3c.A3C(model, opt, t_max=5, gamma=1,
                 beta=1e-2, phi=phi)
-    return agent
 
-def driver(agent,s,r):
+def driver(s,r):
     reward = math.exp( - r) - 1.0
     state = np.array(s, np.float32)
     action = agent.act_and_train(state, reward).tolist()
@@ -79,10 +80,13 @@ def driver(agent,s,r):
     action = min([1, 1], max([-1, -1], action))
     return array.array('d', action)
 
-def stop_episode(agent):
+def get_average_entropy():
+    return agent.average_entropy
+
+def stop_episode():
     agent.stop_episode()
 
-def stop_episode_and_train(agent, state, reward):
+def stop_episode_and_train(state, reward):
     s = np.array(state, np.float32)
     agent.stop_episode_and_train(s, reward)
 

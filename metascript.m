@@ -173,7 +173,7 @@ fml9.preds = [fml3.preds, pred];
 fml9.stopTime = 100;
 
 formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml9};
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
