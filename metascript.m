@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -35,8 +35,8 @@ config_tmpl = struct('maxIter', maxIter,...
 algoNames = {{"A3C", 'falsification'}};
 algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
 %algoNames = {{"CE", 'arch2014_staliro'}};
-sampleTimes = [10, 5, 1];
-%sampleTimes = [5];
+%sampleTimes = [10, 5, 1];
+sampleTimes = [1];
            
 g2L = 1.5;
 g3L = 2.5;
@@ -236,10 +236,7 @@ end
      close(h)
  end
  
- data = load('../ExperimentData/14-May-2018 16:29:04.mat');
-
- configs = cellfun(@convert_string, data.configs);
- results = data.results;
+ configs = cellfun(@convert_string, configs);
  save(logFile, 'configs', 'results');
  
 
