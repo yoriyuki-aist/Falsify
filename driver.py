@@ -75,7 +75,7 @@ def start_learning():
 def driver(s,r):
     reward = math.exp( - r) - 1.0
     state = np.array(s, np.float32)
-    action = agent.act_and_train(state, reward).tolist()
+    action = agent.act_and_train(np.transpose(state), reward).tolist()
     action = list(map(float, action))
     action = min([1, 1], max([-1, -1], action))
     return array.array('d', action)

@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 1;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -24,7 +24,6 @@ if ~ 7 == exist(logDir, 'dir')
 end 
 logFile = fullfile(logDir, [datestr(datetime('now')), '.mat']);
 
-mdl = 'falsification';
 maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
@@ -32,11 +31,11 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0 100; 0 500],...
                 'output_range', [0 160;0 5000;1 4]);
 
-algoNames = {{"A3C", 'falsification'}};
-algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
+algoNames = {{"A3C", 'falsification_arch2014'}};
+%algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
 %algoNames = {{"CE", 'arch2014_staliro'}};
-%sampleTimes = [10, 5, 1];
-sampleTimes = [1];
+sampleTimes = [10, 5, 1];
+%sampleTimes = [5];
            
 g2L = 1.5;
 g3L = 2.5;
@@ -189,7 +188,6 @@ for k = 1:size(formulas, 2)
         end
     end
 end
- load_system(mdl);
  
  if workers_num > 1
      delete(gcp('nocreate'));
@@ -238,9 +236,6 @@ end
  
  configs = cellfun(@convert_string, configs);
  save(logFile, 'configs', 'results');
- 
-
-close_system(mdl, 0);
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(config)
     if config.algoName == "SA"
