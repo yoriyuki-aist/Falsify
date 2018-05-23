@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -31,11 +31,11 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0 100; 0 500],...
                 'output_range', [0 160;0 5000;1 4]);
 
-algoNames = {{"A3C", 'falsification_arch2014'}};
+algoNames = {{"A3C",'autotrans_mod04'}};
 %algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
 %algoNames = {{"CE", 'arch2014_staliro'}};
-sampleTimes = [10, 5, 1];
-%sampleTimes = [5];
+%sampleTimes = [10, 5, 1];
+sampleTimes = [5];
            
 g2L = 1.5;
 g3L = 2.5;
@@ -171,8 +171,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
