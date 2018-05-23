@@ -9,6 +9,8 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     end
 
     function [tout, xout, yout] = runsim(agent, config)
+        disp(config);
+        disp(config.preds);
         %mws = get_param(config.mdl, 'modelworkspace');
         assignin('base', 'Phi', config.monitoringFormula);
         assignin('base', 'Pred', config.preds);
