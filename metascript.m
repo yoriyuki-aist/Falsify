@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
-maxIter = 20;
-workers_num = 1;
+maxIter = 100;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -32,7 +32,8 @@ config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'mdl', mdl,...
                 'outputs', outputs,...
-                'algoName', 'A3C');
+                'input_range', [0 100; 0 500],...
+                'output_range', [0 160;0 5000;1 4]);
 
 algoNames = {'A3C'};
 sampleTimes = [10, 5, 1];

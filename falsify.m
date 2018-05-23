@@ -9,12 +9,12 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     end
 
     function [tout, xout, yout] = runsim(agent, config)
-        disp(config);
-        disp(config.preds);
         %mws = get_param(config.mdl, 'modelworkspace');
         assignin('base', 'Phi', config.monitoringFormula);
         assignin('base', 'Pred', config.preds);
         assignin('base', 'agent', agent);
+        assignin('base', 'input_range', config.input_range);
+        assignin('base', 'output_range', config.output_range);
         set_param([config.mdl, '/MATLAB Function'], 'SystemSampleTime', num2str(config.sampleTime));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
                      'SaveTime', 'on', 'TimeSaveName', 'tout',...
