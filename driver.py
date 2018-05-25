@@ -69,6 +69,8 @@ def start_learning():
                 beta=1e-2, phi=phi)
     return agent
 
+log_f = open('/Users/yoriyuki/Reference/TestGenforCPS/falsify-old-model/driver-log', 'a')
+
 def driver(agent, state, r):
     reward = math.exp( - r) - 1.0
     state = np.array(state, np.float32)
@@ -77,6 +79,8 @@ def driver(agent, state, r):
     brake = float(action[1])
     throttle = min(max(throttle, -1.0), 1.0)
     brake = min(max(brake, -1.0), 1.0)
+    print('state = {}, t = {}, b = {}'.format(state, throttle, brake), file=log_f)
+    log_f.flush()
     return array.array('d', [throttle, brake])
 
 def stop_episode(agent):
