@@ -69,9 +69,9 @@ def start_learning():
                 beta=1e-2, phi=phi)
     return agent
 
-def driver(agent, r,s,g,Robustness):
-    reward = math.exp( - Robustness) - 1.0
-    state = np.array([r, s, g], np.float32)
+def driver(agent, state, r):
+    reward = math.exp( - r) - 1.0
+    state = np.array(state, np.float32)
     action = agent.act_and_train(state, reward)
     throttle = float(action[0])
     brake = float(action[1])
