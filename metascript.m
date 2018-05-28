@@ -1,5 +1,5 @@
 staliro_dir = '../s-taliro';
-logDir = '../falsify-data/';
+logDir = '/Users/yoriyuki/OneDrive - \u56fd\u7acb\u7814\u7a76\u958b\u767a\u6cd5\u4eba\u7523\u696d\u6280\u8853\u7dcf\u5408\u7814\u7a76\u6240/Sync/falsify-data/';
 maxIter = 20;
 workers_num = 10;
 
