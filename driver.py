@@ -57,8 +57,6 @@ class A3CLSTMGaussian(chainer.ChainList, a3c.A3CModel, RecurrentChainMixin):
 obs_space_dim = 3 # Dimension of observations
 action_space_dim = 2 # Dimension of actions
 
-agent = None
-
 def start_learning():
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
     opt = rmsprop_async.RMSpropAsync(
@@ -69,7 +67,8 @@ def start_learning():
                 beta=1e-2, phi=phi)
     return agent
 
-log_f = open('/Users/yoriyuki/Reference/TestGenforCPS/falsify-old-model/driver-log', 'a')
+misc.set_random_seed(0)
+#log_f = open('/Users/yoriyuki/Reference/TestGenforCPS/falsify-old-model/driver-log', 'a')
 
 def driver(agent, state, r):
     reward = math.exp( - r) - 1.0
@@ -79,8 +78,8 @@ def driver(agent, state, r):
     brake = float(action[1])
     throttle = min(max(throttle, -1.0), 1.0)
     brake = min(max(brake, -1.0), 1.0)
-    print('state = {}, t = {}, b = {}'.format(state, throttle, brake), file=log_f)
-    log_f.flush()
+#    print('state = {}, t = {}, b = {}'.format(state, throttle, brake), file=log_f)
+#    log_f.flush()
     return array.array('d', [throttle, brake])
 
 def stop_episode(agent):
