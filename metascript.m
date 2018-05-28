@@ -32,8 +32,8 @@ config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'mdl', mdl,...
                 'outputs', outputs,...
-                'input_range', [0.0 100.0; 0.0 500.0],...
-                'output_range', [0.0 160.0;0.0 5000.0;1.0 4.0]);
+                'input_range', [0 100; 0 500],...
+                'output_range', [0 160;0 5000;1 4]);
 
 algoNames = {'A3C'};
 sampleTimes = [10, 5, 1];
@@ -48,7 +48,7 @@ fml1.expName = 'fml1';
 fml1.targetFormula = '[]p1';
 fml1.monitoringFormula = 'p1';
 
-[esp, ~, ~] = normalize(4770.0, 0.0, 0.0);
+[esp, ~, ~] = normalize(4770, 0, 0);
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [1 0 0];
 fml1.preds(1).b = esp;
@@ -61,7 +61,7 @@ fml2.expName = 'fml2';
 fml2.targetFormula = '[](p1 /\ p2)';
 fml2.monitoringFormula = 'p1 /\ p2';
 
-[esp, sp, ~] = normalize(4770.0, 170.0, 0);
+[esp, sp, ~] = normalize(4770, 170, 0);
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [1 0 0];
 fml2.preds(1).b = esp;
@@ -124,7 +124,7 @@ fml6.expName = 'fml6';
 fml6.targetFormula = '[]_[0, 80](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
-[esp, sp, ~] = normalize(4500.0, 130.0, 0);
+[esp, sp, ~] = normalize(4500, 130, 0);
 fml6.preds(1).str = 'p1';
 fml6.preds(1).A = [1 0 0];
 fml6.preds(1).b = esp;
@@ -141,7 +141,7 @@ fml7.expName = 'fml7';
 fml7.targetFormula = '!<>p1';
 fml7.monitoringFormula = '!p1';
 
-[~, sp, ~] = normalize(0, 160.0, 0);
+[~, sp, ~] = normalize(0, 160, 0);
 fml7.preds(1).str = 'p1';
 fml7.preds(1).A = [0 -1 0];
 fml7.preds(1).b = -sp;
@@ -154,8 +154,8 @@ fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
-[~, vl, ~] = normalize(0, 70.0, 0);
-[~, vu, ~] = normalize(0, 80.0, 0);
+[~, vl, ~] = normalize(0, 70, 0);
+[~, vu, ~] = normalize(0, 80, 0);
 fml8.preds(1).str = 'vl';
 fml8.preds(1).A = [0 -1 0];
 fml8.preds(1).b = -vl;
@@ -171,7 +171,7 @@ fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
-[rpm, ~, ~] = normalize(3100.0, 0, 0);
+[rpm, ~, ~] = normalize(3100, 0, 0);
 pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -rpm);
 fml9.preds = [fml3.preds, pred];
 
