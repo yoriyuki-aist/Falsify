@@ -1,6 +1,6 @@
 staliro_dir = '../s-taliro';
 logDir = '/Users/yoriyuki/OneDrive - \u56fd\u7acb\u7814\u7a76\u958b\u767a\u6cd5\u4eba\u7523\u696d\u6280\u8853\u7dcf\u5408\u7814\u7a76\u6240/Sync/falsify-data/';
-maxIter = 100;
+maxIter = 20;
 workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
@@ -36,9 +36,8 @@ config_tmpl = struct('maxIter', maxIter,...
                 'output_range', [0.0 160.0;0.0 5000.0;1.0 4.0]);
 
 algoNames = {'A3C'};
-%sampleTimes = [10, 5, 1];
-sampleTimes = 5;
-
+sampleTimes = [10, 5, 1];
+           
 [~, ~, g2L] = normalize(0, 0, 1.5);
 [~, ~, g3L] = normalize(0, 0, 2.5);
 [~, ~, g4L] = normalize(0, 0, 3.5);
