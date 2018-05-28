@@ -69,15 +69,12 @@ def start_learning():
                 beta=1e-2, phi=phi)
     return agent
 
-def driver(agent, r,s,g,Robustness):
-    reward = math.exp( - Robustness) - 1.0
-    state = np.array([r, s, g], np.float32)
-    action = agent.act_and_train(state, reward)
-    throttle = float(action[0])
-    brake = float(action[1])
-    throttle = min(max(throttle, -1.0), 1.0)
-    brake = min(max(brake, -1.0), 1.0)
-    return array.array('d', [throttle, brake])
+def driver(agent, state, r):
+    reward = math.exp( - r) - 1.0
+    state = np.array(state, np.float32)
+    action = agent.act_and_train(state, reward).tolist()
+    action = min([1.0, 1.0], max([-1.0, -1.0], action))
+    return array.array('d', action)
 
 def stop_episode(agent):
     agent.stop_episode()
