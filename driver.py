@@ -74,13 +74,10 @@ def driver(agent, state, r):
     reward = math.exp( - r) - 1.0
     state = np.array(state, np.float32)
     action = agent.act_and_train(state, reward)
-    throttle = float(action[0])
-    brake = float(action[1])
-    throttle = min(max(throttle, -1.0), 1.0)
-    brake = min(max(brake, -1.0), 1.0)
+    action = np.minimum(1.0, np.maximum(-1.0, action))
 #    print('state = {}, t = {}, b = {}'.format(state, throttle, brake), file=log_f)
 #    log_f.flush()
-    return array.array('d', [throttle, brake])
+    return array.array('d', action.tolist())
 
 def stop_episode(agent):
     agent.stop_episode()
