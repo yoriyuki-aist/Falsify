@@ -1,6 +1,6 @@
 staliro_dir = '../s-taliro';
 logDir = '../falsify-data/';
-maxIter = 100;
+maxIter = 20;
 workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
