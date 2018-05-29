@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../falsify-data/';
 maxIter = 20;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -33,7 +33,7 @@ config_tmpl = struct('maxIter', maxIter,...
                 'mdl', mdl,...
                 'outputs', outputs,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
-                'output_range', [0.0 160.0;0.0 5000.0;1.0 4.0]);
+                'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
 
 algoNames = {'A3C'};
 sampleTimes = [10, 5, 1];
