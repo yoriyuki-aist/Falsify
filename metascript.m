@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../falsify-data/';
-maxIter = 20;
-workers_num = 1;
+maxIter = 100;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -35,11 +35,11 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
             
-algomdls = {{'A3C', 'autotrans_mod04'}};
+algomdls = {{'A3C', 'autotrans_mod04'}, {'DDQN', 'autotrans_mod04'}, {'ACER', 'autotrans_mod04'}};
 algomdls = [algomdls, {{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
 sampleTimes = [10, 5, 1];
-%algomdls = {{'CE', 'arch2014_staliro'}};
-%sampleTimes = 5;
+%algomdls = {{'ACER', 'autotrans_mod04'}};
+%sampleTimes = 10;
 
 g2L = 1.5;
 g3L = 2.5;
@@ -175,8 +175,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml5};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -269,7 +269,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(
         bestRob = results.run.bestRob;
         bestXout = results.run.bestSample;
         bestYout = [];        
-    elseif strcmp(config.algoName, 'A3C') || strcmp(config.algoName, 'DDQN')
+    elseif strcmp(config.algoName, 'A3C') || strcmp(config.algoName, 'DDQN') || strcmp(config.algoName, 'ACER')
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
     end
 end

@@ -8,12 +8,18 @@ standard_library.install_aliases()
 from os import path
 import math
 import array
+import sys
+
+import gym
+import gym.spaces
+import functools
 
 import chainer
 from chainer import functions as F
 from chainer import links as L
 import numpy as np
 
+import chainerrl
 from chainerrl.agents import a3c
 from chainerrl import experiments
 from chainerrl import links
@@ -23,7 +29,12 @@ from chainerrl.optimizers import rmsprop_async
 from chainerrl import policies
 from chainerrl.recurrent import RecurrentChainMixin
 from chainerrl import v_function
-
+from chainerrl.agents.dqn import DQN
+from chainerrl import explorers
+from chainerrl import q_functions
+from chainerrl import replay_buffer
+from chainerrl.replay_buffer import EpisodicReplayBuffer
+from chainerrl import v_functions
 
 def phi(obs):
     return obs.astype(np.float32)
@@ -57,7 +68,80 @@ class A3CLSTMGaussian(chainer.ChainList, a3c.A3CModel, RecurrentChainMixin):
 obs_space_dim = 3 # Dimension of observations
 action_space_dim = 2 # Dimension of actions
 
-def start_learning():
+def make_ddqn_agent():
+    gamma = 1
+    obs_low = np.array([-1] * obs_space_dim)
+    obs_high = np.array([1] * obs_space_dim)
+    ac_low = np.array([-1] * action_space_dim)
+    ac_high = np.array([1] * action_space_dim)
+    obsSpace = gym.spaces.Box(obs_low, obs_high)
+    actSpace = gym.spaces.Box(ac_low, ac_high)
+
+    qFunc = q_functions.FCQuadraticStateQFunction(
+            obsSpace.low.size, actSpace.low.size,
+            n_hidden_channels=50,
+            n_hidden_layers=2,
+            action_space=actSpace)
+    optimizer = chainer.optimizers.Adam(eps=1e-2)
+    optimizer.setup(qFunc)
+    # Use AdditiveOU for exploration
+    ou_sigma = (actSpace.high - actSpace.low) * 0.25
+    explorer = explorers.AdditiveOU(sigma=ou_sigma)
+    # DQN uses Experience Replay.
+    # Specify a replay buffer and its capacity.
+    replay_buffer = chainerrl.replay_buffer.ReplayBuffer(capacity=10 ** 6)
+    phi = lambda x: x.astype(np.float32, copy=False)
+    agent = chainerrl.agents.DoubleDQN(
+        qFunc, optimizer, replay_buffer, gamma, explorer,
+        replay_start_size=500, update_interval=1,
+        target_update_interval=100, phi=phi)
+    return agent
+
+def make_acer_agent():
+    def phi(obs):
+        return obs.astype(np.float32, copy=False)
+    obs_low = np.array([-1] * obs_space_dim)
+    obs_high = np.array([1] * obs_space_dim)
+    ac_low = np.array([-1] * action_space_dim)
+    ac_high = np.array([1] * action_space_dim)
+    obs_space = gym.spaces.Box(obs_low, obs_high)
+    action_space = gym.spaces.Box(ac_low, ac_high)
+    model = chainerrl.agents.acer.ACERSDNSeparateModel(
+            pi=policies.FCGaussianPolicy(
+                obs_space.low.size, action_space.low.size,
+                n_hidden_channels=50,
+                n_hidden_layers=2,
+                bound_mean=True,
+                min_action=action_space.low,
+                max_action=action_space.high),
+            v=v_functions.FCVFunction(
+                obs_space.low.size,
+                n_hidden_channels=50,
+                n_hidden_layers=2),
+            adv=q_functions.FCSAQFunction(
+                obs_space.low.size, action_space.low.size,
+                n_hidden_channels=50 // 4,
+            n_hidden_layers=2),
+            )
+
+    opt = rmsprop_async.RMSpropAsync(
+        lr=7e-4, eps=1e-1, alpha=0.99)
+    opt.setup(model)
+    opt.add_hook(chainer.optimizer.GradientClipping(40))
+
+    replay_buffer = EpisodicReplayBuffer(10)
+    agent = chainerrl.agents.acer.ACER(model, opt, t_max=5, gamma=1,
+                      replay_buffer=replay_buffer,
+                      n_times_replay=1,
+                      replay_start_size=50,
+                      disable_online_update=False,
+                      use_trust_region=True,
+                      trust_region_delta=0.1,
+                      truncation_threshold=5,
+                      beta=0.5, phi=phi)
+    return agent
+
+def make_a3c_agent():
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
     opt = rmsprop_async.RMSpropAsync(
         lr=7e-4, eps=1e-1, alpha=0.99)
@@ -66,6 +150,16 @@ def start_learning():
     agent = a3c.A3C(model, opt, t_max=5, gamma=1,
                 beta=1e-2, phi=phi)
     return agent
+
+def start_learning(algo):
+    if algo == 'A3C':
+        return make_a3c_agent()
+    elif algo == 'DDQN':
+        return make_ddqn_agent()
+    elif algo == 'ACER':
+        return make_acer_agent()
+    else:
+        sys.exit('unknown algo')
 
 misc.set_random_seed(0)
 #log_f = open('/Users/yoriyuki/Reference/TestGenforCPS/falsify-old-model/driver-log', 'a')

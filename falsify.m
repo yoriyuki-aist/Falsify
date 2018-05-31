@@ -48,7 +48,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     load_system(config.mdl);
     bestRob = inf;
     normal_preds = normalize_pred(config.preds, config.output_range);
-    agent = py.driver.start_learning();
+    agent = py.driver.start_learning(config.algoName);
     tic;
     for numEpisode=1:config.maxEpisodes
         [tout, xout, yout] = runsim(agent, config, normal_preds);
