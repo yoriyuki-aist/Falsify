@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../falsify-data/';
 maxIter = 20;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -34,9 +34,11 @@ config_tmpl = struct('maxIter', maxIter,...
                 'outputs', outputs,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
-
-algoNames = {'A3C'};
+            
+algomdls = {{'A3C', 'autotrans_mod04'}};
+algomdls = [algomdls, {{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
 sampleTimes = [10, 5, 1];
+%algomdls = {{'CE', 'arch2014_staliro'}};
 %sampleTimes = 5;
 
 g2L = 1.5;
@@ -173,15 +175,16 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml5};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml5};
 
 configs = { };
 for k = 1:size(formulas, 2)
-    for i = 1:size(algoNames, 2)
+    for i = 1:size(algomdls, 2)
         for j = 1:size(sampleTimes, 2)
             config = struct(formulas{k});
-            config.algoName = algoNames{i};
+            config.mdl = algomdls{i}{2};
+            config.algoName = algomdls{i}{1};
             config.sampleTime = sampleTimes(j);
             for l = 1:maxIter
               configs = [configs, config];
@@ -197,7 +200,7 @@ end
      p = gcp();
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @falsify,5,configs{idx});
+        F(idx) = parfeval(p, @do_experiment,5,configs{idx});
      end
      % Build a waitbar to track progress
      h = waitbar(0,'Waiting for FevalFutures to complete...');
@@ -224,7 +227,7 @@ end
      for i = 1:size(configs, 2)
         config = configs{i};
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
-            falsify(config);
+            do_experiment(config);
         result = struct('numEpisode', numEpisode,...
                     'elapsedTime', elapsedTime,...
                     'bestRob', bestRob,...
@@ -241,3 +244,32 @@ end
  
 
 close_system(mdl, 0);
+
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(config)
+    if strcmp(config.algoName, 'SA')
+        opt = staliro_options();
+        opt.optim_params.n_tests = config.maxEpisodes;
+        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+            config.targetFormula, config.preds, config.stopTime, opt);
+        numEpisode = results.run.nTests;
+        elapsedTime = results.run.time;
+        bestRob = results.run.bestRob;
+        bestXout = results.run.bestSample;
+        bestYout = [];
+    elseif strcmp(config.algoName, 'CE')
+        opt = staliro_options();
+        opt.optimization_solver = 'CE_Taliro';
+        opt.optim_params.n_tests = config.maxEpisodes;
+        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+            config.targetFormula, config.preds, config.stopTime, opt);
+        numEpisode = results.run.nTests;
+        elapsedTime = results.run.time;
+        bestRob = results.run.bestRob;
+        bestXout = results.run.bestSample;
+        bestYout = [];        
+    elseif strcmp(config.algoName, 'A3C') || strcmp(config.algoName, 'DDQN')
+        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
+    end
+end
