@@ -39,9 +39,9 @@ algoNames = {'A3C'};
 sampleTimes = [10, 5, 1];
 %sampleTimes = 5;
 
-[~, ~, g2L] = normalize(0, 0, 1.5);
-[~, ~, g3L] = normalize(0, 0, 2.5);
-[~, ~, g4L] = normalize(0, 0, 3.5);
+g2L = 1.5;
+g3L = 2.5;
+g4L = 3.5;
 
 % Formula 1
 fml1 = struct(config_tmpl);
@@ -49,10 +49,9 @@ fml1.expName = 'fml1';
 fml1.targetFormula = '[]p1';
 fml1.monitoringFormula = 'p1';
 
-[esp, ~, ~] = normalize(4770.0, 0.0, 0.0);
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [1 0 0];
-fml1.preds(1).b = esp;
+fml1.preds(1).b = 4770.0;
 
 fml1.stopTime = 30;
 
@@ -62,14 +61,13 @@ fml2.expName = 'fml2';
 fml2.targetFormula = '[](p1 /\ p2)';
 fml2.monitoringFormula = 'p1 /\ p2';
 
-[esp, sp, ~] = normalize(4770.0, 170.0, 0);
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [1 0 0];
-fml2.preds(1).b = esp;
+fml2.preds(1).b = 4770.0;
 
 fml2.preds(2).str = 'p2';
 fml2.preds(2).A = [1 0 0];
-fml2.preds(2).b = sp;
+fml2.preds(2).b = 170.0;
 fml2.stopTime = 30;
 
 %Formula 3
@@ -125,14 +123,13 @@ fml6.expName = 'fml6';
 fml6.targetFormula = '[]_[0, 80](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
-[esp, sp, ~] = normalize(4500.0, 130.0, 0);
 fml6.preds(1).str = 'p1';
 fml6.preds(1).A = [1 0 0];
-fml6.preds(1).b = esp;
+fml6.preds(1).b = 4500.0;
 
 fml6.preds(2).str = 'p2';
 fml6.preds(2).A = [0 1 0];
-fml6.preds(2).b = sp;
+fml6.preds(2).b = 130.0;
 
 fml6.stopTime = 100;
 
@@ -142,10 +139,9 @@ fml7.expName = 'fml7';
 fml7.targetFormula = '!<>p1';
 fml7.monitoringFormula = '!p1';
 
-[~, sp, ~] = normalize(0, 160.0, 0);
 fml7.preds(1).str = 'p1';
 fml7.preds(1).A = [0 -1 0];
-fml7.preds(1).b = -sp;
+fml7.preds(1).b = -160.0;
 
 fml7.stopTime = 100;
 
@@ -155,8 +151,8 @@ fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
-[~, vl, ~] = normalize(0, 70.0, 0);
-[~, vu, ~] = normalize(0, 80.0, 0);
+vl = 70.0;
+vu = 80.0;
 fml8.preds(1).str = 'vl';
 fml8.preds(1).A = [0 -1 0];
 fml8.preds(1).b = -vl;
@@ -172,8 +168,7 @@ fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
-[rpm, ~, ~] = normalize(3100.0, 0, 0);
-pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -rpm);
+pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -3100.0);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
@@ -200,18 +195,6 @@ end
      delete(gcp('nocreate'));
      parpool(workers_num);
      p = gcp();
-%      spmd
-%         % Setup tempdir and cd into it
-%         currDir = pwd;
-%         addpath(currDir);
-%          P = py.sys.path;
-%         insert(P,int32(0),pwd);
-%         tmpDir = tempname;
-%         mkdir(tmpDir);
-%         cd(tmpDir);
-%         % Load the model on the worker
-%         load_system(mdl);
-%      end
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(p, @falsify,5,configs{idx});
@@ -233,14 +216,7 @@ end
         waitbar(idx/size(configs, 2),h);
      end
      delete(h)
-     
-%      spmd
-%      cd(currDir);
-%      rmdir(tmpDir,'s');
-%      rmpath(currDir);
-%      close_system(mdl, 0);
-%      end
-    
+         
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
@@ -265,9 +241,3 @@ end
  
 
 close_system(mdl, 0);
-
-function [esp, sp, g] = normalize(engine_speed, speed, gear)
-    esp = (engine_speed - 2500)/2500;
-    sp = (speed - 80)/80;
-    g = (gear - 2.5)/1.5;
-end
