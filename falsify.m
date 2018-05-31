@@ -18,10 +18,10 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
        end
     end
 
-    function [tout, xout, yout] = runsim(agent, config)
+    function [tout, xout, yout] = runsim(agent, config, normal_preds)
         %mws = get_param(config.mdl, 'modelworkspace');
         assignin('base', 'Phi', config.monitoringFormula);
-        assignin('base', 'Pred', config.preds);
+        assignin('base', 'Pred', normal_preds);
         assignin('base', 'agent', agent);
         assignin('base', 'input_range', config.input_range);
         assignin('base', 'output_range', config.output_range);
@@ -51,7 +51,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     agent = py.driver.start_learning();
     tic;
     for numEpisode=1:config.maxEpisodes
-        [tout, xout, yout] = runsim(agent, config);
+        [tout, xout, yout] = runsim(agent, config, normal_preds);
         [Y, R] = yout2TY(yout);
         rob =  dp_taliro(config.targetFormula, normal_preds, Y, tout, [], [], []);
         py.driver.stop_episode_and_train(agent, Y(end, :), exp(- R(end, 1)) - 1);
