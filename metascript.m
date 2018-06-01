@@ -1,7 +1,8 @@
 staliro_dir = '../s-taliro';
+breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
-workers_num = 10;
+maxIter = 20;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -16,6 +17,14 @@ if exist('setup_monitor.m', 'file') == 0
     cwd = pwd;
     cd(fullfile(staliro_dir, 'monitor'));
     setup_monitor;
+    cd(pwd);
+end
+
+if exist('InitBreach.m', 'file') == 0
+    addpath(breach_dir);
+    cwd = pwd;
+    cd(breach_dir);
+    InitBreach;
     cd(pwd);
 end
     
@@ -35,8 +44,8 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
             
-algomdls = {{'A3C', 'autotrans_mod04'}, {'DDQN', 'autotrans_mod04'}, {'ACER', 'autotrans_mod04'}};
-algomdls = [algomdls, {{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
+%algomdls = {{'A3C', 'autotrans_mod04'}, {'DDQN', 'autotrans_mod04'}, {'ACER', 'autotrans_mod04'}};
+%algomdls = [algomdls, {{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
 sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 %sampleTimes = 10;
