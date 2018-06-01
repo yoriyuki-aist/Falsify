@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 logDir = '../ExperimentData/';
 maxIter = 20;
-workers_num = 1;
+workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -28,8 +28,8 @@ maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
-                'input_range', [0 100; 0 500],...
-                'output_range', [0 160;0 5000;1 4]);
+                'input_range', [0.0 100.0; 0.0 500.0],...
+                'output_range', [0.0 160.0;0.0 5000.0;1.0 4.0]);
 
 algoNames = {{"A3C",'autotrans_mod04'}};
 %algoNames = [algoNames, {{"SA", 'arch2014_staliro'}, {"CE", 'arch2014_staliro'}}];
@@ -49,7 +49,7 @@ fml1.monitoringFormula = 'p1';
 
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [0 1 0];
-fml1.preds(1).b = 4770;
+fml1.preds(1).b = 4770.0;
 
 fml1.stopTime = 30;
 
@@ -61,11 +61,11 @@ fml2.monitoringFormula = 'p1 /\ p2';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 1 0];
-fml2.preds(1).b = 4770;
+fml2.preds(1).b = 4770.0;
 
 fml2.preds(2).str = 'p2';
 fml2.preds(2).A = [1 0 0];
-fml2.preds(2).b = 170;
+fml2.preds(2).b = 170.0;
 fml2.stopTime = 30;
 
 %Formula 3
@@ -123,11 +123,11 @@ fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 
 fml6.preds(1).str = 'p1';
 fml6.preds(1).A = [0 1 0];
-fml6.preds(1).b = 4500;
+fml6.preds(1).b = 4500.0;
 
 fml6.preds(2).str = 'p2';
 fml6.preds(2).A = [1 0 0];
-fml6.preds(2).b = 130;
+fml6.preds(2).b = 130.0;
 
 fml6.stopTime = 100;
 
@@ -139,7 +139,7 @@ fml7.monitoringFormula = '!p1';
 
 fml7.preds(1).str = 'p1';
 fml7.preds(1).A = [-1 0 0];
-fml7.preds(1).b = -160;
+fml7.preds(1).b = -160.0;
 
 fml7.stopTime = 100;
 
@@ -149,8 +149,8 @@ fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
 
-vl = 70;
-vu = 80;
+vl = 70.0;
+vu = 80.0;
 fml8.preds(1).str = 'vl';
 fml8.preds(1).A = [-1 0 0];
 fml8.preds(1).b = -vl;
@@ -166,7 +166,7 @@ fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
 
-pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -3100);
+pred = struct('str', 'highRPM', 'A', [0 -1 0], 'b', -3100.0);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
