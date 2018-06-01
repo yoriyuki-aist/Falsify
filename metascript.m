@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
+maxIter = 1;
 workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
@@ -46,9 +46,10 @@ config_tmpl = struct('maxIter', maxIter,...
             
 %algomdls = {{'A3C', 'autotrans_mod04'}, {'DDQN', 'autotrans_mod04'}, {'ACER', 'autotrans_mod04'}};
 %algomdls = [algomdls, {{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
-sampleTimes = [10, 5, 1];
+algomdls = [{{'SA', 'arch2014_staliro'}, {'CE', 'arch2014_staliro'}}];
+%sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
-%sampleTimes = 10;
+sampleTimes = 10;
 
 g2L = 1.5;
 g3L = 2.5;
@@ -184,8 +185,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -255,30 +256,26 @@ end
 close_system(mdl, 0);
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(config)
-    if strcmp(config.algoName, 'SA')
-        opt = staliro_options();
-        opt.optim_params.n_tests = config.maxEpisodes;
-        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
-            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
-            config.targetFormula, config.preds, config.stopTime, opt);
-        numEpisode = results.run.nTests;
-        elapsedTime = results.run.time;
-        bestRob = results.run.bestRob;
-        bestXout = results.run.bestSample;
-        bestYout = [];
-    elseif strcmp(config.algoName, 'CE')
-        opt = staliro_options();
-        opt.optimization_solver = 'CE_Taliro';
-        opt.optim_params.n_tests = config.maxEpisodes;
-        [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
-            repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
-            config.targetFormula, config.preds, config.stopTime, opt);
-        numEpisode = results.run.nTests;
-        elapsedTime = results.run.time;
-        bestRob = results.run.bestRob;
-        bestXout = results.run.bestSample;
-        bestYout = [];        
+    if strcmp(config.algoName, 'SA') || strcmp(config.algoName, 'CE')
+        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config);
     elseif strcmp(config.algoName, 'A3C') || strcmp(config.algoName, 'DDQN') || strcmp(config.algoName, 'ACER')
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
     end
 end
+
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
+    opt = staliro_options();
+    if strcmp(config.algoName, 'CE')
+        opt.optimization_solver = 'CE_Taliro';
+    end
+    opt.optim_params.n_tests = config.maxEpisodes;
+    [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+        repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+        config.targetFormula, config.preds, config.stopTime, opt);
+    numEpisode = results.run.nTests;
+    elapsedTime = results.run.time;
+    bestRob = results.run.bestRob;
+    bestXout = results.run.bestSample;
+    bestYout = [];
+end
+
