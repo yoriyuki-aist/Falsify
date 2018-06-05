@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
+maxIter = 20;
 workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
@@ -44,7 +44,7 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
             
-algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}, {'RL', 'ACER', 'autotrans_mod04'}};
+algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
 algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
@@ -66,7 +66,7 @@ fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [1 0 0];
 fml1.preds(1).b = 4770.0;
 
-fml1.br_formula = STL_Formula('fml1', 'alw (EngineRPM <= 4770.0)')
+fml1.br_formula = STL_Formula('fml1', 'alw (EngineRPM <= 4770.0)');
 
 fml1.stopTime = 30;
 
@@ -188,8 +188,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml1};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
