@@ -1,7 +1,7 @@
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
+maxIter = 1;
 workers_num = 10;
 
 if exist('dp_taliro.m', 'file') == 0
@@ -45,7 +45,7 @@ config_tmpl = struct('maxIter', maxIter,...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
             
 algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
+algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
@@ -197,7 +197,7 @@ for k = 1:size(formulas, 2)
         for j = 1:size(sampleTimes, 2)
             config = struct(formulas{k});
             config.mdl = algomdls{i}{3};
-            config.algoName = [algomdls{i}{1}, algomdls{i}{2}];
+            config.algoName = [algomdls{i}{1}, '-', algomdls{i}{2}];
             config.sampleTime = sampleTimes(j);
             config.engine = algomdls{i}{1};
             config.option = algomdls{i}{2};
