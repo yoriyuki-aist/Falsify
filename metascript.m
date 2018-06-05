@@ -2,7 +2,7 @@ staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 1;
-workers_num = 10;
+workers_num = 1;
 
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
@@ -44,13 +44,13 @@ config_tmpl = struct('maxIter', maxIter,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
             
-algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
+%algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
+%algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
-%algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
-sampleTimes = [10, 5, 1];
+algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
+%sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
-%sampleTimes = 10;
+sampleTimes = 10;
 
 g2L = 1.5;
 g3L = 2.5;
@@ -66,7 +66,7 @@ fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [1 0 0];
 fml1.preds(1).b = 4770.0;
 
-fml1.br_formula = STL_Formula('fml1', 'alw (EngineRPM <= 4770.0)');
+fml1.br_formula = STL_Formula('fml1', 'alw (EngineRPM <= 0.0)');
 
 fml1.stopTime = 30;
 
@@ -188,8 +188,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-%formulas = {fml1};
+%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -287,19 +287,28 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
+    in_dim = size(config.input_range, 1);
     br_model = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
-    inputs = cellfun(@num2str, num2cell(1:size(config.input_range, 1)));
-    signal_gen = fixed_cp_signal_gen(inputs, config.stopTime / config.sampleTime, {'spline'});
-    br_model.SetInputGen(signal_gen);
-    br_model.SetPramRanges(inputs, config.input_range);
-    falsif_pb = FalsificationProblem(br_model, config.br_formula);
-    falsif_pb.max_time = 300;
-    falsif_pb.max_obj_eval = config.maxEpisodes;
-    falsif_pb.setup_solver(config.option);
+    siggens = {};
+    inputs = {};
+    for i = 1:in_dim
+       name = ['Input', num2str(i)];
+       inputs = [inputs, name];
+       siggen = fixed_cp_signal_gen({name}, config.stopTime / config.sampleTime, {'spline'});
+       siggens = [siggens, siggen];
+    end
+    InputGen = BreachSignalGen(num2cell(siggens));
+    InputGen.SetParam({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0; 0 100.0; 0 100.0; 0 100.0; 0 100.0;0 100.0]);
+    br_model.SetInputGen(InputGen);
+    br_model.SetParamRanges({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0 0 100.0 0 100.0 0 500.0 0 500.0 0 500.0]);
+    falsify_pb = FalsificationProblem(br_model, config.br_formula);
+    falsify_pb.max_time = 600;
+    falsify_pb.max_obj_eval = config.maxEpisodes;
+    falsify_pb.setup_solver(config.option);
     falsify_pb.solve();
-    numEpisode = falsif_pb.nb_obj_eval;
-    elapsedTime = falsif_pb.time_spent;
-    bestRob = falsif_pb.obj_best;
-    bestXout = falsif_pb.BrSet_Best;
+    numEpisode = falsify_pb.nb_obj_eval;
+    elapsedTime = falsify_pb.time_spent;
+    bestRob = falsify_pb.obj_best;
+    bestXout = falsify_pb.BrSet_Best;
     bestYout = [];
 end
