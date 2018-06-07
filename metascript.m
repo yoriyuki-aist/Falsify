@@ -33,13 +33,11 @@ if ~ 7 == exist(logDir, 'dir')
 end 
 logFile = fullfile(logDir, [datestr(datetime('now')), '.mat']);
 
-mdl = 'autotrans_mod04';
 outputs = [2,3,4];
 maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
-                'mdl', mdl,...
                 'outputs', outputs,...
                 'input_range', [0.0 100.0; 0.0 500.0],...
                 'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
@@ -47,7 +45,7 @@ config_tmpl = struct('maxIter', maxIter,...
 %algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
 %algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
-algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
+algomdls = {{'breach', 'global_nelder_mead', 'models/arch2014_staliro'}};
 %sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 sampleTimes = 10;
@@ -298,9 +296,8 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach
        siggens = [siggens, siggen];
     end
     InputGen = BreachSignalGen(num2cell(siggens));
-    InputGen.SetParam({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0; 0 100.0; 0 100.0; 0 100.0; 0 100.0;0 100.0]);
     br_model.SetInputGen(InputGen);
-    br_model.SetParamRanges({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0 0 100.0 0 100.0 0 500.0 0 500.0 0 500.0]);
+    br_model.SetParamRanges({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0; 0 100.0; 0 100.0; 0 500.0; 0 500.0; 0 500.0]);
     falsify_pb = FalsificationProblem(br_model, config.br_formula);
     falsify_pb.max_time = 600;
     falsify_pb.max_obj_eval = config.maxEpisodes;
