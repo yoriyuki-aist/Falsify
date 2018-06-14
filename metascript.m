@@ -54,7 +54,7 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 %algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
 algomdls = {};
-br_algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
+br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 %sampleTimes = 10;
@@ -229,13 +229,14 @@ for k = 1:size(formulas, 2)
 end
 
 br_configs = { };
+br_sample_times = [10, 5];
 for k = 1:size(formulas, 2)
     for i = 1:size(br_algomdls, 2)
-        for j = 1:size(sampleTimes, 2)
+        for j = 1:size(br_sample_times, 2)
             config = struct(formulas{k});
             config.mdl = br_algomdls{i}{3};
             config.algoName = [br_algomdls{i}{1}, '-', br_algomdls{i}{2}];
-            config.sampleTime = sampleTimes(j);
+            config.sampleTime = br_sample_times(j);
             config.engine = br_algomdls{i}{1};
             config.option = br_algomdls{i}{2};
             for l = 1:maxIter
@@ -365,7 +366,10 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
+    disp(config);
     global workers_num
+    delete(gcp('nocreate'));
+    parpool(workers_num);
     mdl = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
     br_model = mdl.copy();
     in_dim = size(config.input_range, 1);
@@ -400,4 +404,5 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach
     bestRob = falsify_pb.obj_best;
     bestXout = falsify_pb.BrSet_Best;
     bestYout = [];
+    delete(gcp('nocreate'));
 end
