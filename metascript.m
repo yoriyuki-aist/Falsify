@@ -1,9 +1,15 @@
+% Configurations
+%%%%%%%%%%%%%%%%
+global workers_num logDir;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
-workers_num = 1;
+maxIter = 20;
+maxEpisodes = 200;
 
+% Initialization
+%%%%%%%%%%%%%%%%
 if exist('dp_taliro.m', 'file') == 0
     addpath(staliro_dir);
     cwd = pwd;
@@ -30,32 +36,36 @@ end
     
 if ~ 7 == exist(logDir, 'dir')
     mkdir(logDir);
-end 
-logFile = fullfile(logDir, [datestr(datetime('now')), '.mat']);
-
-outputs = [2,3,4];
-maxEpisodes = 200;
+end
+start_time = datetime('now');
 
 config_tmpl = struct('maxIter', maxIter,...
-                'maxEpisodes', maxEpisodes,...
-                'outputs', outputs,...
-                'input_range', [0.0 100.0; 0.0 500.0],...
-                'output_range', [0.0 5000.0;0.0 160.0;1.0 4.0]);
+                'maxEpisodes', maxEpisodes);
+% ARCH2014 Benchmark
+%%%%%%%%%%%%%%%%%%%%
+outputs = [2,3,4];
+
+arch2014_tmpl = struct(config_tmpl);
+arch2014_tmpl.outputs = [2, 3, 4];
+arch2014_tmpl.input_range = [0.0 100.0; 0.0 500.0];
+arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
+arch2014_tmpl.br_model = BreachSimulinkSystem('arch2014_staliro', 'all', [], {}, [], 'Verbose', 0);
             
 %algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
 %algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
-algomdls = {{'breach', 'global_nelder_mead', 'models/arch2014_staliro'}};
-%sampleTimes = [10, 5, 1];
+algomdls = {};
+br_algomdls = {{'breach', 'global_nelder_mead'}};
+sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
-sampleTimes = 10;
+%sampleTimes = 10;
 
 g2L = 1.5;
 g3L = 2.5;
 g4L = 3.5;
 
 % Formula 1
-fml1 = struct(config_tmpl);
+fml1 = struct(arch2014_tmpl);
 fml1.expName = 'fml1';
 fml1.targetFormula = '[]p1';
 fml1.monitoringFormula = 'p1';
@@ -63,16 +73,15 @@ fml1.monitoringFormula = 'p1';
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [1 0 0];
 fml1.preds(1).b = 4770.0;
-
-fml1.br_formula = STL_Formula('fml1', 'alw (EngineRPM <= 0.0)');
-
+fml1.br_formula = STL_Formula('fml1', 'alw (Out1[t] <= 4770.0)');
 fml1.stopTime = 30;
 
 % Formula 2
-fml2 = struct(config_tmpl);
+fml2 = struct(arch2014_tmpl);
 fml2.expName = 'fml2';
 fml2.targetFormula = '[](p1 /\ p2)';
 fml2.monitoringFormula = 'p1 /\ p2';
+fml2.br_formula = STL_Formula('fml2', 'alw ((Out1[t] <= 4770.0) and (Out2[t] <= 170))');
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [1 0 0];
@@ -84,10 +93,12 @@ fml2.preds(2).b = 170.0;
 fml2.stopTime = 30;
 
 %Formula 3
-fml3 = struct(config_tmpl);
+fml3 = struct(arch2014_tmpl);
 fml3.expName = 'fml3';
 fml3.targetFormula = '[]_[0,29.0]( ((g2L/\g2U) /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](!(g2L/\g2U)))';
 fml3.monitoringFormula = '[.]_[1.0,1.0]( ((g2L/\g2U) /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](!(g2L/\g2U)))';
+fml3.br_formula = STL_Formula('fml3',...
+    'alw_[0, 29.0](((Out3[t] >= 1.5 and Out3[t] <= 2.5) and ev_[0, 0.1] (Out3[t] <= 1.5)) => alw_[0.1,1.0]((Out3[t]< 1.5) or (Out3[t] > 2.5)))');
 
 fml3.preds(1).str = 'g1';
 fml3.preds(1).A = [0 0 1];
@@ -111,15 +122,17 @@ fml3.preds(6).b = -g4L;
 fml3.stopTime = 30;
 
 %Formula 4
-fml4 = struct(config_tmpl);
+fml4 = struct(arch2014_tmpl);
 fml4.expName = 'fml4';
 fml4.targetFormula = '[]_[0,29.0]( (!g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](g1))';
 fml4.monitoringFormula = '[.]_[1.0,1.0]((!g1 /\ <>_[0, 0.1] g1) -> []_[0.1,1.0](g1))';
+fml4.br_formula = STL_Formula('fml4',...
+    'alw_[0, 29.0](((Out3[t] > 1.5) and ev_[0, 0.1] (Out3[t] <= 1.5)) => alw_[0.1,1.0](Out3[t]<= 1.5))');
 fml4.preds = fml3.preds;
 fml4.stopTime = 30;
 
 %Formula 5
-fml5 = struct(config_tmpl);
+fml5 = struct(arch2014_tmpl);
 fml5.expName = 'fml5';
 fml5.targetFormula = ['[]_[0,29]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
 '[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
@@ -127,14 +140,21 @@ fml5.targetFormula = ['[]_[0,29]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ 
 fml5.monitoringFormula = ['[.]_[1.0,1.0]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
 '[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
 '[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4))'];
+fml5.br_formula = STL_Formula('fml5',...
+    ['alw_[0, 29.0](', ...
+        '(((Out3[t] > 1.5) and ev_[0, 0.1] (Out3[t] <= 1.5)) => alw_[0.1,1.0](Out3[t]<= 1.5)) and',...
+        '((((Out3[t] < 1.5) or (Out3[t] > 2.5)) and ev_[0, 0.1] ((Out3[t] >= 1.5) and (Out3[t] <= 2.5))) => alw_[0.1,1.0]((Out3[t] >= 1.5) and (Out3[t] <= 2.5))) and',...
+        '((((Out3[t] < 2.5) or (Out3[t] > 3.5)) and ev_[0, 0.1] ((Out3[t] >= 2.5) and (Out3[t] <= 3.5))) => alw_[0.1,1.0]((Out3[t] >= 2.5) and (Out3[t] <= 3.5))) and',...
+        '(((Out3[t] < 3.5) and ev_[0, 0.1] (Out3[t] >= 3.5)) => alw_[0.1,1.0](Out3[t] >= 3.5)))']);
 fml5.preds = fml3.preds;
 fml5.stopTime = 30;
 
 % Formula 6
-fml6 = struct(config_tmpl);
+fml6 = struct(arch2014_tmpl);
 fml6.expName = 'fml6';
 fml6.targetFormula = '[]_[0, 80](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
 fml6.monitoringFormula = '[.]_[20, 20](([]_[0, 10](p1)) -> ([]_[10,20](p2)))';
+fml6.br_formula = STL_Formula('fml6', 'alw_[0,80.0]((alw_[0,10](Out1[t]<=4500)) => alw_[10,20](Out2[t]<=130))');
 
 fml6.preds(1).str = 'p1';
 fml6.preds(1).A = [1 0 0];
@@ -147,10 +167,11 @@ fml6.preds(2).b = 130.0;
 fml6.stopTime = 100;
 
 %Formula 7
-fml7 = struct(config_tmpl);
+fml7 = struct(arch2014_tmpl);
 fml7.expName = 'fml7';
 fml7.targetFormula = '!<>p1';
 fml7.monitoringFormula = '!p1';
+fml7.br_formula = STL_Formula('fml6', 'not ev (Out2[t]>=160)');
 
 fml7.preds(1).str = 'p1';
 fml7.preds(1).A = [0 -1 0];
@@ -159,10 +180,11 @@ fml7.preds(1).b = -160.0;
 fml7.stopTime = 100;
 
 %Formula 8
-fml8 = struct(config_tmpl);
+fml8 = struct(arch2014_tmpl);
 fml8.expName = 'fml8';
 fml8.targetFormula = '[]_[0,75](<>_[0,25](!(vl/\vu)))';
 fml8.monitoringFormula = '[.]_[25, 25]<>_[0,25](!(vl/\vu))';
+fml8.br_formula = STL_Formula('fml8', 'alw_[0,75](ev_[0,25](not ((Out2[t]>=70) and (Out2[t]<=80))))');
 
 vl = 70.0;
 vu = 80.0;
@@ -176,18 +198,19 @@ fml8.preds(2).b = vu;
 fml8.stopTime = 100;
 
 %Formula 9
-fml9 = struct(config_tmpl);
+fml9 = struct(arch2014_tmpl);
 fml9.expName = 'fml9';
 fml9.targetFormula = '[]_[0,80](![]_[0,20](!g4 /\ highRPM))';
 fml9.monitoringFormula = '[.]_[20, 20]![]_[0,20](!g4 /\ highRPM)';
+fml9.br_formula = STL_Formula('fml9', 'alw_[0,80](not alw_[0,20]((Out3[t]<3.5) and (Out1[t]>=3100)))');
 
 pred = struct('str', 'highRPM', 'A', [-1 0 0], 'b', -3100.0);
 fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml1};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
@@ -205,18 +228,64 @@ for k = 1:size(formulas, 2)
         end
     end
 end
- load_system(mdl);
- 
+
+br_configs = { };
+for k = 1:size(formulas, 2)
+    for i = 1:size(br_algomdls, 2)
+        for j = 1:size(sampleTimes, 2)
+            config = struct(formulas{k});
+            config.algoName = [br_algomdls{i}{1}, '-', br_algomdls{i}{2}];
+            config.sampleTime = sampleTimes(j);
+            config.engine = br_algomdls{i}{1};
+            config.option = br_algomdls{i}{2};
+            for l = 1:maxIter
+              br_configs = [configs, config];
+            end
+        end
+    end
+end
+
+do_experiment('ARCH2014', configs, br_configs);
+
+% Power Control Benchmark Model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ptc_tmpl = struct(config_tmpl);
+ptc_tmpl.outputs = [2, 3];
+ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0];
+
+ptc_fml26 = struct(ptc_tmpl);
+ptc_fml26.expName = 'ptc_fml26';
+ptc_tmpl.input_range = [900.0 1000.0; 0.0 61.2];
+ptc_fml26.targetFormula = '[]_[10,50](pl /\ pu)';
+ptc_fml26.monitoringFormula = 'pl /\ pu';
+ptc_fml26.preds(1).str = 'pl';
+ptc_fml26.preds(1).A = [1 0 0];
+ptc_tml26.preds(1).b = 0.04;
+ptc_fml26.preds(1).str = 'pu';
+ptc_fml26.preds(1).A = [-1 0 0];
+ptc_tml26.preds(1).b = 0.04;
+ptc_fml26.stopTime = 50;
+
+ptc_formulas = {ptc_tml26};
+
+algomdls = {{{'s-taliro', 'SA', 'PTC_M1'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}};
+
+
+function do_experiment(name, configs, br_configs)
+ total = size(configs, 2) + size(br_configs, 2);
+ no_br = size(configs, 2);
+ h = waitbar(0,'Waiting for experiments to complete...');
+ global workers_num logDir;
  if workers_num > 1
      delete(gcp('nocreate'));
      parpool(workers_num);
      p = gcp();
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @do_experiment,5,configs{idx});
+        F(idx) = parfeval(p, @falsify_any,5,configs{idx});
      end
      % Build a waitbar to track progress
-     h = waitbar(0,'Waiting for FevalFutures to complete...');
      for idx = 1:size(configs, 2)
         [completedIdx, ...
             numEpisode, elapsedTime, bestRob, bestXout, bestYout] ...
@@ -229,9 +298,8 @@ end
                     'bestYout', bestYout);
         results{completedIdx} = result;
         % update waitbar
-        waitbar(idx/size(configs, 2),h);
+        waitbar(idx/total,h);
      end
-     delete(h)
          
      delete(gcp('nocreate'));
  else
@@ -240,25 +308,40 @@ end
      for i = 1:size(configs, 2)
         config = configs{i};
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
-            do_experiment(config);
+            falsify_any(config);
         result = struct('numEpisode', numEpisode,...
                     'elapsedTime', elapsedTime,...
                     'bestRob', bestRob,...
                     'bestXout', bestXout,...
                     'bestYout', bestYout);
         results{i} = result;
-        waitbar(i / size(configs, 2))
+        waitbar(i / total)
      end
-     close(h)
  end
-  
- [s,git_hash_string] = system('git rev-parse HEAD');
+ for i = 1:size(br_configs, 2)
+    config = br_configs{i};
+    if workers_num > 1
+        config.br_model.SetupParallel(workers_num);
+    end
+    [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
+        falsify_any(config);
+    result = struct('numEpisode', numEpisode,...
+                'elapsedTime', elapsedTime,...
+                'bestRob', bestRob,...
+                'bestXout', bestXout,...
+                'bestYout', bestYout);
+    results{no_br + i} = result;
+    waitbar((no_br + i) / total)
+ end
+ close(h);
+ configs = [configs, br_configs];
+
+ logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '.mat']);
+ [~,git_hash_string] = system('git rev-parse HEAD');
  save(logFile, 'git_hash_string', 'configs', 'results');
- 
+end
 
-close_system(mdl, 0);
-
-function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = do_experiment(config)
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_any(config)
     if strcmp(config.engine, 's-taliro')
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config);
     elseif strcmp(config.engine, 'RL')
@@ -286,18 +369,24 @@ end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
     in_dim = size(config.input_range, 1);
-    br_model = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
+    br_model = config.br_model.copy();
     siggens = {};
     inputs = {};
+    params = {};
+    params_range = [];
     for i = 1:in_dim
        name = ['Input', num2str(i)];
+       times = config.stopTime / config.sampleTime;
        inputs = [inputs, name];
-       siggen = fixed_cp_signal_gen({name}, config.stopTime / config.sampleTime, {'spline'});
+       siggen = fixed_cp_signal_gen({name}, times, {'spline'});
        siggens = [siggens, siggen];
+       param_names = cellfun(@(num) [name, '_u', num2str(num)], num2cell(0:(times-1)), 'UniformOutput', false);
+       params = [params, param_names];
+       params_range = [params_range, repmat(transpose(config.input_range(i,:)), [1, times])];
     end
     InputGen = BreachSignalGen(num2cell(siggens));
     br_model.SetInputGen(InputGen);
-    br_model.SetParamRanges({'Input1_u0', 'Input1_u1', 'Input1_u2', 'Input2_u0', 'Input2_u1', 'Input2_u2'}, [0 100.0; 0 100.0; 0 100.0; 0 500.0; 0 500.0; 0 500.0]);
+    br_model.SetParamRanges(params, params_range');
     falsify_pb = FalsificationProblem(br_model, config.br_formula);
     falsify_pb.max_time = 600;
     falsify_pb.max_obj_eval = config.maxEpisodes;
