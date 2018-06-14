@@ -366,10 +366,8 @@ end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
     global workers_num
-    br_model = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
-    if workers_num > 1
-        br_model.SetupParallel(workers_num);
-    end
+    mdl = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
+    br_model = mdl.copy();
     in_dim = size(config.input_range, 1);
     siggens = {};
     inputs = {};
@@ -388,7 +386,11 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach
     InputGen = BreachSignalGen(num2cell(siggens));
     br_model.SetInputGen(InputGen);
     br_model.SetParamRanges(params, params_range');
-    falsify_pb = FalsificationProblem(br_model, config.br_formula);
+    pb = FalsificationProblem(br_model, config.br_formula);
+    falsify_pb = pb.copy();
+    if workers_num > 1
+        falsify_pb.SetupParallel(workers_num);
+    end
     falsify_pb.max_time = 600;
     falsify_pb.max_obj_eval = config.maxEpisodes;
     falsify_pb.setup_solver(config.option);
