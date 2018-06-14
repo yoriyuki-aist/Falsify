@@ -240,7 +240,7 @@ for k = 1:size(formulas, 2)
             config.engine = br_algomdls{i}{1};
             config.option = br_algomdls{i}{2};
             for l = 1:maxIter
-              br_configs = [configs, config];
+              br_configs = [br_configs, config];
             end
         end
     end
