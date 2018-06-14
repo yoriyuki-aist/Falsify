@@ -229,7 +229,7 @@ for k = 1:size(formulas, 2)
 end
 
 br_configs = { };
-br_sample_times = [10, 5];
+br_sample_times = [10];
 for k = 1:size(formulas, 2)
     for i = 1:size(br_algomdls, 2)
         for j = 1:size(br_sample_times, 2)
