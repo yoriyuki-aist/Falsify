@@ -1,11 +1,11 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
+maxIter = 20;
 maxEpisodes = 200;
 
 % Initialization
@@ -268,14 +268,30 @@ ptc_fml26.preds(2).A = [-1 0];
 ptc_fml26.preds(2).b = 0.04;
 ptc_fml26.stopTime = 50;
 
-ptc_formulas = {ptc_fml26};
+ptc_fml33 = struct(ptc_tmpl);
+ptc_fml33.expName = 'ptc_fml33';
+ptc_fml33.input_range = [900.0 1000.0; 0.0 61.2];
+ptc_fml33.targetFormula = '[]_[10,50](power -> (pl /\ pu))';
+ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
+ptc_fml33.preds(1).str = 'pl';
+ptc_fml33.preds(1).A = [1 0];
+ptc_fml33.preds(1).b = 0.2;
+ptc_fml33.preds(2).str = 'pu';
+ptc_fml33.preds(2).A = [-1 0];
+ptc_fml33.preds(2).b = 0.2;
+ptc_fml33.preds(3).str = 'power';
+ptc_fml33.preds(3).A = [0 -1];
+ptc_fml33.preds(3).b = -0.5;
+ptc_fml33.stopTime = 50;
+
+ptc_formulas = {ptc_fml33};
 
 %ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
-ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
+ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
+    {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 
-
-ptc_sampleTimes = [10];
+ptc_sampleTimes = [10, 5, 1];
 
 ptc_configs = { };
 for k = 1:size(ptc_formulas, 2)
