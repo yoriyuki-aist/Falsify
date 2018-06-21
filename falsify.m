@@ -52,16 +52,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     agent = py.driver.start_learning(config.option,...
         size(config.input_range, 1), size(config.output_range, 1));
     tic;
-    
-    %Initialization for PTC model
-    simTime = 50;
-    en_speed = 1000;
-    measureTime = 1;
-    fault_time = 60;
-    spec_num = 1;
-    fuel_inj_tol = 1.0;
-    MAF_sensor_tol = 1.0;
-    AF_sensor_tol = 1.0;
+  
 
     for numEpisode=1:config.maxEpisodes
         [~, xout, yout] = runsim(agent, config, normal_preds);

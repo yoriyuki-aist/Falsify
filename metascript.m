@@ -1,7 +1,7 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
@@ -49,6 +49,7 @@ arch2014_tmpl = struct(config_tmpl);
 arch2014_tmpl.outputs = [2, 3, 4];
 arch2014_tmpl.input_range = [0.0 100.0; 0.0 500.0];
 arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
+arch2014_tmpl.init_opts = {};
             
 %algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
 %algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
@@ -254,6 +255,9 @@ end
 ptc_tmpl = struct(config_tmpl);
 %ptc_tmpl.outputs = [2];
 ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0];
+ptc_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
+    {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
+    {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
 ptc_fml26 = struct(ptc_tmpl);
 ptc_fml26.expName = 'ptc_fml26';
@@ -379,6 +383,9 @@ function do_experiment(name, configs, br_configs)
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_any(config)
+    for i = 1:size(config.init_opts, 2)
+       assignin('base', config.init_opts{i}{1}, config.init_opts{i}{2});
+    end
     if strcmp(config.engine, 's-taliro')
         [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config);
     elseif strcmp(config.engine, 'RL')
