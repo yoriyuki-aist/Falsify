@@ -1,11 +1,11 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
+maxIter = 1;
 maxEpisodes = 200;
 
 % Initialization
@@ -246,32 +246,64 @@ for k = 1:size(formulas, 2)
     end
 end
 
-do_experiment('ARCH2014', configs, br_configs);
+%do_experiment('ARCH2014', configs, br_configs);
 
 % Power Control Benchmark Model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ptc_tmpl = struct(config_tmpl);
-ptc_tmpl.outputs = [2, 3];
+%ptc_tmpl.outputs = [2];
 ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0];
 
 ptc_fml26 = struct(ptc_tmpl);
 ptc_fml26.expName = 'ptc_fml26';
-ptc_tmpl.input_range = [900.0 1000.0; 0.0 61.2];
+ptc_fml26.input_range = [900.0 1000.0; 0.0 61.2];
 ptc_fml26.targetFormula = '[]_[10,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
-ptc_fml26.preds(1).A = [1 0 0];
-ptc_tml26.preds(1).b = 0.04;
-ptc_fml26.preds(1).str = 'pu';
-ptc_fml26.preds(1).A = [-1 0 0];
-ptc_tml26.preds(1).b = 0.04;
+ptc_fml26.preds(1).A = [1 0];
+ptc_fml26.preds(1).b = 0.04;
+ptc_fml26.preds(2).str = 'pu';
+ptc_fml26.preds(2).A = [-1 0];
+ptc_fml26.preds(2).b = 0.04;
 ptc_fml26.stopTime = 50;
 
-ptc_formulas = {ptc_tml26};
+ptc_formulas = {ptc_fml26};
 
-algomdls = {{{'s-taliro', 'SA', 'PTC_M1'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}};
+%ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+%ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
+
+ptc_sampleTimes = [10];
+
+ptc_configs = { };
+for k = 1:size(ptc_formulas, 2)
+    for i = 1:size(ptc_algomdls, 2)
+        for j = 1:size(ptc_sampleTimes, 2)
+            config = struct(ptc_formulas{k});
+            config.mdl = ptc_algomdls{i}{3};
+            config.algoName = [ptc_algomdls{i}{1}, '-', ptc_algomdls{i}{2}];
+            config.sampleTime = ptc_sampleTimes(j);
+            config.engine = ptc_algomdls{i}{1};
+            config.option = ptc_algomdls{i}{2};
+            for l = 1:maxIter
+              ptc_configs = [ptc_configs, config];
+            end
+        end
+    end
+end
+
+simTime = 50;
+en_speed = 1000;
+measureTime = 1;
+fault_time = 60;
+spec_num = 1;
+fuel_inj_tol = 1.0;
+MAF_sensor_tol = 1.0;
+AF_sensor_tol = 1.0;
+
+do_experiment('PTC', ptc_configs, {});
 
 function do_experiment(name, configs, br_configs)
  total = size(configs, 2) + size(br_configs, 2);

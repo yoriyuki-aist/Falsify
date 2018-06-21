@@ -65,10 +65,7 @@ class A3CLSTMGaussian(chainer.ChainList, a3c.A3CModel, RecurrentChainMixin):
 
         return pout, vout
 
-obs_space_dim = 3 # Dimension of observations
-action_space_dim = 2 # Dimension of actions
-
-def make_ddqn_agent():
+def make_ddqn_agent(obs_space_dim, action_space_dim):
     gamma = 1
     obs_low = np.array([-1] * obs_space_dim)
     obs_high = np.array([1] * obs_space_dim)
@@ -97,7 +94,7 @@ def make_ddqn_agent():
         target_update_interval=100, phi=phi)
     return agent
 
-def make_acer_agent():
+def make_acer_agent(obs_space_dim, action_space_dim):
     def phi(obs):
         return obs.astype(np.float32, copy=False)
     obs_low = np.array([-1] * obs_space_dim)
@@ -141,7 +138,7 @@ def make_acer_agent():
                       beta=0.5, phi=phi)
     return agent
 
-def make_a3c_agent():
+def make_a3c_agent(obs_space_dim, action_space_dim):
     model = A3CLSTMGaussian(obs_space_dim, action_space_dim)
     opt = rmsprop_async.RMSpropAsync(
         lr=7e-4, eps=1e-1, alpha=0.99)
@@ -151,13 +148,15 @@ def make_a3c_agent():
                 beta=1e-2, phi=phi)
     return agent
 
-def start_learning(algo):
+def start_learning(algo, obs_space_dim, action_space_dim):
+    obs_space_dim = int(obs_space_dim)
+    action_space_dim = int(action_space_dim)
     if algo == 'A3C':
-        return make_a3c_agent()
+        return make_a3c_agent(obs_space_dim, action_space_dim)
     elif algo == 'DDQN':
-        return make_ddqn_agent()
+        return make_ddqn_agent(obs_space_dim, action_space_dim)
     elif algo == 'ACER':
-        return make_acer_agent()
+        return make_acer_agent(obs_space_dim, action_space_dim)
     else:
         sys.exit('unknown algo')
 
