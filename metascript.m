@@ -310,15 +310,6 @@ for k = 1:size(ptc_formulas, 2)
     end
 end
 
-simTime = 50;
-en_speed = 1000;
-measureTime = 1;
-fault_time = 60;
-spec_num = 1;
-fuel_inj_tol = 1.0;
-MAF_sensor_tol = 1.0;
-AF_sensor_tol = 1.0;
-
 do_experiment('PTC', ptc_configs, {});
 
 function do_experiment(name, configs, br_configs)
