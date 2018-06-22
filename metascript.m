@@ -1,7 +1,7 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
@@ -261,7 +261,7 @@ ptc_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
 
 ptc_fml26 = struct(ptc_tmpl);
 ptc_fml26.expName = 'ptc_fml26';
-ptc_fml26.input_range = [900.0 1000.0; 0.0 61.2];
+ptc_fml26.input_range = [900.0 1000.0; 8.8 69.9];
 ptc_fml26.targetFormula = '[]_[10,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
@@ -274,7 +274,7 @@ ptc_fml26.stopTime = 50;
 
 ptc_fml33 = struct(ptc_tmpl);
 ptc_fml33.expName = 'ptc_fml33';
-ptc_fml33.input_range = [900.0 1000.0; 0.0 61.2];
+ptc_fml33.input_range = [900.0 1000.0; 8.8 90.0];
 ptc_fml33.targetFormula = '[]_[10,50](power -> (pl /\ pu))';
 ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
 ptc_fml33.preds(1).str = 'pl';
