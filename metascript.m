@@ -295,7 +295,7 @@ ptc_formulas = {ptc_fml26, ptc_fml33};
 ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
     {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
 
-ptc_sampleTimes = [15, 10, 5];
+ptc_sampleTimes = [10, 5];
 
 ptc_configs = { };
 for k = 1:size(ptc_formulas, 2)
