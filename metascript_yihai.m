@@ -125,7 +125,7 @@ for k = 1:size(ptc_formulas, 2)
     end
 end
 
-do_experiment('PTC', ptc_configs, {});
+%do_experiment('PTC', ptc_configs, {});
 
 insulin_tmpl = struct(config_tmpl);
 insulin_tmpl.output_range = [0 160;0 40;0 40];
@@ -165,7 +165,7 @@ for k = 1:size(insulin_formulas, 2)
         end
     end
 end
-%do_experiment('insulin', insulin_configs, {});
+do_experiment('insulin', insulin_configs, {});
 
 function do_experiment(name, configs, br_configs)
  total = size(configs, 2) + size(br_configs, 2);
