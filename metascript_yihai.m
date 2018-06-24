@@ -130,11 +130,10 @@ end
 insulin_tmpl = struct(config_tmpl);
 insulin_tmpl.output_range = [0 160;0 40;0 40];
 insulin_tmpl.input_range = [40 40; 30 30;200 200;40 40;150 250;0 80;20 50;100 300;20 70;-.3 .3];
-insulin_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
-    {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1}};
+insulin_tmpl.init_opts = {{'simTime', 30}};
 
-% Formula 1
-insulin_fml1 = struct(config_tmpl);
+% insulin Formula 1
+insulin_fml1 = struct(insulin_tmpl);
 insulin_fml1.expName = 'insulin_fml1';
 insulin_fml1.targetFormula = '[]p1';
 insulin_fml1.monitoringFormula = 'p1';
@@ -234,6 +233,7 @@ function do_experiment(name, configs, br_configs)
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_any(config)
+    disp(config.init_opts);
     for i = 1:size(config.init_opts, 2)
        assignin('base', config.init_opts{i}{1}, config.init_opts{i}{2});
     end
