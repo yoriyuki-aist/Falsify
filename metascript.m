@@ -1,15 +1,15 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
-maxEpisodes = 1;
+maxIter = 20;
+maxEpisodes = 200;
 do_arch2014 = false;
-do_ptc = false;
-do_insulin = true;
+do_ptc = true;
+do_insulin = false;
 
 
 % Initialization
@@ -271,7 +271,7 @@ ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0];
-ptc_fml26.preds(1).b = 0.05;
+ptc_fml26.preds(1).b = 0.10;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0];
 ptc_fml26.preds(2).b = 0.05;
@@ -287,7 +287,7 @@ ptc_fml33.preds(1).A = [1 0];
 ptc_fml33.preds(1).b = 0.2;
 ptc_fml33.preds(2).str = 'pu';
 ptc_fml33.preds(2).A = [-1 0];
-ptc_fml33.preds(2).b = 0.2;
+ptc_fml33.preds(2).b = 0.1;
 ptc_fml33.preds(3).str = 'power';
 ptc_fml33.preds(3).A = [0 -1];
 ptc_fml33.preds(3).b = -0.5;
@@ -447,6 +447,7 @@ end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
     opt = staliro_options();
+    opt.interpolationtype = {'pconst'};
     if strcmp(config.option, 'CE')
         opt.optimization_solver = 'CE_Taliro';
     end
