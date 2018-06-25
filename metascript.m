@@ -1,12 +1,16 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
-maxEpisodes = 200;
+maxIter = 1;
+maxEpisodes = 1;
+do_arch2014 = false;
+do_ptc = false;
+do_insulin = true;
+
 
 % Initialization
 %%%%%%%%%%%%%%%%
@@ -246,7 +250,9 @@ for k = 1:size(formulas, 2)
     end
 end
 
-%do_experiment('ARCH2014', configs, br_configs);
+if do_arch2014
+    do_experiment('ARCH2014', configs, br_configs);
+end
 
 % Power Control Benchmark Model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -313,7 +319,52 @@ for k = 1:size(ptc_formulas, 2)
     end
 end
 
-do_experiment('PTC', ptc_configs, {});
+if do_ptc
+    do_experiment('PTC', ptc_configs, {});
+end
+
+insulin_tmpl = struct(config_tmpl);
+insulin_tmpl.output_range = [0 160;0 40;0 40];
+insulin_tmpl.input_range = [40 40; 30 30;200 200;40 40;150 250;0 80;20 50;100 300;20 70;-.3 .3];
+insulin_tmpl.init_opts = {{'simTime', 30}};
+
+% insulin Formula 1
+insulin_fml1 = struct(insulin_tmpl);
+insulin_fml1.expName = 'insulin_fml1';
+insulin_fml1.targetFormula = '[]p1';
+insulin_fml1.monitoringFormula = 'p1';
+
+insulin_fml1.preds(1).str = 'p1';
+insulin_fml1.preds(1).A = [-1 0 0];
+insulin_fml1.preds(1).b = [-2 0 0];
+
+insulin_fml1.stopTime = 30;
+
+insulin_formulas = {insulin_fml1};
+insulin_algomdls = {{'RL', 'A3C', 'insulin_RL'}};
+insulin_sampleTimes = [5];
+
+insulin_configs = {};
+for k = 1:size(insulin_formulas, 2)
+    for i = 1:size(insulin_algomdls, 2)
+        for j = 1:size(insulin_sampleTimes, 2)
+            config = struct(insulin_formulas{k});
+            config.mdl = insulin_algomdls{i}{3};
+            config.algoName = [insulin_algomdls{i}{1}, '-', insulin_algomdls{i}{2}];
+            config.sampleTime = insulin_sampleTimes(j);
+            config.engine = insulin_algomdls{i}{1};
+            config.option = insulin_algomdls{i}{2};
+            for l = 1:maxIter
+              insulin_configs = [insulin_configs, config];
+            end
+        end
+    end
+end
+
+if do_insulin
+    do_experiment('insulin', insulin_configs, {});
+end
+
 
 function do_experiment(name, configs, br_configs)
  total = size(configs, 2) + size(br_configs, 2);
