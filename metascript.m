@@ -284,13 +284,13 @@ ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
 ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
 ptc_fml33.preds(1).str = 'pl';
 ptc_fml33.preds(1).A = [1 0];
-ptc_fml33.preds(1).b = 0.15;
+ptc_fml33.preds(1).b = 0.19;
 ptc_fml33.preds(2).str = 'pu';
 ptc_fml33.preds(2).A = [-1 0];
-ptc_fml33.preds(2).b = 0.15;
+ptc_fml33.preds(2).b = 0.19;
 ptc_fml33.preds(3).str = 'power';
 ptc_fml33.preds(3).A = [0 -1];
-ptc_fml33.preds(3).b = 0.10;
+ptc_fml33.preds(3).b = 0.50;
 ptc_fml33.stopTime = 50;
 
 ptc_formulas = {ptc_fml26, ptc_fml33};
