@@ -27,7 +27,7 @@ if exist('setup_monitor.m', 'file') == 0
     cwd = pwd;
     cd(fullfile(staliro_dir, 'monitor'));
     setup_monitor;
-    cd(pwd);
+    cd(cwd);
 end
 
 if exist('InitBreach.m', 'file') == 0
@@ -35,7 +35,7 @@ if exist('InitBreach.m', 'file') == 0
     cwd = pwd;
     cd(breach_dir);
     InitBreach;
-    cd(pwd);
+    cd(cwd);
 end    
 if ~ 7 == exist(logDir, 'dir')
     mkdir(logDir);
@@ -213,7 +213,7 @@ fml9.preds = [fml3.preds, pred];
 fml9.stopTime = 100;
 
 %formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml2};
+formulas = {fml6};
 
 configs = { };
 for k = 1:size(formulas, 2)
