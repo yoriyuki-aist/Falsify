@@ -27,7 +27,7 @@ if exist('setup_monitor.m', 'file') == 0
     cwd = pwd;
     cd(fullfile(staliro_dir, 'monitor'));
     setup_monitor;
-    cd(pwd);
+    cd(cwd);
 end
 
 if exist('InitBreach.m', 'file') == 0
@@ -35,7 +35,7 @@ if exist('InitBreach.m', 'file') == 0
     cwd = pwd;
     cd(breach_dir);
     InitBreach;
-    cd(pwd);
+    cd(cwd);
 end    
 if ~ 7 == exist(logDir, 'dir')
     mkdir(logDir);
@@ -55,9 +55,9 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
             
 algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-%algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
+algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
-%algomdls = {};
+br_algomdls = {};
 %br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
 br_algomdls = { };
 sampleTimes = [10, 5, 1];
@@ -92,7 +92,7 @@ fml2.preds(1).A = [1 0 0];
 fml2.preds(1).b = 4770.0;
 
 fml2.preds(2).str = 'p2';
-fml2.preds(2).A = [1 0 0];
+fml2.preds(2).A = [0 1 0];
 fml2.preds(2).b = 170.0;
 fml2.stopTime = 30;
 
@@ -298,8 +298,9 @@ ptc_formulas = {ptc_fml26, ptc_fml33};
 
 %ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
-ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
-    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
+%ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
+%    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
+ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10, 5];
 
