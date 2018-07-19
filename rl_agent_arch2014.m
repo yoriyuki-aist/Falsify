@@ -1,4 +1,4 @@
-classdef rl_agent < matlab.System & matlab.system.mixin.Propagates ...
+classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         & matlab.system.mixin.CustomIcon & matlab.system.mixin.Nondirect
     % untitled Add summary here
     %
@@ -10,23 +10,33 @@ classdef rl_agent < matlab.System & matlab.system.mixin.Propagates ...
 
     % Public, tunable properties
     properties
-       
+
     end
 
     % Public, non-tunable properties
     properties(Nontunable)
-       input_range;
-       agent;
+       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
+       SampleTime = 5.0; % Sample Time
+       OffsetTime = 0.4; % Offset Time
+       input_range = [0 0 0];
+       agent = [];
     end
 
     properties(DiscreteState)
 
     end
 
+    properties(Constant, Hidden)
+        SampleTimeTypePropSet = matlab.system.StringSet(...
+           {'Inherited sample time',...
+            'Fixed In Minor Step sample time', ...
+            'Discrete Periodic sample time'});
+    end
+    
     % Pre-computed constants
-    properties(Access = private)
-        state;
-        reward;
+    properties(Access = public)
+        state = [0 0 0];
+        reward = 0;
     end
 
 %     methods
@@ -39,14 +49,28 @@ classdef rl_agent < matlab.System & matlab.system.mixin.Propagates ...
 
     methods(Access = protected)
         %% Common functions
+        function sts = getSampleTimeImpl(obj)
+            switch obj.SampleTimeTypeProp
+            case 'Inherited sample time'
+               sts = createSampleTime(obj,'Type','Inherited');
+            case 'Fixed In Minor Step sample time'
+               sts = createSampleTime(obj,'Type','Fixed In Minor Step');
+            case 'Discrete Periodic sample time'
+               sts = createSampleTime(obj,'Type','Discrete Periodic',...
+                'SampleTime',obj.SampleTime, ...
+                'OffsetTime',obj.OffsetTime);
+            end
+        end
+        
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
             obj.input_range = evalin('base', 'input_range');
             obj.agent = evalin('base', 'agent');
+            obj.SampleTime = evalin('base', 'sample_time');
         end
 
-        function action = outputImpl(obj, ~)
-            action_normalized = double(py.driver.driver(obj.agent, obj.state', obj.reward(1)));
+        function action = outputImpl(obj, ~, ~)
+            action_normalized = double(py.driver.driver(obj.agent, obj.state, obj.reward(1)));
             action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
             lower = obj.input_range(:,1)';
             upper = obj.input_range(:,2)';
@@ -54,9 +78,9 @@ classdef rl_agent < matlab.System & matlab.system.mixin.Propagates ...
             action = (action_normalized .* (upper - middle) + middle)'; 
         end
         
-        function updateImpl(obj, u)
-            obj.state = u(2:end);
-            obj.reward = u(1);
+        function updateImpl(obj, state, reward)
+            obj.state = state;
+            obj.reward = reward;
         end
         
 %         function y = stepImpl(obj,u)
@@ -102,14 +126,30 @@ classdef rl_agent < matlab.System & matlab.system.mixin.Propagates ...
             flag = false;
         end
 
+        function flag = isOutputFixedSizeImpl(~, ~)
+           flag = true; 
+        end
+        
+        function n = getNumInputsImpl(~)
+           n = 2;
+        end
+        
         function out = getOutputSizeImpl(~)
             % Return size for each output port
-            out = [1 1];
+            out = [2];
 
             % Example: inherit size from first input port
             % out = propagatedInputSize(obj,1);
         end
 
+        function ds = getOutputDataTypeImpl(~)     
+            ds = ['double'];
+        end
+        
+        function flag = isOutputComplexImpl(~)     
+            flag = false;
+        end
+        
         function icon = getIconImpl(~)
             % Define icon for System block
             icon = mfilename("class"); % Use class name
