@@ -23,7 +23,8 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     end
 
     properties(DiscreteState)
-
+       state;
+       reward;
     end
 
     properties(Constant, Hidden)
@@ -35,8 +36,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     
     % Pre-computed constants
     properties(Access = public)
-        state = [0 0 0];
-        reward = 0;
+ 
     end
 
 %     methods
@@ -62,15 +62,22 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
             end
         end
         
+        function resetImpl(obj)
+            obj.state = [-1 -1 -1];
+            obj.reward = 0;
+        end
+        
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
+            obj.state = [-1 -1 -1];
+            obj.reward = 0;
             obj.input_range = evalin('base', 'input_range');
             obj.agent = evalin('base', 'agent');
             obj.SampleTime = evalin('base', 'sample_time');
         end
 
         function action = outputImpl(obj, ~, ~)
-            action_normalized = double(py.driver.driver(obj.agent, obj.state, obj.reward(1)));
+            action_normalized = double(py.driver.driver(obj.agent, obj.state, obj.reward));
             action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
             lower = obj.input_range(:,1)';
             upper = obj.input_range(:,2)';
@@ -79,8 +86,8 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         end
         
         function updateImpl(obj, state, reward)
-            obj.state = state;
-            obj.reward = reward;
+            obj.state = state';
+            obj.reward = reward(1);
         end
         
 %         function y = stepImpl(obj,u)
@@ -115,9 +122,22 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         end
 
         %% Simulink functions
-        function ds = getDiscreteStateImpl(~)
-            % Return structure of properties with DiscreteState attribute
-            ds = struct([]);
+%         function ds = getDiscreteStateImpl(~)
+%             % Return structure of properties with DiscreteState attribute
+%             ds = struct([]);
+%         end
+
+        function [sz,dt,cp] = getDiscreteStateSpecificationImpl(~, propertyname)
+           switch propertyname 
+               case 'state'
+                   sz = [1 3];
+                   dt = 'double';
+                   cp = false;
+               case 'reward'
+                   sz = [1];
+                   dt = 'double';
+                   cp = false;
+           end
         end
 
         function flag = isInputSizeMutableImpl(~,~)
