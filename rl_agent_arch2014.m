@@ -15,11 +15,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 
     % Public, non-tunable properties
     properties(Nontunable)
-       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
-       SampleTime = 5.0; % Sample Time
-       OffsetTime = 0.4; % Offset Time
-       input_range = [0 0 0];
-       agent = [];
+   
     end
 
     properties(DiscreteState)
@@ -36,7 +32,11 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     
     % Pre-computed constants
     properties(Access = public)
- 
+       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
+       SampleTime = 5.0; % Sample Time
+       OffsetTime = 0.0; % Offset Time
+       input_range = [0.0 100.0; 0.0 500.0]
+       agent = struct([]);
     end
 
 %     methods
@@ -68,6 +68,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         end
         
         function setupImpl(obj)
+            coder.extrinsic('evalin')
             % Perform one-time calculations, such as computing constants
             obj.state = [-1 -1 -1];
             obj.reward = 0;
@@ -77,6 +78,8 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         end
 
         function action = outputImpl(obj, ~, ~)
+            coder.extrinsic('py.driver.driver')
+            action_normalized = [0 0];
             action_normalized = double(py.driver.driver(obj.agent, obj.state, obj.reward));
             action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
             lower = obj.input_range(:,1)';
