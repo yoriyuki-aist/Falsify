@@ -148,34 +148,34 @@ def make_a3c_agent(obs_space_dim, action_space_dim):
                 beta=1e-2, phi=phi)
     return agent
 
+agent = None
+
 def start_learning(algo, obs_space_dim, action_space_dim):
+    global agent
     obs_space_dim = int(obs_space_dim)
     action_space_dim = int(action_space_dim)
     if algo == 'A3C':
-        return make_a3c_agent(obs_space_dim, action_space_dim)
+        agent = make_a3c_agent(obs_space_dim, action_space_dim)
     elif algo == 'DDQN':
-        return make_ddqn_agent(obs_space_dim, action_space_dim)
+        agenet = make_ddqn_agent(obs_space_dim, action_space_dim)
     elif algo == 'ACER':
-        return make_acer_agent(obs_space_dim, action_space_dim)
+        agent = make_acer_agent(obs_space_dim, action_space_dim)
     else:
         sys.exit('unknown algo')
 
 misc.set_random_seed(0)
-#log_f = open('/Users/yoriyuki/Reference/TestGenforCPS/falsify-old-model/driver-log', 'a')
 
-def driver(agent, state, r):
+def driver(state, r):
     reward = math.exp( - r) - 1.0
     state = np.array(state, np.float32)
     action = agent.act_and_train(state, reward)
     action = np.minimum(1.0, np.maximum(-1.0, action))
-#    print('state = {}, t = {}, b = {}'.format(state, throttle, brake), file=log_f)
-#    log_f.flush()
     return array.array('d', action.tolist())
 
-def stop_episode(agent):
+def stop_episode():
     agent.stop_episode()
 
-def stop_episode_and_train(agent, state, reward):
+def stop_episode_and_train(state, reward):
     s = np.array(state, np.float32)
     agent.stop_episode_and_train(s, reward)
 

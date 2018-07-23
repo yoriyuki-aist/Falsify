@@ -1,5 +1,6 @@
 classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
-        & matlab.system.mixin.CustomIcon & matlab.system.mixin.Nondirect
+        & matlab.system.mixin.CustomIcon & matlab.system.mixin.Nondirect & ...
+        matlab.system.mixin.SampleTime
     % untitled Add summary here
     %
     % NOTE: When renaming the class name untitled, the file name
@@ -15,7 +16,9 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 
     % Public, non-tunable properties
     properties(Nontunable)
-   
+       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
+       OffsetTime = 0.0; % Offset Time
+       input_range = [0.0 100.0; 0.0 500.0]
     end
 
     properties(DiscreteState)
@@ -32,11 +35,9 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     
     % Pre-computed constants
     properties(Access = public)
-       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
-       SampleTime = 5.0; % Sample Time
-       OffsetTime = 0.0; % Offset Time
-       input_range = [0.0 100.0; 0.0 500.0]
-       agent = struct([]);
+   
+ 
+   
     end
 
 %     methods
@@ -50,14 +51,17 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     methods(Access = protected)
         %% Common functions
         function sts = getSampleTimeImpl(obj)
+            coder.extrinsic('evalin')
+            sample_time = 0;
+            sample_time = evalin('base', 'sample_time');
             switch obj.SampleTimeTypeProp
             case 'Inherited sample time'
                sts = createSampleTime(obj,'Type','Inherited');
             case 'Fixed In Minor Step sample time'
                sts = createSampleTime(obj,'Type','Fixed In Minor Step');
             case 'Discrete Periodic sample time'
-               sts = createSampleTime(obj,'Type','Discrete Periodic',...
-                'SampleTime',obj.SampleTime, ...
+               sts = createSampleTime(obj,'Type','Discrete',...
+                'SampleTime', sample_time, ...
                 'OffsetTime',obj.OffsetTime);
             end
         end
@@ -68,19 +72,15 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         end
         
         function setupImpl(obj)
-            coder.extrinsic('evalin')
             % Perform one-time calculations, such as computing constants
             obj.state = [-1 -1 -1];
             obj.reward = 0;
-            obj.input_range = evalin('base', 'input_range');
-            obj.agent = evalin('base', 'agent');
-            obj.SampleTime = evalin('base', 'sample_time');
         end
 
         function action = outputImpl(obj, ~, ~)
             coder.extrinsic('py.driver.driver')
             action_normalized = [0 0];
-            action_normalized = double(py.driver.driver(obj.agent, obj.state, obj.reward));
+            action_normalized = double(py.driver.driver(obj.state, obj.reward));
             action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
             lower = obj.input_range(:,1)';
             upper = obj.input_range(:,2)';
@@ -179,6 +179,25 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
             % icon = "My System"; % Example: text icon
             % icon = ["My","System"]; % Example: multi-line text icon
             % icon = matlab.system.display.Icon("myicon.jpg"); % Example: image file icon
+        end
+        
+        function flag = isInactivePropertyImpl(obj,prop)
+            flag = false;
+            switch obj.SampleTimeTypeProp
+                case {'Inherited sample time', 'Fixed In Minor Step sample time'}
+                    if any(strcmp(prop,{'SampleTime','OffsetTime','TickTime'}))
+                        flag = true;
+                    end
+                case 'discrete periodic'
+                    if any(strcmp(prop,{'TickTime'}))
+                        flag = true;
+                    end
+            end
+        end
+        
+        function [flag1, flag2] = isInputDirectFeedthroughImpl(~, ~, ~)
+            flag1 = false;
+            flag2 = false;
         end
     end
 
