@@ -1,12 +1,12 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
-maxEpisodes = 20;
+maxIter = 20;
+maxEpisodes = 200;
 do_arch2014 = true;
 do_ptc = false;
 do_insulin = false;
@@ -59,7 +59,6 @@ algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'C
 %algomdls = [{{'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}}];
 br_algomdls = {};
 %br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
-br_algomdls = { };
 sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 %sampleTimes = 10;
@@ -213,8 +212,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml6};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml6};
 
 configs = { };
 for k = 1:size(formulas, 2)
