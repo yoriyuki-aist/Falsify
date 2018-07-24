@@ -11,33 +11,27 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 
     % Public, tunable properties
     properties
-
+      sample_time = 5.0;
+      input_range = [0.0 100.0; 0.0 500.0];
     end
 
     % Public, non-tunable properties
     properties(Nontunable)
-       SampleTimeTypeProp = 'Discrete Periodic sample time'; % Sample Time Type
-       OffsetTime = 0.0; % Offset Time
-       input_range = [0.0 100.0; 0.0 500.0]
+       
     end
 
     properties(DiscreteState)
-       state;
-       reward;
+       action;
+       last_t;
     end
 
     properties(Constant, Hidden)
-        SampleTimeTypePropSet = matlab.system.StringSet(...
-           {'Inherited sample time',...
-            'Fixed In Minor Step sample time', ...
-            'Discrete Periodic sample time'});
+       
     end
     
     % Pre-computed constants
     properties(Access = public)
-   
- 
-   
+  
     end
 
 %     methods
@@ -49,48 +43,35 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 %     end
 
     methods(Access = protected)
-        %% Common functions
-        function sts = getSampleTimeImpl(obj)
-            coder.extrinsic('evalin')
-            sample_time = 0;
-            sample_time = evalin('base', 'sample_time');
-            switch obj.SampleTimeTypeProp
-            case 'Inherited sample time'
-               sts = createSampleTime(obj,'Type','Inherited');
-            case 'Fixed In Minor Step sample time'
-               sts = createSampleTime(obj,'Type','Fixed In Minor Step');
-            case 'Discrete Periodic sample time'
-               sts = createSampleTime(obj,'Type','Discrete',...
-                'SampleTime', sample_time, ...
-                'OffsetTime',obj.OffsetTime);
-            end
-        end
-        
+        %% Common functions  
         function resetImpl(obj)
-            obj.state = [-1 -1 -1];
-            obj.reward = 0;
+            obj.action = [0 0];
+            obj.last_t = -inf;
         end
         
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
-            obj.state = [-1 -1 -1];
-            obj.reward = 0;
+            obj.action = [0 0];
+            obj.last_t = -inf;
         end
 
         function action = outputImpl(obj, ~, ~)
-            coder.extrinsic('py.driver.driver')
-            action_normalized = [0 0];
-            action_normalized = double(py.driver.driver(obj.state, obj.reward));
-            action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
-            lower = obj.input_range(:,1)';
-            upper = obj.input_range(:,2)';
-            middle = (lower + upper)/2.0;
-            action = (action_normalized .* (upper - middle) + middle)'; 
+           action = obj.action'; 
         end
         
         function updateImpl(obj, state, reward)
-            obj.state = state';
-            obj.reward = reward(1);
+            coder.extrinsic('py.driver.driver')
+            action_normalized = [0 0];
+            t = getCurrentTime(obj);
+            if floor(t ./ obj.sample_time) ~= floor(obj.last_t ./ obj.sample_time)
+                action_normalized = double(py.driver.driver(state', reward(1)));
+                action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
+                lower = obj.input_range(:,1)';
+                upper = obj.input_range(:,2)';
+                middle = (lower + upper)/2.0;
+                obj.action = (action_normalized .* (upper - middle) + middle); 
+            end
+            obj.last_t = t;
         end
         
 %         function y = stepImpl(obj,u)
@@ -132,11 +113,11 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 
         function [sz,dt,cp] = getDiscreteStateSpecificationImpl(~, propertyname)
            switch propertyname 
-               case 'state'
-                   sz = [1 3];
+               case 'action'
+                   sz = [1 2];
                    dt = 'double';
                    cp = false;
-               case 'reward'
+               case 'last_t'
                    sz = [1];
                    dt = 'double';
                    cp = false;
@@ -180,21 +161,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
             % icon = ["My","System"]; % Example: multi-line text icon
             % icon = matlab.system.display.Icon("myicon.jpg"); % Example: image file icon
         end
-        
-        function flag = isInactivePropertyImpl(obj,prop)
-            flag = false;
-            switch obj.SampleTimeTypeProp
-                case {'Inherited sample time', 'Fixed In Minor Step sample time'}
-                    if any(strcmp(prop,{'SampleTime','OffsetTime','TickTime'}))
-                        flag = true;
-                    end
-                case 'discrete periodic'
-                    if any(strcmp(prop,{'TickTime'}))
-                        flag = true;
-                    end
-            end
-        end
-        
+                
         function [flag1, flag2] = isInputDirectFeedthroughImpl(~, ~, ~)
             flag1 = false;
             flag2 = false;
