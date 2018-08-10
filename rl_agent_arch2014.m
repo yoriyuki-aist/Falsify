@@ -45,13 +45,13 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     methods(Access = protected)
         %% Common functions  
         function resetImpl(obj)
-            obj.action = [100 0 ; 0 500] * rand(2, 1);
+            obj.action = ([100 0 ; 0 500] * rand(2, 1))';
             obj.last_t = -inf;
         end
         
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
-            obj.action = [100 0 ; 0 500] * rand(2, 1);
+            obj.action = ([100 0 ; 0 500] * rand(2, 1))';
             obj.last_t = -inf;
         end
 
