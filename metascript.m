@@ -5,7 +5,7 @@ workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
+maxIter = 100;
 maxEpisodes = 200;
 do_arch2014 = true;
 do_ptc = false;
@@ -430,7 +430,7 @@ function do_experiment(name, configs, br_configs)
 
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '.mat']);
  [~,git_hash_string] = system('git rev-parse HEAD');
- save(logFile, 'git_hash_string', 'configs', 'results');
+ save(logFile, 'git_hash_string', 'configs', 'results', '-v7.3');
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_any(config)
