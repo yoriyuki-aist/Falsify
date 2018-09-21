@@ -46,15 +46,21 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
     methods(Access = protected)
         %% Common functions  
         function resetImpl(obj)
-            obj.action = ([100 0 ; 0 500] * rand(2, 1))';
+            action_normalized = [0 0];
+            coder.extrinsic('py.driver.driver')
+            action_normalized = double(py.driver.driver([-1 -1 -1], 2));
+            action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
+            lower = obj.input_range(:,1)';
+            upper = obj.input_range(:,2)';
+            middle = (lower + upper)/2.0;
+            obj.action = (action_normalized .* (upper - middle) + middle); 
+            obj.last_action = obj.action;
             obj.last_t = 0;
         end
         
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
-            obj.action = ([100 0 ; 0 500] * rand(2, 1))';
-            obj.last_action = ([100 0 ; 0 500] * rand(2, 1))';
-            obj.last_t = 0;
+            obj.resetImpl();
         end
 
         function action = outputImpl(obj, ~, ~)
