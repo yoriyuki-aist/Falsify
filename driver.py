@@ -157,7 +157,7 @@ def start_learning(algo, obs_space_dim, action_space_dim):
     if algo == 'A3C':
         agent = make_a3c_agent(obs_space_dim, action_space_dim)
     elif algo == 'DDQN':
-        agenet = make_ddqn_agent(obs_space_dim, action_space_dim)
+        agent = make_ddqn_agent(obs_space_dim, action_space_dim)
     elif algo == 'ACER':
         agent = make_acer_agent(obs_space_dim, action_space_dim)
     else:

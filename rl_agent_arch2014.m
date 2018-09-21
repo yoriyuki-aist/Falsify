@@ -22,6 +22,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
 
     properties(DiscreteState)
        action;
+       last_action;
        last_t;
     end
 
@@ -46,17 +47,20 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
         %% Common functions  
         function resetImpl(obj)
             obj.action = ([100 0 ; 0 500] * rand(2, 1))';
-            obj.last_t = -inf;
+            obj.last_t = 0;
         end
         
         function setupImpl(obj)
             % Perform one-time calculations, such as computing constants
             obj.action = ([100 0 ; 0 500] * rand(2, 1))';
-            obj.last_t = -inf;
+            obj.last_action = ([100 0 ; 0 500] * rand(2, 1))';
+            obj.last_t = 0;
         end
 
         function action = outputImpl(obj, ~, ~)
-           action = obj.action'; 
+            t = getCurrentTime(obj);
+            p = (t - obj.last_t) / obj.sample_time;
+            action = (1 - p) * obj.last_action' + p * obj.action';
         end
         
         function updateImpl(obj, state, reward)
@@ -69,6 +73,7 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
                 lower = obj.input_range(:,1)';
                 upper = obj.input_range(:,2)';
                 middle = (lower + upper)/2.0;
+                obj.last_action = obj.action;
                 obj.action = (action_normalized .* (upper - middle) + middle); 
             end
             obj.last_t = t;
@@ -117,6 +122,10 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
                    sz = [1 2];
                    dt = 'double';
                    cp = false;
+               case 'last_action'
+                   sz = [1 2];
+                   dt = 'double';
+                   cp = false;             
                case 'last_t'
                    sz = [1];
                    dt = 'double';
