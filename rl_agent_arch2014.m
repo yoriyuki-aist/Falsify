@@ -81,8 +81,8 @@ classdef rl_agent_arch2014 < matlab.System & matlab.system.mixin.Propagates ...
                 middle = (lower + upper)/2.0;
                 obj.last_action = obj.action;
                 obj.action = (action_normalized .* (upper - middle) + middle); 
+                obj.last_t = t;
             end
-            obj.last_t = t;
         end
         
 %         function y = stepImpl(obj,u)

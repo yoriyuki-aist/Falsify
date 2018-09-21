@@ -54,14 +54,14 @@ arch2014_tmpl.input_range = [0.0 100.0; 0.0 500.0];
 arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
             
-%algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-%algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
-algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
+algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
+algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
+%algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 br_algomdls = {};
 %br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
-%sampleTimes = [10, 5, 1];
+sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
-sampleTimes = 10;
+%sampleTimes = 10;
 
 g2L = 1.5;
 g3L = 2.5;
@@ -212,8 +212,8 @@ fml9.preds = [fml3.preds, pred];
 
 fml9.stopTime = 100;
 
-%formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
-formulas = {fml1};
+formulas = {fml1, fml2, fml3, fml4, fml5, fml6, fml7, fml8, fml9 };
+%formulas = {fml1};
 
 configs = { };
 for k = 1:size(formulas, 2)
