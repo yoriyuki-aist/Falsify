@@ -378,12 +378,12 @@ function do_experiment(name, configs, br_configs)
      h = waitbar(0,'Waiting for experiments to complete...');
      results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @falsify_any,5,configs{idx});
+        F(idx) = parfeval(p, @falsify_any,3,configs{idx});
      end
      % Build a waitbar to track progress
      for idx = 1:size(configs, 2)
         [completedIdx, ...
-            numEpisode, elapsedTime, bestRob, bestXout, bestYout] ...
+            numEpisode, elapsedTime, bestRob] ...
             = fetchNext(F);
         % store the result
         result = struct('numEpisode', numEpisode,...
@@ -400,7 +400,7 @@ function do_experiment(name, configs, br_configs)
      results = cell([1, size(configs,2)]);
      for i = 1:size(configs, 2)
         config = configs{i};
-        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
+        [numEpisode, elapsedTime, bestRob] = ...
             falsify_any(config);
         result = struct('numEpisode', numEpisode,...
                     'elapsedTime', elapsedTime,...
@@ -411,7 +411,7 @@ function do_experiment(name, configs, br_configs)
  end
  for i = 1:size(br_configs, 2)
     config = br_configs{i};
-    [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = ...
+    [numEpisode, elapsedTime, bestRob] = ...
         falsify_any(config);
     result = struct('numEpisode', numEpisode,...
                 'elapsedTime', elapsedTime,...
@@ -427,16 +427,16 @@ function do_experiment(name, configs, br_configs)
  save(logFile, 'git_hash_string', 'configs', 'results', '-v7.3');
 end
 
-function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_any(config)
+function [numEpisode, elapsedTime, bestRob] = falsify_any(config)
     for i = 1:size(config.init_opts, 2)
        assignin('base', config.init_opts{i}{1}, config.init_opts{i}{2});
     end
     if strcmp(config.engine, 's-taliro')
-        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config);
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify_staliro(config);
     elseif strcmp(config.engine, 'RL')
-        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config);
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify(config);
     elseif strcmp(config.engine, 'breach')
-        [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config);
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify_breach(config);
     end
 end
 
