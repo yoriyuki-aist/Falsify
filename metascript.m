@@ -1,14 +1,14 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
+maxIter = 1;
 maxEpisodes = 200;
-do_arch2014 = true;
-do_ptc = false;
+do_arch2014 = false;
+do_ptc = true;
 do_insulin = false;
 
 
@@ -53,6 +53,7 @@ arch2014_tmpl.outputs = [2, 3, 4];
 arch2014_tmpl.input_range = [0.0 100.0; 0.0 500.0];
 arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
+arch2014_tmpl.interpolation = {'linear'};
             
 algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
 algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
@@ -263,45 +264,46 @@ ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0];
 ptc_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
+ptc_tmpl.interpolation = {'pconst'};
 
 ptc_fml26 = struct(ptc_tmpl);
 ptc_fml26.expName = 'ptc_fml26';
-ptc_fml26.input_range = [900.0 1000.0; 8.8 69.9];
+ptc_fml26.input_range = [900.0 1100.0; 8.8 69.9];
 ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0];
-ptc_fml26.preds(1).b = 0.19;
+ptc_fml26.preds(1).b = 0.05;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0];
-ptc_fml26.preds(2).b = 0.19;
+ptc_fml26.preds(2).b = 0.05;
 ptc_fml26.stopTime = 50;
 
-ptc_fml33 = struct(ptc_tmpl);
-ptc_fml33.expName = 'ptc_fml33';
-ptc_fml33.input_range = [900.0 1000.0; 8.8 90.0];
-ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
-ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
-ptc_fml33.preds(1).str = 'pl';
-ptc_fml33.preds(1).A = [1 0];
-ptc_fml33.preds(1).b = 0.19;
-ptc_fml33.preds(2).str = 'pu';
-ptc_fml33.preds(2).A = [-1 0];
-ptc_fml33.preds(2).b = 0.19;
-ptc_fml33.preds(3).str = 'power';
-ptc_fml33.preds(3).A = [0 -1];
-ptc_fml33.preds(3).b = 0.50;
-ptc_fml33.stopTime = 50;
+% ptc_fml33 = struct(ptc_tmpl);
+% ptc_fml33.expName = 'ptc_fml33';
+% ptc_fml33.input_range = [900.0 1000.0; 8.8 90.0];
+% ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
+% ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
+% ptc_fml33.preds(1).str = 'pl';
+% ptc_fml33.preds(1).A = [1 0];
+% ptc_fml33.preds(1).b = 0.19;
+% ptc_fml33.preds(2).str = 'pu';
+% ptc_fml33.preds(2).A = [-1 0];
+% ptc_fml33.preds(2).b = 0.19;
+% ptc_fml33.preds(3).str = 'power';
+% ptc_fml33.preds(3).A = [0 -1];
+% ptc_fml33.preds(3).b = 0.50;
+% ptc_fml33.stopTime = 50;
 
-ptc_formulas = {ptc_fml26, ptc_fml33};
+ptc_formulas = {ptc_fml26};
 
-%ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
 %    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
-ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
+%ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
-ptc_sampleTimes = [10, 5];
+ptc_sampleTimes = [10];
 
 ptc_configs = { };
 for k = 1:size(ptc_formulas, 2)
@@ -323,6 +325,9 @@ end
 if do_ptc
     do_experiment('PTC', ptc_configs, {});
 end
+
+% Insulin Benchmark Model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 insulin_tmpl = struct(config_tmpl);
 insulin_tmpl.output_range = [0 160;0 40;0 40];
@@ -370,13 +375,16 @@ end
 function do_experiment(name, configs, br_configs)
  total = size(configs, 2) + size(br_configs, 2);
  no_br = size(configs, 2);
+ results = table('Size', [0 6],...
+     'VariableTypes', {'string', 'string', 'int32', 'int32', 'double', 'double'},...
+     'VariableNames', {'expName', 'algoName', 'sampleTime',...
+     'numEpisode', 'elapsedTime', 'bestRob'});
  global workers_num logDir;
  if workers_num > 1
      delete(gcp('nocreate'));
      parpool(workers_num);
      p = gcp();
      h = waitbar(0,'Waiting for experiments to complete...');
-     results = cell([1, size(configs ,2)]);
      for idx = 1:size(configs, 2)
         F(idx) = parfeval(p, @falsify_any,3,configs{idx});
      end
@@ -386,10 +394,10 @@ function do_experiment(name, configs, br_configs)
             numEpisode, elapsedTime, bestRob] ...
             = fetchNext(F);
         % store the result
-        result = struct('numEpisode', numEpisode,...
-                    'elapsedTime', elapsedTime,...
-                    'bestRob', bestRob);
-        results{completedIdx} = result;
+        config = configs{completedIdx};
+        result = {config.expName, config.algoName, config.sampleTime,...
+            numEpisode, elapsedTime, bestRob};
+        results = [results; result];
         % update waitbar
         waitbar(idx/total,h);
      end
@@ -397,15 +405,14 @@ function do_experiment(name, configs, br_configs)
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
-     results = cell([1, size(configs,2)]);
      for i = 1:size(configs, 2)
         config = configs{i};
         [numEpisode, elapsedTime, bestRob] = ...
             falsify_any(config);
-        result = struct('numEpisode', numEpisode,...
-                    'elapsedTime', elapsedTime,...
-                    'bestRob', bestRob);
-        results{i} = result;
+        result = {config.expName, config.algoName, config.sampleTime,...
+            numEpisode, elapsedTime, bestRob};
+        disp(result);
+        results = [results; result];
         waitbar(i / total)
      end
  end
@@ -413,18 +420,16 @@ function do_experiment(name, configs, br_configs)
     config = br_configs{i};
     [numEpisode, elapsedTime, bestRob] = ...
         falsify_any(config);
-    result = struct('numEpisode', numEpisode,...
-                'elapsedTime', elapsedTime,...
-                'bestRob', bestRob);
-    results{no_br + i} = result;
+    result = {config.expName, config.algoName, config.sampleTime,...
+                numEpisode, elapsedTime, bestRob};
+    results = [results; result];
     waitbar((no_br + i) / total)
  end
  close(h);
- configs = [configs, br_configs];
-
- logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '.mat']);
- [~,git_hash_string] = system('git rev-parse HEAD');
- save(logFile, 'git_hash_string', 'configs', 'results', '-v7.3');
+ 
+  [~,git_hash_string] = system('git rev-parse HEAD');
+ logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
+ writetable(results, logFile);
 end
 
 function [numEpisode, elapsedTime, bestRob] = falsify_any(config)
@@ -442,7 +447,7 @@ end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
     opt = staliro_options();
-    opt.interpolationtype = {'linear'};
+    opt.interpolationtype = config.interpolation;
     if strcmp(config.option, 'CE')
         opt.optimization_solver = 'CE_Taliro';
     end
