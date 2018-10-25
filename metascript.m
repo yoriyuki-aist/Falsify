@@ -297,11 +297,11 @@ ptc_fml26.stopTime = 50;
 
 ptc_formulas = {ptc_fml26};
 
-ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+%ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
 %    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
-%ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
+ptc_algomdls = {{'RL', 'DDQN', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
 
@@ -411,7 +411,6 @@ function do_experiment(name, configs, br_configs)
             falsify_any(config);
         result = {config.expName, config.algoName, config.sampleTime,...
             numEpisode, elapsedTime, bestRob};
-        disp(result);
         results = [results; result];
         waitbar(i / total)
      end
