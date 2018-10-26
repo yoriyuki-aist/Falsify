@@ -260,7 +260,7 @@ end
 
 ptc_tmpl = struct(config_tmpl);
 %ptc_tmpl.outputs = [2];
-ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0];
+ptc_tmpl.output_range = [-0.1 0.1; 0.0 1.0; 8.8 90.0; 900.0 1100.0];
 ptc_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
@@ -268,16 +268,30 @@ ptc_tmpl.interpolation = {'pconst'};
 
 ptc_fml26 = struct(ptc_tmpl);
 ptc_fml26.expName = 'ptc_fml26';
-ptc_fml26.input_range = [900.0 1100.0; 8.8 69.9];
+ptc_fml26.input_range = [ 8.8 69.9; 900.0 1100.0];
 ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
-ptc_fml26.preds(1).A = [1 0];
+ptc_fml26.preds(1).A = [1 0 0 0];
 ptc_fml26.preds(1).b = 0.05;
 ptc_fml26.preds(2).str = 'pu';
-ptc_fml26.preds(2).A = [-1 0];
+ptc_fml26.preds(2).A = [-1 0 0 0];
 ptc_fml26.preds(2).b = 0.05;
 ptc_fml26.stopTime = 50;
+
+% ptc_fml26 = struct(ptc_tmpl);
+% ptc_fml26.expName = 'ptc_fml27-rise';
+% ptc_fml26.input_range = [900.0 1100.0; 8.8 69.9];
+% ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
+% ptc_fml26.monitoringFormula = 'pl /\ pu';
+% ptc_fml26.preds(1).str = 'pl';
+% ptc_fml26.preds(1).A = [1 0];
+% ptc_fml26.preds(1).b = 0.05;
+% ptc_fml26.preds(2).str = 'pu';
+% ptc_fml26.preds(2).A = [-1 0];
+% ptc_fml26.preds(2).b = 0.05;
+% ptc_fml26.stopTime = 50;
+
 
 % ptc_fml33 = struct(ptc_tmpl);
 % ptc_fml33.expName = 'ptc_fml33';
@@ -297,11 +311,11 @@ ptc_fml26.stopTime = 50;
 
 ptc_formulas = {ptc_fml26};
 
-%ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
 %    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
-ptc_algomdls = {{'RL', 'DDQN', 'PTC_M1_RL'}};
+%ptc_algomdls = {{'RL', 'DDQN', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
 
@@ -451,6 +465,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
         opt.optimization_solver = 'CE_Taliro';
     end
     opt.optim_params.n_tests = config.maxEpisodes;
+    disp(config.input_range);
     [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
         repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
         config.targetFormula, config.preds, config.stopTime, opt);
