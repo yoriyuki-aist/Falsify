@@ -1,11 +1,11 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 4;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
+maxIter = 100;
 maxEpisodes = 200;
 do_arch2014 = false;
 do_ptc = true;
@@ -266,118 +266,118 @@ ptc_tmpl.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 ptc_tmpl.interpolation = {'pconst'};
 
-% ptc_fml26 = struct(ptc_tmpl);
-% ptc_fml26.expName = 'ptc_fml26';
-% ptc_fml26.input_range = [ 8.8 69.9; 900.0 1100.0];
-% ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
-% ptc_fml26.monitoringFormula = 'pl /\ pu';
-% ptc_fml26.preds(1).str = 'pl';
-% ptc_fml26.preds(1).A = [1 0 0 0];
-% ptc_fml26.preds(1).b = 0.05;
-% ptc_fml26.preds(2).str = 'pu';
-% ptc_fml26.preds(2).A = [-1 0 0 0];
-% ptc_fml26.preds(2).b = 0.05;
-% ptc_fml26.stopTime = 50;
+ptc_fml26 = struct(ptc_tmpl);
+ptc_fml26.expName = 'ptc_fml26';
+ptc_fml26.input_range = [ 8.8 69.9; 900.0 1100.0];
+ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
+ptc_fml26.monitoringFormula = 'pl /\ pu';
+ptc_fml26.preds(1).str = 'pl';
+ptc_fml26.preds(1).A = [1 0 0 0];
+ptc_fml26.preds(1).b = 0.05;
+ptc_fml26.preds(2).str = 'pu';
+ptc_fml26.preds(2).A = [-1 0 0 0];
+ptc_fml26.preds(2).b = 0.05;
+ptc_fml26.stopTime = 50;
 
-% ptc_fml27_rise = struct(ptc_tmpl);
-% ptc_fml27_rise.expName = 'ptc_fml27-rise';
-% ptc_fml27_rise.input_range = [8.8 69.9; 900.0 1100.0];
-% ptc_fml27_rise.targetFormula = '[]_[11,50]((r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu))';
-% ptc_fml27_rise.monitoringFormula = '(r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu)';
-% ptc_fml27_rise.preds(1).str = 'pl';
-% ptc_fml27_rise.preds(1).A = [1 0 0 0];
-% ptc_fml27_rise.preds(1).b = 0.02;
-% ptc_fml27_rise.preds(2).str = 'pu';
-% ptc_fml27_rise.preds(2).A = [-1 0 0 0];
-% ptc_fml27_rise.preds(2).b = 0.02;
-% ptc_fml27_rise.preds(3).str = 'r1';
-% ptc_fml27_rise.preds(3).A = [0 0 1 0];
-% ptc_fml27_rise.preds(3).b = 25.0;
-% ptc_fml27_rise.preds(4).str = 'r2';
-% ptc_fml27_rise.preds(4).A = [0 0 -1 0];
-% ptc_fml27_rise.preds(4).b = -45.0;
-% ptc_fml27_rise.stopTime = 50;
+ptc_fml27_rise = struct(ptc_tmpl);
+ptc_fml27_rise.expName = 'ptc_fml27-rise';
+ptc_fml27_rise.input_range = [8.8 69.9; 900.0 1100.0];
+ptc_fml27_rise.targetFormula = '[]_[11,50]((r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu))';
+ptc_fml27_rise.monitoringFormula = '(r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu)';
+ptc_fml27_rise.preds(1).str = 'pl';
+ptc_fml27_rise.preds(1).A = [1 0 0 0];
+ptc_fml27_rise.preds(1).b = 0.02;
+ptc_fml27_rise.preds(2).str = 'pu';
+ptc_fml27_rise.preds(2).A = [-1 0 0 0];
+ptc_fml27_rise.preds(2).b = 0.02;
+ptc_fml27_rise.preds(3).str = 'r1';
+ptc_fml27_rise.preds(3).A = [0 0 1 0];
+ptc_fml27_rise.preds(3).b = 25.0;
+ptc_fml27_rise.preds(4).str = 'r2';
+ptc_fml27_rise.preds(4).A = [0 0 -1 0];
+ptc_fml27_rise.preds(4).b = -45.0;
+ptc_fml27_rise.stopTime = 50;
 
 
-% ptc_fml27_fall = struct(ptc_tmpl);
-% ptc_fml27_fall.expName = 'ptc_fml27-fall';
-% ptc_fml27_fall.input_range = [8.8 69.9; 900.0 1100.0];
-% ptc_fml27_fall.targetFormula = '[]_[11,50]((r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu))';
-% ptc_fml27_fall.monitoringFormula = '(r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu)';
-% ptc_fml27_fall.preds(1).str = 'pl';
-% ptc_fml27_fall.preds(1).A = [1 0 0 0];
-% ptc_fml27_fall.preds(1).b = 0.02;
-% ptc_fml27_fall.preds(2).str = 'pu';
-% ptc_fml27_fall.preds(2).A = [-1 0 0 0];
-% ptc_fml27_fall.preds(2).b = 0.02;
-% ptc_fml27_fall.preds(3).str = 'r1';
-% ptc_fml27_fall.preds(3).A = [0 0 1 0];
-% ptc_fml27_fall.preds(3).b = 25.0;
-% ptc_fml27_fall.preds(4).str = 'r2';
-% ptc_fml27_fall.preds(4).A = [0 0 -1 0];
-% ptc_fml27_fall.preds(4).b = -45.0;
-% ptc_fml27_fall.stopTime = 50;
+ptc_fml27_fall = struct(ptc_tmpl);
+ptc_fml27_fall.expName = 'ptc_fml27-fall';
+ptc_fml27_fall.input_range = [8.8 69.9; 900.0 1100.0];
+ptc_fml27_fall.targetFormula = '[]_[11,50]((r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu))';
+ptc_fml27_fall.monitoringFormula = '(r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu)';
+ptc_fml27_fall.preds(1).str = 'pl';
+ptc_fml27_fall.preds(1).A = [1 0 0 0];
+ptc_fml27_fall.preds(1).b = 0.02;
+ptc_fml27_fall.preds(2).str = 'pu';
+ptc_fml27_fall.preds(2).A = [-1 0 0 0];
+ptc_fml27_fall.preds(2).b = 0.02;
+ptc_fml27_fall.preds(3).str = 'r1';
+ptc_fml27_fall.preds(3).A = [0 0 1 0];
+ptc_fml27_fall.preds(3).b = 25.0;
+ptc_fml27_fall.preds(4).str = 'r2';
+ptc_fml27_fall.preds(4).A = [0 0 -1 0];
+ptc_fml27_fall.preds(4).b = -45.0;
+ptc_fml27_fall.stopTime = 50;
 
-% ptc_fml30 = struct(ptc_tmpl);
-% ptc_fml30.expName = 'ptc_fml30';
-% ptc_fml30.input_range = [ 8.8 69.9; 900.0 1100.0];
-% ptc_fml30.targetFormula = '[]_[11,50](pu)';
-% ptc_fml30.monitoringFormula = 'pu';
-% ptc_fml30.preds(1).str = 'pu';
-% ptc_fml30.preds(1).A = [-1 0 0 0];
-% ptc_fml30.preds(1).b = 0.1;
-% ptc_fml30.stopTime = 50;
-% ptc_fml30.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
-%     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
-%     {'fuel_inj_tol', 1.05}, {'MAF_sensor_tol', 1.05}, {'AF_sensor_tol', 1.01}};
+ptc_fml30 = struct(ptc_tmpl);
+ptc_fml30.expName = 'ptc_fml30';
+ptc_fml30.input_range = [ 8.8 69.9; 900.0 1100.0];
+ptc_fml30.targetFormula = '[]_[11,50](pu)';
+ptc_fml30.monitoringFormula = 'pu';
+ptc_fml30.preds(1).str = 'pu';
+ptc_fml30.preds(1).A = [-1 0 0 0];
+ptc_fml30.preds(1).b = 0.1;
+ptc_fml30.stopTime = 50;
+ptc_fml30.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
+    {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
+    {'fuel_inj_tol', 1.05}, {'MAF_sensor_tol', 1.05}, {'AF_sensor_tol', 1.01}};
 
-% ptc_fml31 = struct(ptc_tmpl);
-% ptc_fml31.expName = 'ptc_fml31';
-% ptc_fml31.input_range = [ 8.8 69.9; 900.0 1100.0];
-% ptc_fml31.targetFormula = '[]_[11,50](pl)';
-% ptc_fml31.monitoringFormula = 'pl';
-% ptc_fml31.preds(1).str = 'pl';
-% ptc_fml31.preds(1).A = [1 0 0 0];
-% ptc_fml31.preds(1).b = 0.1;
-% ptc_fml31.stopTime = 50;
-% ptc_fml31.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
-%     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
-%     {'fuel_inj_tol', 0.95}, {'MAF_sensor_tol', 0.95}, {'AF_sensor_tol', 0.99}};
+ptc_fml31 = struct(ptc_tmpl);
+ptc_fml31.expName = 'ptc_fml31';
+ptc_fml31.input_range = [ 8.8 69.9; 900.0 1100.0];
+ptc_fml31.targetFormula = '[]_[11,50](pl)';
+ptc_fml31.monitoringFormula = 'pl';
+ptc_fml31.preds(1).str = 'pl';
+ptc_fml31.preds(1).A = [1 0 0 0];
+ptc_fml31.preds(1).b = 0.1;
+ptc_fml31.stopTime = 50;
+ptc_fml31.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
+    {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
+    {'fuel_inj_tol', 0.95}, {'MAF_sensor_tol', 0.95}, {'AF_sensor_tol', 0.99}};
 
-% ptc_fml32 = struct(ptc_tmpl);
-% ptc_fml32.expName = 'ptc_fml32';
-% ptc_fml32.input_range = [8.8 90.0; 900.0 1100.0];
-% ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu))';
-% ptc_fml32.monitoringFormula = '(power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu)';
-% ptc_fml32.preds(1).str = 'pl';
-% ptc_fml32.preds(1).A = [1 0 0 0];
-% ptc_fml32.preds(1).b = 0.02;
-% ptc_fml32.preds(2).str = 'pu';
-% ptc_fml32.preds(2).A = [-1 0 0 0];
-% ptc_fml32.preds(2).b = 0.02;
-% ptc_fml32.preds(3).str = 'power';
-% ptc_fml32.preds(3).A = [0 -1 0 0];
-% ptc_fml32.preds(3).b = -0.51;
-% ptc_fml32.preds(4).str = 'normal';
-% ptc_fml32.preds(4).A = [0 1 0 0];
-% ptc_fml32.preds(4).b = 0.50;
-% ptc_fml32.stopTime = 50;
+ptc_fml32 = struct(ptc_tmpl);
+ptc_fml32.expName = 'ptc_fml32';
+ptc_fml32.input_range = [8.8 90.0; 900.0 1100.0];
+ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu))';
+ptc_fml32.monitoringFormula = '(power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu)';
+ptc_fml32.preds(1).str = 'pl';
+ptc_fml32.preds(1).A = [1 0 0 0];
+ptc_fml32.preds(1).b = 0.02;
+ptc_fml32.preds(2).str = 'pu';
+ptc_fml32.preds(2).A = [-1 0 0 0];
+ptc_fml32.preds(2).b = 0.02;
+ptc_fml32.preds(3).str = 'power';
+ptc_fml32.preds(3).A = [0 -1 0 0];
+ptc_fml32.preds(3).b = -0.51;
+ptc_fml32.preds(4).str = 'normal';
+ptc_fml32.preds(4).A = [0 1 0 0];
+ptc_fml32.preds(4).b = 0.50;
+ptc_fml32.stopTime = 50;
 
-% ptc_fml33 = struct(ptc_tmpl);
-% ptc_fml33.expName = 'ptc_fml33';
-% ptc_fml33.input_range = [8.8 90.0; 900.0 1100.0];
-% ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
-% ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
-% ptc_fml33.preds(1).str = 'pl';
-% ptc_fml33.preds(1).A = [1 0 0 0];
-% ptc_fml33.preds(1).b = 0.2;
-% ptc_fml33.preds(2).str = 'pu';
-% ptc_fml33.preds(2).A = [-1 0 0 0];
-% ptc_fml33.preds(2).b = 0.2;
-% ptc_fml33.preds(3).str = 'power';
-% ptc_fml33.preds(3).A = [0 -1 0 0];
-% ptc_fml33.preds(3).b = -0.50;
-% ptc_fml33.stopTime = 50;
+ptc_fml33 = struct(ptc_tmpl);
+ptc_fml33.expName = 'ptc_fml33';
+ptc_fml33.input_range = [8.8 90.0; 900.0 1100.0];
+ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
+ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
+ptc_fml33.preds(1).str = 'pl';
+ptc_fml33.preds(1).A = [1 0 0 0];
+ptc_fml33.preds(1).b = 0.2;
+ptc_fml33.preds(2).str = 'pu';
+ptc_fml33.preds(2).A = [-1 0 0 0];
+ptc_fml33.preds(2).b = 0.2;
+ptc_fml33.preds(3).str = 'power';
+ptc_fml33.preds(3).A = [0 -1 0 0];
+ptc_fml33.preds(3).b = -0.50;
+ptc_fml33.stopTime = 50;
 
 ptc_fml34 = struct(ptc_tmpl);
 ptc_fml34.expName = 'ptc_fml34_startup';
@@ -401,12 +401,12 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 15}, {'spec_num', 1},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
-ptc_formulas = {ptc_fml34};
+ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 
 %ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
-%ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
-%    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
-ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
+ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
+    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
+%ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
 
