@@ -5,7 +5,7 @@ workers_num = 4;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
+maxIter = 1;
 maxEpisodes = 200;
 do_arch2014 = false;
 do_ptc = true;
@@ -380,7 +380,7 @@ ptc_fml33.preds(3).b = -0.50;
 ptc_fml33.stopTime = 50;
 
 ptc_fml34 = struct(ptc_tmpl);
-ptc_fml34.expName = 'ptc_fml34_startup';
+ptc_fml34.expName = 'ptc_fml34_sensorfail';
 ptc_fml34.input_range = [8.8 69.9; 900.0 1100.0];
 ptc_fml34.targetFormula = '[]_[15,50](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
 ptc_fml34.monitoringFormula = '((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu)';
