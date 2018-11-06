@@ -404,9 +404,9 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 
 %ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
-ptc_algomdls = { {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
-    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
-%ptc_algomdls = {{'s-taliro', 'CE', 'PTC_M1'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
+ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
+     {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+%ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
 
@@ -485,6 +485,8 @@ function do_experiment(name, configs, br_configs)
      'VariableNames', {'expName', 'algoName', 'sampleTime',...
      'numEpisode', 'elapsedTime', 'bestRob'});
  global workers_num logDir;
+ [~,git_hash_string] = system('git rev-parse HEAD');
+ logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
  if workers_num > 1
      delete(gcp('nocreate'));
      parpool(workers_num);
@@ -503,6 +505,7 @@ function do_experiment(name, configs, br_configs)
         result = {config.expName, config.algoName, config.sampleTime,...
             numEpisode, elapsedTime, bestRob};
         results = [results; result];
+        writetable(results, logFile);
         % update waitbar
         waitbar(idx/total,h);
      end
@@ -527,13 +530,10 @@ function do_experiment(name, configs, br_configs)
     result = {config.expName, config.algoName, config.sampleTime,...
                 numEpisode, elapsedTime, bestRob};
     results = [results; result];
+    writetable(results, logFile);
     waitbar((no_br + i) / total)
  end
  close(h);
- 
-  [~,git_hash_string] = system('git rev-parse HEAD');
- logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
- writetable(results, logFile);
 end
 
 function [numEpisode, elapsedTime, bestRob] = falsify_any(config)
