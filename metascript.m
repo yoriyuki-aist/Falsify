@@ -60,7 +60,9 @@ arch2014_tmpl.interpolation = {'linear'};
 %algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 %br_algomdls = {};
 algomdls = {};
-br_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}, {'breach', 'basic', 'arch2014_staliro'}};
+cmeas_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
+basic_algomodls = {{'breach', 'basic', 'arch2014_staliro'}};
+nm_algomodls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 %sampleTimes = 10;
@@ -236,17 +238,41 @@ end
 
 br_configs = { };
 
-br_sample_times = [10];
+cmeas_sample_times = [10, 5, 1];
+nm_sample_time = [10];
+basic_sample_time = [10];
 for k = 1:size(formulas, 2)
-    for i = 1:size(br_algomdls, 2)
-        for j = 1:size(br_sample_times, 2)
+    for i = 1:size(cmaes_algomdls, 2)
+        for j = 1:size(cmeas_sample_times, 2)
             config = struct(formulas{k});
-            config.mdl = br_algomdls{i}{3};
-            config.algoName = [br_algomdls{i}{1}, '-', br_algomdls{i}{2}];
-            config.sampleTime = br_sample_times(j);
-            config.engine = br_algomdls{i}{1};
-            config.option = br_algomdls{i}{2};
-            for l = 1:maxIter
+            config.mdl = cmeas_algomdls{i}{3};
+            config.algoName = [cmeas_algomdls{i}{1}, '-', cmeas_algomdls{i}{2}];
+            config.sampleTime = cmeas_sample_times(j);
+            config.engine = cmeas_algomdls{i}{1};
+            config.option = cmeas_algomdls{i}{2};
+            for l = 1:100
+              br_configs = [br_configs, config];
+            end
+        end
+        for j = 1:size(basic_sample_times, 2)
+            config = struct(formulas{k});
+            config.mdl = basic_algomdls{i}{3};
+            config.algoName = [basic_algomdls{i}{1}, '-', basic_algomdls{i}{2}];
+            config.sampleTime = basic_sample_times(j);
+            config.engine = basic_algomdls{i}{1};
+            config.option = basic_algomdls{i}{2};
+            for l = 1:100
+              br_configs = [br_configs, config];
+            end
+        end
+        for j = 1:size(nm_sample_times, 2)
+            config = struct(formulas{k});
+            config.mdl = nm_algomdls{i}{3};
+            config.algoName = [nm_algomdls{i}{1}, '-', nm_algomdls{i}{2}];
+            config.sampleTime = nm_sample_times(j);
+            config.engine = nm_algomdls{i}{1};
+            config.option = nm_algomdls{i}{2};
+            for l = 1:100
               br_configs = [br_configs, config];
             end
         end
