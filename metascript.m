@@ -7,8 +7,8 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
 maxEpisodes = 200;
-do_arch2014 = false;
-do_ptc = true;
+do_arch2014 = true;
+do_ptc = false;
 do_insulin = false;
 
 
@@ -55,11 +55,12 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
 arch2014_tmpl.interpolation = {'linear'};
             
-algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
+%algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
+%algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
 %algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
-br_algomdls = {};
-%br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
+%br_algomdls = {};
+algomdls = {};
+br_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}, {'breach', 'basic', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
 %algomdls = {{'ACER', 'autotrans_mod04'}};
 %sampleTimes = 10;
@@ -234,6 +235,7 @@ for k = 1:size(formulas, 2)
 end
 
 br_configs = { };
+
 br_sample_times = [10];
 for k = 1:size(formulas, 2)
     for i = 1:size(br_algomdls, 2)
@@ -582,7 +584,7 @@ function [numEpisode, elapsedTime, bestRob] = falsify_breach(config)
        name = ['Input', num2str(i)];
        times = config.stopTime / config.sampleTime;
        inputs = [inputs, name];
-       siggen = fixed_cp_signal_gen({name}, times, {'spline'});
+       siggen = fixed_cp_signal_gen({name}, times, {'linear'});
        siggens = [siggens, siggen];
        param_names = cellfun(@(num) [name, '_u', num2str(num)], num2cell(0:(times-1)), 'UniformOutput', false);
        params = [params, param_names];
