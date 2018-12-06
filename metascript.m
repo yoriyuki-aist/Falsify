@@ -569,7 +569,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
     bestYout = [];
 end
 
-function [numEpisode, elapsedTime, bestRob, bestXout, besetYout] = falsify_breach(config)
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
     global workers_num
     delete(gcp('nocreate'));
     parpool(workers_num);
