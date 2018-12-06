@@ -552,6 +552,8 @@ function do_experiment(name, configs, br_configs)
         waitbar(i / total)
      end
  end
+ delete(gcp('nocreate'));
+ parpool(workers_num);
  for i = 1:size(br_configs, 2)
     config = br_configs{i};
     [numEpisode, elapsedTime, bestRob] = ...
@@ -562,6 +564,7 @@ function do_experiment(name, configs, br_configs)
     writetable(results, logFile);
     waitbar((no_br + i) / total)
  end
+ delete(gcp('nocreate'));
  close(h);
 end
 
@@ -596,9 +599,6 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
-    global workers_num
-    delete(gcp('nocreate'));
-    parpool(workers_num);
     mdl = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
     br_model = mdl.copy();
     in_dim = size(config.input_range, 1);
@@ -633,5 +633,4 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach
     bestRob = falsify_pb.obj_best;
     bestXout = falsify_pb.BrSet_Best;
     bestYout = [];
-    delete(gcp('nocreate'));
 end
