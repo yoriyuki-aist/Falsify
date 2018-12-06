@@ -599,6 +599,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_stalir
 end
 
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
+    global workers_num;
     mdl = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
     br_model = mdl.copy();
     in_dim = size(config.input_range, 1);
