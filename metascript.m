@@ -60,7 +60,7 @@ arch2014_tmpl.interpolation = {'linear'};
 %algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 %br_algomdls = {};
 algomdls = {};
-cmeas_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
+cmaes_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
 basic_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
 nm_algomdls = {{'breach', 'global_nelder_mead', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
@@ -238,18 +238,18 @@ end
 
 br_configs = { };
 
-cmeas_sample_times = [];
+cmaes_sample_times = [10,5,1];
 nm_sample_times = [10];
 basic_sample_times = [10, 5, 1];
 for k = 1:size(formulas, 2)
     for i = 1:size(cmaes_algomdls, 2)
-        for j = 1:size(cmeas_sample_times, 2)
+        for j = 1:size(cmaes_sample_times, 2)
             config = struct(formulas{k});
-            config.mdl = cmeas_algomdls{i}{3};
-            config.algoName = [cmeas_algomdls{i}{1}, '-', cmeas_algomdls{i}{2}];
-            config.sampleTime = cmeas_sample_times(j);
-            config.engine = cmeas_algomdls{i}{1};
-            config.option = cmeas_algomdls{i}{2};
+            config.mdl = cmaes_algomdls{i}{3};
+            config.algoName = [cmaes_algomdls{i}{1}, '-', cmaes_algomdls{i}{2}];
+            config.sampleTime = cmaes_sample_times(j);
+            config.engine = cmaes_algomdls{i}{1};
+            config.option = cmaes_algomdls{i}{2};
             for l = 1:100
               br_configs = [br_configs, config];
             end
