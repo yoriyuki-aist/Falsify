@@ -238,9 +238,9 @@ end
 
 br_configs = { };
 
-cmeas_sample_times = [10, 5, 1];
+cmeas_sample_times = [];
 nm_sample_times = [10];
-basic_sample_times = [10];
+basic_sample_times = [10, 5, 1];
 for k = 1:size(formulas, 2)
     for i = 1:size(cmaes_algomdls, 2)
         for j = 1:size(cmeas_sample_times, 2)
