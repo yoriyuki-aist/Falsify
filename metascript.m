@@ -1,14 +1,14 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
+maxIter = 100;
 maxEpisodes = 200;
-do_arch2014 = false;
-do_ptc = true;
+do_arch2014 = true;
+do_ptc = false;
 do_insulin = false;
 
 
@@ -55,14 +55,15 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
 arch2014_tmpl.interpolation = {'linear'};
             
-algomdls = {{'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'}};
-algomdls = [algomdls, {{'s-taliro', 'SA', 'arch2014_staliro'}}, {{'s-taliro', 'CE', 'arch2014_staliro'}}];
-%algomdls = {{'RL', 'DDQN', 'autotrans_mod04'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
+algomdls = {{'RL', 'RAND', 'autotrans_mod04'},...
+    {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
+    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 br_algomdls = {};
 %br_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
 sampleTimes = [10, 5, 1];
-%algomdls = {{'ACER', 'autotrans_mod04'}};
+%algomdls = {{'RL', 'RAND', 'autotrans_mod04'}};
 %sampleTimes = 10;
+%br_algomdls = {};
 
 g2L = 1.5;
 g3L = 2.5;
@@ -252,7 +253,7 @@ for k = 1:size(formulas, 2)
 end
 
 if do_arch2014
-    do_experiment('ARCH2014', configs, br_configs);
+    do_experiment('ARCH2014', shuffle_cell_array(configs), shuffle_cell_array(br_configs));
 end
 
 % Power Control Benchmark Model

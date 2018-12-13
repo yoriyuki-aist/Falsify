@@ -39,6 +39,37 @@ from chainerrl import v_functions
 def phi(obs):
     return obs.astype(np.float32)
 
+class RandomAgent(chainerrl.agent.Agent):
+    """Random agent."""
+
+    def __init__(self, action_space_dim):
+        self.action_space_dim = action_space_dim
+
+    def act(self, _):
+        a = np.random.rand(self.action_space_dim)
+        return 2 * a - 1
+
+    def act_and_train(self, state, r):
+        return self.act(state)
+
+    def stop_episode(self):
+        pass
+
+    def stop_episode_and_train(self, state, r):
+        pass
+
+    def get_statistics():
+        pass
+
+    def load():
+        pass
+
+    def save():
+        pass
+
+def make_random_agent(_, action_space_dim):
+    return RandomAgent(action_space_dim)
+
 class A3CLSTMGaussian(chainer.ChainList, a3c.A3CModel, RecurrentChainMixin):
     """An example of A3C recurrent Gaussian policy."""
 
@@ -160,15 +191,21 @@ def start_learning(algo, obs_space_dim, action_space_dim):
         agent = make_ddqn_agent(obs_space_dim, action_space_dim)
     elif algo == 'ACER':
         agent = make_acer_agent(obs_space_dim, action_space_dim)
+    elif algo == 'RAND':
+        agent = make_random_agent(obs_space_dim, action_space_dim)
     else:
         sys.exit('unknown algo')
-
-misc.set_random_seed(0)
 
 def driver(state, r):
     reward = math.exp( - r) - 1.0
     state = np.array(state, np.float32)
     action = agent.act_and_train(state, reward)
+    action = np.minimum(1.0, np.maximum(-1.0, action))
+    return array.array('d', action.tolist())
+
+def act(state):
+    state = np.array(state, np.float32)
+    action = agent.act(state)
     action = np.minimum(1.0, np.maximum(-1.0, action))
     return array.array('d', action.tolist())
 
