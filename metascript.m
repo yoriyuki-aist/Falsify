@@ -521,28 +521,42 @@ function do_experiment(name, configs, br_configs)
  git_hash_string = strrep(git_hash_string,newline,'');
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
  if workers_num > 1
-     delete(gcp('nocreate'));
-     parpool(workers_num);
-     p = gcp();
-     h = waitbar(0,'Waiting for experiments to complete...');
-     for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @falsify_any,3,configs{idx});
+     for retry_num = 1:10
+         delete(gcp('nocreate'));
+         parpool(workers_num);
+         p = gcp();
+         h = waitbar(0,'Waiting for experiments to complete...');
+         for idx = 1:size(configs, 2)
+            F(idx) = parfeval(p, @falsify_any,3,configs{idx});
+         end
+         returned = [ ];
+         % Build a waitbar to track progress
+         for idx = 1:size(configs, 2)
+            [completedIdx, ...
+                numEpisode, elapsedTime, bestRob] ...
+                = fetchNext(F);
+            % store the result
+            config = configs{completedIdx};
+            result = {config.expName, config.algoName, config.sampleTime,...
+                numEpisode, elapsedTime, bestRob};
+            results = [results; result];
+            writetable(results, logFile);
+            returned = [returned; completedIdx];
+            % update waitbar
+            waitbar(idx/total,h);
+         end
+         old_configs = configs;
+         configs = {};
+         for idx = 1:size(old_configs, 2)
+             if ~ismember(idx, returned)
+                 configs = [configs, old_configs{idx}]; 
+             end
+         end
+         if size(configs, 2) == 0
+            break 
+         end
      end
-     % Build a waitbar to track progress
-     for idx = 1:size(configs, 2)
-        [completedIdx, ...
-            numEpisode, elapsedTime, bestRob] ...
-            = fetchNext(F);
-        % store the result
-        config = configs{completedIdx};
-        result = {config.expName, config.algoName, config.sampleTime,...
-            numEpisode, elapsedTime, bestRob};
-        results = [results; result];
-        writetable(results, logFile);
-        % update waitbar
-        waitbar(idx/total,h);
-     end
-         
+
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
