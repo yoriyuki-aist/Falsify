@@ -1,7 +1,7 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 4;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
@@ -304,10 +304,10 @@ ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0 0 0];
-ptc_fml26.preds(1).b = 0.1;
+ptc_fml26.preds(1).b = 0.2;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0 0 0];
-ptc_fml26.preds(2).b = 0.1;
+ptc_fml26.preds(2).b = 0.2;
 ptc_fml26.stopTime = 50;
 
 ptc_fml27_rise = struct(ptc_tmpl);
@@ -337,10 +337,10 @@ ptc_fml27_fall.targetFormula = '[]_[11,50]((r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl
 ptc_fml27_fall.monitoringFormula = '(r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu)';
 ptc_fml27_fall.preds(1).str = 'pl';
 ptc_fml27_fall.preds(1).A = [1 0 0 0];
-ptc_fml27_fall.preds(1).b = 0.025;
+ptc_fml27_fall.preds(1).b = 0.030;
 ptc_fml27_fall.preds(2).str = 'pu';
 ptc_fml27_fall.preds(2).A = [-1 0 0 0];
-ptc_fml27_fall.preds(2).b = 0.025;
+ptc_fml27_fall.preds(2).b = 0.030;
 ptc_fml27_fall.preds(3).str = 'r1';
 ptc_fml27_fall.preds(3).A = [0 0 1 0];
 ptc_fml27_fall.preds(3).b = 25.0;
@@ -382,10 +382,10 @@ ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl
 ptc_fml32.monitoringFormula = '(power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu)';
 ptc_fml32.preds(1).str = 'pl';
 ptc_fml32.preds(1).A = [1 0 0 0];
-ptc_fml32.preds(1).b = 0.03;
+ptc_fml32.preds(1).b = 0.10;
 ptc_fml32.preds(2).str = 'pu';
 ptc_fml32.preds(2).A = [-1 0 0 0];
-ptc_fml32.preds(2).b = 0.03;
+ptc_fml32.preds(2).b = 0.10;
 ptc_fml32.preds(3).str = 'power';
 ptc_fml32.preds(3).A = [0 -1 0 0];
 ptc_fml32.preds(3).b = -0.51;
@@ -435,7 +435,8 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 %ptc_formulas = {ptc_fml26, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32};
 
-ptc_algomdls = {{'RL', 'RAND', 'PTC_M1_RL'}, {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
+ptc_algomdls = {{'RL', 'RAND', 'PTC_M1_RL'},...
+    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
     {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
