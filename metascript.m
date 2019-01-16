@@ -7,7 +7,7 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
 maxEpisodes = 200;
-do_arch2014 = false;
+do_arch2014 = true;
 do_ptc = true;
 do_insulin = false;
 
@@ -55,9 +55,11 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
 arch2014_tmpl.interpolation = {'linear'};
             
-algomdls = {{'RL', 'RAND', 'autotrans_mod04'},...
-    {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
-    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
+%algomdls = {{'RL', 'CONST', 'autotrans_mod04'}};
+algomdls = {{'RL', 'RANDEXT', 'autotrans_mod04'}};
+%     {'RL', 'RAND', 'autotrans_mod04'},...
+%     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
+%    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 br_algomdls = {};
 cmaes_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
 basic_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
@@ -239,46 +241,46 @@ end
 
 br_configs = { };
 
-cmaes_sample_times = [10,5,1];
-nm_sample_times = [10,5,1];
-basic_sample_times = [10];
-for k = 1:size(formulas, 2)
-    for i = 1:size(cmaes_algomdls, 2)
-        for j = 1:size(cmaes_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = cmaes_algomdls{i}{3};
-            config.algoName = [cmaes_algomdls{i}{1}, '-', cmaes_algomdls{i}{2}];
-            config.sampleTime = cmaes_sample_times(j);
-            config.engine = cmaes_algomdls{i}{1};
-            config.option = cmaes_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-        for j = 1:size(basic_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = basic_algomdls{i}{3};
-            config.algoName = [basic_algomdls{i}{1}, '-', basic_algomdls{i}{2}];
-            config.sampleTime = basic_sample_times(j);
-            config.engine = basic_algomdls{i}{1};
-            config.option = basic_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-        for j = 1:size(nm_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = nm_algomdls{i}{3};
-            config.algoName = [nm_algomdls{i}{1}, '-', nm_algomdls{i}{2}];
-            config.sampleTime = nm_sample_times(j);
-            config.engine = nm_algomdls{i}{1};
-            config.option = nm_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-    end
-end
+% cmaes_sample_times = [10,5,1];
+% nm_sample_times = [10,5,1];
+% basic_sample_times = [10];
+% for k = 1:size(formulas, 2)
+%     for i = 1:size(cmaes_algomdls, 2)
+%         for j = 1:size(cmaes_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = cmaes_algomdls{i}{3};
+%             config.algoName = [cmaes_algomdls{i}{1}, '-', cmaes_algomdls{i}{2}];
+%             config.sampleTime = cmaes_sample_times(j);
+%             config.engine = cmaes_algomdls{i}{1};
+%             config.option = cmaes_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%         for j = 1:size(basic_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = basic_algomdls{i}{3};
+%             config.algoName = [basic_algomdls{i}{1}, '-', basic_algomdls{i}{2}];
+%             config.sampleTime = basic_sample_times(j);
+%             config.engine = basic_algomdls{i}{1};
+%             config.option = basic_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%         for j = 1:size(nm_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = nm_algomdls{i}{3};
+%             config.algoName = [nm_algomdls{i}{1}, '-', nm_algomdls{i}{2}];
+%             config.sampleTime = nm_sample_times(j);
+%             config.engine = nm_algomdls{i}{1};
+%             config.option = nm_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%     end
+% end
 
 if do_arch2014
     do_experiment('ARCH2014', shuffle_cell_array(configs), shuffle_cell_array(br_configs));
@@ -304,10 +306,10 @@ ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0 0 0];
-ptc_fml26.preds(1).b = 0.2;
+ptc_fml26.preds(1).b = 0.1;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0 0 0];
-ptc_fml26.preds(2).b = 0.2;
+ptc_fml26.preds(2).b = 0.1;
 ptc_fml26.stopTime = 50;
 
 ptc_fml27_rise = struct(ptc_tmpl);
@@ -317,10 +319,10 @@ ptc_fml27_rise.targetFormula = '[]_[11,50]((r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl
 ptc_fml27_rise.monitoringFormula = '(r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu)';
 ptc_fml27_rise.preds(1).str = 'pl';
 ptc_fml27_rise.preds(1).A = [1 0 0 0];
-ptc_fml27_rise.preds(1).b = 0.02;
+ptc_fml27_rise.preds(1).b = 0.025;
 ptc_fml27_rise.preds(2).str = 'pu';
 ptc_fml27_rise.preds(2).A = [-1 0 0 0];
-ptc_fml27_rise.preds(2).b = 0.02;
+ptc_fml27_rise.preds(2).b = 0.025;
 ptc_fml27_rise.preds(3).str = 'r1';
 ptc_fml27_rise.preds(3).A = [0 0 1 0];
 ptc_fml27_rise.preds(3).b = 25.0;
@@ -337,10 +339,10 @@ ptc_fml27_fall.targetFormula = '[]_[11,50]((r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl
 ptc_fml27_fall.monitoringFormula = '(r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu)';
 ptc_fml27_fall.preds(1).str = 'pl';
 ptc_fml27_fall.preds(1).A = [1 0 0 0];
-ptc_fml27_fall.preds(1).b = 0.030;
+ptc_fml27_fall.preds(1).b = 0.025;
 ptc_fml27_fall.preds(2).str = 'pu';
 ptc_fml27_fall.preds(2).A = [-1 0 0 0];
-ptc_fml27_fall.preds(2).b = 0.030;
+ptc_fml27_fall.preds(2).b = 0.025;
 ptc_fml27_fall.preds(3).str = 'r1';
 ptc_fml27_fall.preds(3).A = [0 0 1 0];
 ptc_fml27_fall.preds(3).b = 25.0;
@@ -382,10 +384,10 @@ ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl
 ptc_fml32.monitoringFormula = '(power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu)';
 ptc_fml32.preds(1).str = 'pl';
 ptc_fml32.preds(1).A = [1 0 0 0];
-ptc_fml32.preds(1).b = 0.10;
+ptc_fml32.preds(1).b = 0.03;
 ptc_fml32.preds(2).str = 'pu';
 ptc_fml32.preds(2).A = [-1 0 0 0];
-ptc_fml32.preds(2).b = 0.10;
+ptc_fml32.preds(2).b = 0.03;
 ptc_fml32.preds(3).str = 'power';
 ptc_fml32.preds(3).A = [0 -1 0 0];
 ptc_fml32.preds(3).b = -0.51;
@@ -435,7 +437,8 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 %ptc_formulas = {ptc_fml26, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32};
 
-ptc_algomdls = {{'RL', 'RAND', 'PTC_M1_RL'},...
+ptc_algomdls = ...%{{'RL', 'CONST', 'PTC_M1_RL'}};
+    {{'RL', 'RANDEXT', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'},...
     {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
     {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
@@ -567,6 +570,7 @@ function do_experiment(name, configs, br_configs)
         result = {config.expName, config.algoName, config.sampleTime,...
             numEpisode, elapsedTime, bestRob};
         results = [results; result];
+        writetable(results, logFile);
         waitbar(i / total)
      end
  end
