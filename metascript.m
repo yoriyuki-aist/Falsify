@@ -319,10 +319,10 @@ ptc_fml27_rise.targetFormula = '[]_[11,50]((r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl
 ptc_fml27_rise.monitoringFormula = '(r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu)';
 ptc_fml27_rise.preds(1).str = 'pl';
 ptc_fml27_rise.preds(1).A = [1 0 0 0];
-ptc_fml27_rise.preds(1).b = 0.025;
+ptc_fml27_rise.preds(1).b = 0.02;
 ptc_fml27_rise.preds(2).str = 'pu';
 ptc_fml27_rise.preds(2).A = [-1 0 0 0];
-ptc_fml27_rise.preds(2).b = 0.025;
+ptc_fml27_rise.preds(2).b = 0.02;
 ptc_fml27_rise.preds(3).str = 'r1';
 ptc_fml27_rise.preds(3).A = [0 0 1 0];
 ptc_fml27_rise.preds(3).b = 25.0;
@@ -435,12 +435,9 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
-%ptc_formulas = {ptc_fml26, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32};
 
-ptc_algomdls = ...%{{'RL', 'CONST', 'PTC_M1_RL'}};
-    {{'RL', 'RAND', 'PTC_M1_RL'},...
-    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
-    {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {ptc_algomdls, {'RL', 'RAND', 'PTC_M1_RL'}, {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
@@ -465,7 +462,6 @@ end
 if do_ptc
     do_experiment('PTC', ptc_configs, {});
 end
-
 % Insulin Benchmark Model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
