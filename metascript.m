@@ -7,7 +7,7 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
 maxEpisodes = 200;
-do_arch2014 = true;
+do_arch2014 = false;
 do_ptc = true;
 do_insulin = false;
 
@@ -438,7 +438,7 @@ ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31,
 %ptc_formulas = {ptc_fml26, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32};
 
 ptc_algomdls = ...%{{'RL', 'CONST', 'PTC_M1_RL'}};
-    {{'RL', 'RANDEXT', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'},...
+    {{'RL', 'RAND', 'PTC_M1_RL'},...
     {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
     {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
