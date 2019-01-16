@@ -436,8 +436,8 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
 
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33};
 
-ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
-ptc_algomdls = [ptc_algomdls, {'RL', 'RAND', 'PTC_M1_RL'}, {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}];
+ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
+    {'RL', 'RAND', 'PTC_M1_RL'}, {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
