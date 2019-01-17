@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
 workers_num = 10;
-staliro_dir = '../s-taliro';
+staliro_dir = '/Users/yoriyuki/Reference/TestGenforCPS/s-taliro/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
@@ -532,9 +532,11 @@ function do_experiment(name, configs, br_configs)
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
-                [completedIdx, ...
-                    numEpisode, elapsedTime, bestRob] ...
-                    = fetchNext(F);
+                 exception = MException('MATLAB:test', 'hoge');
+                 throw(exception);
+%                 [completedIdx, ...
+%                     numEpisode, elapsedTime, bestRob] ...
+%                     = fetchNext(F);
              catch ME
                  warning('Problem fectingNext');
                  print(ME);
