@@ -23,8 +23,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         %mws = get_param(config.mdl, 'modelworkspace');
         assignin('base', 'Phi', config.monitoringFormula);
         assignin('base', 'Pred', normal_preds);
-        set_param([config.mdl, '/MATLAB System'], 'sample_time', num2str(config.sampleTime));
-        set_param([config.mdl, '/MATLAB System'], 'input_range', mat2str(config.input_range));
+        disp([config.mdl, config.agentName]);
+        set_param([config.mdl, config.agentName], 'sample_time', num2str(config.sampleTime));
+        set_param([config.mdl, config.agentName], 'input_range', mat2str(config.input_range));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
                      'SaveTime', 'on', 'TimeSaveName', 'tout',...
                      'SaveState','on','StateSaveName','xout',...
