@@ -1,7 +1,7 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 4;
+workers_num = 10;
 staliro_dir = '../s-taliro';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
@@ -55,9 +55,11 @@ arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
 arch2014_tmpl.interpolation = {'linear'};
             
-algomdls = {{'RL', 'RAND', 'autotrans_mod04'},...
-    {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
-    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
+%algomdls = {{'RL', 'CONST', 'autotrans_mod04'}};
+algomdls = {{'RL', 'RANDEXT', 'autotrans_mod04'}};
+%     {'RL', 'RAND', 'autotrans_mod04'},...
+%     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
+%    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 br_algomdls = {};
 cmaes_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
 basic_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
@@ -239,46 +241,46 @@ end
 
 br_configs = { };
 
-cmaes_sample_times = [10,5,1];
-nm_sample_times = [10,5,1];
-basic_sample_times = [10];
-for k = 1:size(formulas, 2)
-    for i = 1:size(cmaes_algomdls, 2)
-        for j = 1:size(cmaes_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = cmaes_algomdls{i}{3};
-            config.algoName = [cmaes_algomdls{i}{1}, '-', cmaes_algomdls{i}{2}];
-            config.sampleTime = cmaes_sample_times(j);
-            config.engine = cmaes_algomdls{i}{1};
-            config.option = cmaes_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-        for j = 1:size(basic_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = basic_algomdls{i}{3};
-            config.algoName = [basic_algomdls{i}{1}, '-', basic_algomdls{i}{2}];
-            config.sampleTime = basic_sample_times(j);
-            config.engine = basic_algomdls{i}{1};
-            config.option = basic_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-        for j = 1:size(nm_sample_times, 2)
-            config = struct(formulas{k});
-            config.mdl = nm_algomdls{i}{3};
-            config.algoName = [nm_algomdls{i}{1}, '-', nm_algomdls{i}{2}];
-            config.sampleTime = nm_sample_times(j);
-            config.engine = nm_algomdls{i}{1};
-            config.option = nm_algomdls{i}{2};
-            for l = 1:100
-              br_configs = [br_configs, config];
-            end
-        end
-    end
-end
+% cmaes_sample_times = [10,5,1];
+% nm_sample_times = [10,5,1];
+% basic_sample_times = [10];
+% for k = 1:size(formulas, 2)
+%     for i = 1:size(cmaes_algomdls, 2)
+%         for j = 1:size(cmaes_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = cmaes_algomdls{i}{3};
+%             config.algoName = [cmaes_algomdls{i}{1}, '-', cmaes_algomdls{i}{2}];
+%             config.sampleTime = cmaes_sample_times(j);
+%             config.engine = cmaes_algomdls{i}{1};
+%             config.option = cmaes_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%         for j = 1:size(basic_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = basic_algomdls{i}{3};
+%             config.algoName = [basic_algomdls{i}{1}, '-', basic_algomdls{i}{2}];
+%             config.sampleTime = basic_sample_times(j);
+%             config.engine = basic_algomdls{i}{1};
+%             config.option = basic_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%         for j = 1:size(nm_sample_times, 2)
+%             config = struct(formulas{k});
+%             config.mdl = nm_algomdls{i}{3};
+%             config.algoName = [nm_algomdls{i}{1}, '-', nm_algomdls{i}{2}];
+%             config.sampleTime = nm_sample_times(j);
+%             config.engine = nm_algomdls{i}{1};
+%             config.option = nm_algomdls{i}{2};
+%             for l = 1:100
+%               br_configs = [br_configs, config];
+%             end
+%         end
+%     end
+% end
 
 if do_arch2014
     do_experiment('ARCH2014', shuffle_cell_array(configs), shuffle_cell_array(br_configs));
@@ -433,10 +435,9 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
 ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
-%ptc_formulas = {ptc_fml26, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32};
 
-ptc_algomdls = {{'RL', 'RAND', 'PTC_M1_RL'}, {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'},...
-    {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
+ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
+    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [10];
@@ -461,7 +462,6 @@ end
 if do_ptc
     do_experiment('PTC', ptc_configs, {});
 end
-
 % Insulin Benchmark Model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -520,28 +520,48 @@ function do_experiment(name, configs, br_configs)
  git_hash_string = strrep(git_hash_string,newline,'');
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
  if workers_num > 1
-     delete(gcp('nocreate'));
-     parpool(workers_num);
-     p = gcp();
-     h = waitbar(0,'Waiting for experiments to complete...');
-     for idx = 1:size(configs, 2)
-        F(idx) = parfeval(p, @falsify_any,3,configs{idx});
+     for retry_num = 1:10
+         delete(gcp('nocreate'));
+         parpool(workers_num);
+         p = gcp();
+         h = waitbar(0,'Waiting for experiments to complete...');
+         for idx = 1:size(configs, 2)
+            F(idx) = parfeval(p, @falsify_any,3,configs{idx});
+         end
+         returned = [ ];
+         % Build a waitbar to track progress
+         for idx = 1:size(configs, 2)
+             try
+                [completedIdx, ...
+                    numEpisode, elapsedTime, bestRob] ...
+                    = fetchNext(F);
+             catch ME
+                 warning('Problem fectingNext');
+                 print(ME);
+                 break;
+             end
+            % store the result
+            config = configs{completedIdx};
+            result = {config.expName, config.algoName, config.sampleTime,...
+                numEpisode, elapsedTime, bestRob};
+            results = [results; result];
+            writetable(results, logFile);
+            returned = [returned; completedIdx];
+            % update waitbar
+            waitbar(idx/total,h);
+         end
+         old_configs = configs;
+         configs = {};
+         for idx = 1:size(old_configs, 2)
+             if ~ismember(idx, returned)
+                 configs = [configs, old_configs{idx}]; 
+             end
+         end
+         if size(configs, 2) == 0
+            break;
+         end
      end
-     % Build a waitbar to track progress
-     for idx = 1:size(configs, 2)
-        [completedIdx, ...
-            numEpisode, elapsedTime, bestRob] ...
-            = fetchNext(F);
-        % store the result
-        config = configs{completedIdx};
-        result = {config.expName, config.algoName, config.sampleTime,...
-            numEpisode, elapsedTime, bestRob};
-        results = [results; result];
-        writetable(results, logFile);
-        % update waitbar
-        waitbar(idx/total,h);
-     end
-         
+
      delete(gcp('nocreate'));
  else
      h = waitbar(0,'Please wait...');
@@ -552,6 +572,7 @@ function do_experiment(name, configs, br_configs)
         result = {config.expName, config.algoName, config.sampleTime,...
             numEpisode, elapsedTime, bestRob};
         results = [results; result];
+        writetable(results, logFile);
         waitbar(i / total)
      end
  end
