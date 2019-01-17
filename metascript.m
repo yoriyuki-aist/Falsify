@@ -531,9 +531,15 @@ function do_experiment(name, configs, br_configs)
          returned = [ ];
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
-            [completedIdx, ...
-                numEpisode, elapsedTime, bestRob] ...
-                = fetchNext(F);
+             try
+                [completedIdx, ...
+                    numEpisode, elapsedTime, bestRob] ...
+                    = fetchNext(F);
+             catch ME
+                 warning('Problem fectingNext');
+                 print(ME);
+                 break;
+             end
             % store the result
             config = configs{completedIdx};
             result = {config.expName, config.algoName, config.sampleTime,...
@@ -552,7 +558,7 @@ function do_experiment(name, configs, br_configs)
              end
          end
          if size(configs, 2) == 0
-            break 
+            break;
          end
      end
 
