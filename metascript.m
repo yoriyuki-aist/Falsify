@@ -532,14 +532,10 @@ function do_experiment(name, configs, br_configs)
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
-                 exception = MException('MATLAB:test', 'hoge');
-                 throw(exception);
-%                 [completedIdx, ...
-%                     numEpisode, elapsedTime, bestRob] ...
-%                     = fetchNext(F);
-             catch ME
-                 warning('Problem fectingNext');
-                 print(ME);
+                [completedIdx, ...
+                    numEpisode, elapsedTime, bestRob] ...
+                    = fetchNext(F);
+             catch
                  break;
              end
             % store the result
