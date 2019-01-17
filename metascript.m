@@ -535,9 +535,7 @@ function do_experiment(name, configs, br_configs)
                 [completedIdx, ...
                     numEpisode, elapsedTime, bestRob] ...
                     = fetchNext(F);
-             catch ME
-                 warning('Problem fectingNext');
-                 print(ME);
+             catch
                  break;
              end
             % store the result
