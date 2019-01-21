@@ -10,7 +10,7 @@ close all
 % Configurations
 %%%%%%%%%%%%%%%%
 global logDir;
-staliro_dir = '../s-taliro/';
+staliro_dir = '../s-taliro_public/trunk';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxEpisodes = 200;
@@ -94,15 +94,16 @@ tmpl.output_range = [0.0 12.0;11.5 13.0; 1120.0 1220.0; 3.0*10^4 5.0*10^4; 1.0 3
 tmpl.init_opts = {};
 tmpl.interpolation = {'linear'};
 tmpl.agentName = '/RL agent';
+tmpl.stopTime = 630;
 
 % Formula 1
 fml1 = struct(tmpl);
 fml1.expName = 'fml1';
-fml1.targetFormula = '[]p1';
+fml1.targetFormula = '[]_[30, 630]p1';
 fml1.monitoringFormula = 'p1';
 
 fml1.preds(1).str = 'p1';
-fml1.preds(1).A = [1 0 0 0 0 0];
+fml1.preds(1).A = [0 0 0 0 0 1];
 fml1.preds(1).b = 12.0;
 fml1.stopTime = Parameter.Time.TMax;
 fml1.mdl = 'SimplifiedWTModelRL';
@@ -112,8 +113,22 @@ fml1.engine = 'RL';
 fml1.option = 'DDQN';
 
 [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(fml1);
+
+X = bestYout.getElement(3).Values.Data;
+Y = bestYout.getElement(4).Values.Data;
+T = bestYout.getElement(4).Values.Time;
+v0_cell{iBin,iRandSeed}.signals.values = X(:);
+v0_cell{iBin,iRandSeed}.time = T;
+Theta.signals.values = Y(:, 6);
+Theta.times = T(:);
+Omega.signals.values = Y(:, 5);
+Omega.times = T(:);
+Mg.signals.values = Y(:, 3);
+Mg.times = T(:);
+Theta_d.signals.values = Y(:, 1);
+Theta_d.times = T(:);
 SimplifiedTurbine_PostProcessing;
-   
+
 save(config.flname, 'results', 'Parameter', 'config')
 SimplifiedTurbine_PlotResults
 
