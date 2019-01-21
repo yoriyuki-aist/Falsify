@@ -10,7 +10,7 @@ function do_experiment(name, configs, br_configs)
  git_hash_string = strrep(git_hash_string,newline,'');
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
  if workers_num > 1
-     for retry_num = 1:10
+     for retry_num = 1:100
          delete(gcp('nocreate'));
          parpool(workers_num);
          p = gcp();
