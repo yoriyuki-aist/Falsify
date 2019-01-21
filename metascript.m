@@ -279,50 +279,30 @@ ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0 0 0];
-ptc_fml26.preds(1).b = 0.1;
+ptc_fml26.preds(1).b = 0.2;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0 0 0];
-ptc_fml26.preds(2).b = 0.1;
+ptc_fml26.preds(2).b = 0.2;
 ptc_fml26.stopTime = 50;
 
-ptc_fml27_rise = struct(ptc_tmpl);
-ptc_fml27_rise.expName = 'ptc_fml27-rise';
-ptc_fml27_rise.input_range = [8.8 69.9; 900.0 1100.0];
-ptc_fml27_rise.targetFormula = '[]_[11,50]((r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu))';
-ptc_fml27_rise.monitoringFormula = '(r1  /\ <>_[0,0.1] r2) -> []_[1,5](pl /\ pu)';
-ptc_fml27_rise.preds(1).str = 'pl';
-ptc_fml27_rise.preds(1).A = [1 0 0 0];
-ptc_fml27_rise.preds(1).b = 0.02;
-ptc_fml27_rise.preds(2).str = 'pu';
-ptc_fml27_rise.preds(2).A = [-1 0 0 0];
-ptc_fml27_rise.preds(2).b = 0.02;
-ptc_fml27_rise.preds(3).str = 'r1';
-ptc_fml27_rise.preds(3).A = [0 0 1 0];
-ptc_fml27_rise.preds(3).b = 25.0;
-ptc_fml27_rise.preds(4).str = 'r2';
-ptc_fml27_rise.preds(4).A = [0 0 -1 0];
-ptc_fml27_rise.preds(4).b = -45.0;
-ptc_fml27_rise.stopTime = 50;
-
-
-ptc_fml27_fall = struct(ptc_tmpl);
-ptc_fml27_fall.expName = 'ptc_fml27-fall';
-ptc_fml27_fall.input_range = [8.8 69.9; 900.0 1100.0];
-ptc_fml27_fall.targetFormula = '[]_[11,50]((r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu))';
-ptc_fml27_fall.monitoringFormula = '(r2  /\ <>_[0,0.1] r1) -> []_[1,5](pl /\ pu)';
-ptc_fml27_fall.preds(1).str = 'pl';
-ptc_fml27_fall.preds(1).A = [1 0 0 0];
-ptc_fml27_fall.preds(1).b = 0.025;
-ptc_fml27_fall.preds(2).str = 'pu';
-ptc_fml27_fall.preds(2).A = [-1 0 0 0];
-ptc_fml27_fall.preds(2).b = 0.025;
-ptc_fml27_fall.preds(3).str = 'r1';
-ptc_fml27_fall.preds(3).A = [0 0 1 0];
-ptc_fml27_fall.preds(3).b = 25.0;
-ptc_fml27_fall.preds(4).str = 'r2';
-ptc_fml27_fall.preds(4).A = [0 0 -1 0];
-ptc_fml27_fall.preds(4).b = -45.0;
-ptc_fml27_fall.stopTime = 50;
+ptc_fml27 = struct(ptc_tmpl);
+ptc_fml27.expName = 'ptc_fml27-rise';
+ptc_fml27.input_range = [8.8 69.9; 900.0 1100.0];
+ptc_fml27.targetFormula = '[]_[11,50](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
+ptc_fml27.monitoringFormula = '[.]_[5,5](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
+ptc_fml27.preds(1).str = 'pl';
+ptc_fml27.preds(1).A = [1 0 0 0];
+ptc_fml27.preds(1).b = 0.1;
+ptc_fml27.preds(2).str = 'pu';
+ptc_fml27.preds(2).A = [-1 0 0 0];
+ptc_fml27.preds(2).b = 0.1;
+ptc_fml27.preds(3).str = 'r1';
+ptc_fml27.preds(3).A = [0 0 1 0];
+ptc_fml27.preds(3).b = 25.0;
+ptc_fml27.preds(4).str = 'r2';
+ptc_fml27.preds(4).A = [0 0 -1 0];
+ptc_fml27.preds(4).b = -45.0;
+ptc_fml27.stopTime = 50;
 
 ptc_fml30 = struct(ptc_tmpl);
 ptc_fml30.expName = 'ptc_fml30';
@@ -331,7 +311,7 @@ ptc_fml30.targetFormula = '[]_[11,50](pu)';
 ptc_fml30.monitoringFormula = 'pu';
 ptc_fml30.preds(1).str = 'pu';
 ptc_fml30.preds(1).A = [-1 0 0 0];
-ptc_fml30.preds(1).b = 0.2;
+ptc_fml30.preds(1).b = 0.3;
 ptc_fml30.stopTime = 50;
 ptc_fml30.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
@@ -344,7 +324,7 @@ ptc_fml31.targetFormula = '[]_[11,50](pl)';
 ptc_fml31.monitoringFormula = 'pl';
 ptc_fml31.preds(1).str = 'pl';
 ptc_fml31.preds(1).A = [1 0 0 0];
-ptc_fml31.preds(1).b = 0.2;
+ptc_fml31.preds(1).b = 0.3;
 ptc_fml31.stopTime = 50;
 ptc_fml31.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 60}, {'spec_num', 1},...
@@ -354,13 +334,13 @@ ptc_fml32 = struct(ptc_tmpl);
 ptc_fml32.expName = 'ptc_fml32';
 ptc_fml32.input_range = [8.8 90.0; 900.0 1100.0];
 ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu))';
-ptc_fml32.monitoringFormula = '(power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu)';
+ptc_fml32.monitoringFormula = '[.]_[5,5]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu))';
 ptc_fml32.preds(1).str = 'pl';
 ptc_fml32.preds(1).A = [1 0 0 0];
-ptc_fml32.preds(1).b = 0.03;
+ptc_fml32.preds(1).b = 0.1;
 ptc_fml32.preds(2).str = 'pu';
 ptc_fml32.preds(2).A = [-1 0 0 0];
-ptc_fml32.preds(2).b = 0.03;
+ptc_fml32.preds(2).b = 0.1;
 ptc_fml32.preds(3).str = 'power';
 ptc_fml32.preds(3).A = [0 -1 0 0];
 ptc_fml32.preds(3).b = -0.51;
@@ -376,10 +356,10 @@ ptc_fml33.targetFormula = '[]_[11,50](power -> (pl /\ pu))';
 ptc_fml33.monitoringFormula = 'power -> (pl /\ pu)';
 ptc_fml33.preds(1).str = 'pl';
 ptc_fml33.preds(1).A = [1 0 0 0];
-ptc_fml33.preds(1).b = 0.2;
+ptc_fml33.preds(1).b = 0.3;
 ptc_fml33.preds(2).str = 'pu';
 ptc_fml33.preds(2).A = [-1 0 0 0];
-ptc_fml33.preds(2).b = 0.2;
+ptc_fml33.preds(2).b = 0.3;
 ptc_fml33.preds(3).str = 'power';
 ptc_fml33.preds(3).A = [0 -1 0 0];
 ptc_fml33.preds(3).b = -0.50;
@@ -389,13 +369,13 @@ ptc_fml34 = struct(ptc_tmpl);
 ptc_fml34.expName = 'ptc_fml34_sensorfail';
 ptc_fml34.input_range = [8.8 69.9; 900.0 1100.0];
 ptc_fml34.targetFormula = '[]_[15,50](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
-ptc_fml34.monitoringFormula = '((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu)';
+ptc_fml34.monitoringFormula = '[.]_[5,5](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
 ptc_fml34.preds(1).str = 'pl';
 ptc_fml34.preds(1).A = [1 0 0 0];
-ptc_fml34.preds(1).b = 0.1;
+ptc_fml34.preds(1).b = 0.3;
 ptc_fml34.preds(2).str = 'pu';
 ptc_fml34.preds(2).A = [-1 0 0 0];
-ptc_fml34.preds(2).b = 0.1;
+ptc_fml34.preds(2).b = 0.3;
 ptc_fml34.preds(3).str = 'r1';
 ptc_fml34.preds(3).A = [0 0 1 0];
 ptc_fml34.preds(3).b = 25.0;
@@ -407,13 +387,13 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 15}, {'spec_num', 1},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
-ptc_formulas = {ptc_fml26, ptc_fml27_rise, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
+ptc_formulas = {ptc_fml26, ptc_fml27, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 
 ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
     {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
-ptc_sampleTimes = [10];
+ptc_sampleTimes = [5];
 
 ptc_configs = { };
 for k = 1:size(ptc_formulas, 2)
@@ -478,4 +458,153 @@ end
 
 if do_insulin
     do_experiment('insulin', insulin_configs, {});
+<<<<<<< Updated upstream
 end
+=======
+end
+
+
+function do_experiment(name, configs, br_configs)
+ total = size(configs, 2) + size(br_configs, 2);
+ no_br = size(configs, 2);
+ results = table('Size', [0 6],...
+     'VariableTypes', {'string', 'string', 'int32', 'int32', 'double', 'double'},...
+     'VariableNames', {'expName', 'algoName', 'sampleTime',...
+     'numEpisode', 'elapsedTime', 'bestRob'});
+ global workers_num logDir;
+ [~,git_hash_string] = system('git rev-parse HEAD');
+ git_hash_string = strrep(git_hash_string,newline,'');
+ logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
+ h = waitbar(0,'Waiting for experiments to complete...');
+ if workers_num > 1
+     for retry_num = 1:10
+         delete(gcp('nocreate'));
+         parpool(workers_num);
+         p = gcp();
+ 
+         for idx = 1:size(configs, 2)
+            F(idx) = parfeval(p, @falsify_any,3,configs{idx});
+         end
+         returned = [ ];
+         % Build a waitbar to track progress
+         for idx = 1:size(configs, 2)
+             try
+                [completedIdx, ...
+                    numEpisode, elapsedTime, bestRob] ...
+                    = fetchNext(F);
+             catch
+                 break;
+             end
+            % store the result
+            config = configs{completedIdx};
+            result = {config.expName, config.algoName, config.sampleTime,...
+                numEpisode, elapsedTime, bestRob};
+            results = [results; result];
+            writetable(results, logFile);
+            returned = [returned; completedIdx];
+            % update waitbar
+            waitbar(idx/total,h);
+         end
+         old_configs = configs;
+         configs = {};
+         for idx = 1:size(old_configs, 2)
+             if ~ismember(idx, returned)
+                 configs = [configs, old_configs{idx}]; 
+             end
+         end
+         if size(configs, 2) == 0
+            break;
+         end
+     end
+
+     delete(gcp('nocreate'));
+ else
+     h = waitbar(0,'Please wait...');
+     for i = 1:size(configs, 2)
+        config = configs{i};
+        [numEpisode, elapsedTime, bestRob] = ...
+            falsify_any(config);
+        result = {config.expName, config.algoName, config.sampleTime,...
+            numEpisode, elapsedTime, bestRob};
+        results = [results; result];
+        writetable(results, logFile);
+        waitbar(i / total)
+     end
+ end
+ for i = 1:size(br_configs, 2)
+    config = br_configs{i};
+    [numEpisode, elapsedTime, bestRob] = ...
+        falsify_any(config);
+    result = {config.expName, config.algoName, config.sampleTime,...
+                numEpisode, elapsedTime, bestRob};
+    results = [results; result];
+    writetable(results, logFile);
+    waitbar((no_br + i) / total)
+ end
+ close(h);
+end
+
+function [numEpisode, elapsedTime, bestRob] = falsify_any(config)
+    for i = 1:size(config.init_opts, 2)
+       assignin('base', config.init_opts{i}{1}, config.init_opts{i}{2});
+    end
+    if strcmp(config.engine, 's-taliro')
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify_staliro(config);
+    elseif strcmp(config.engine, 'RL')
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify(config);
+    elseif strcmp(config.engine, 'breach')
+        [numEpisode, elapsedTime, bestRob, ~, ~] = falsify_breach(config);
+    end
+end
+
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
+    opt = staliro_options();
+    opt.interpolationtype = config.interpolation;
+    if strcmp(config.option, 'CE')
+        opt.optimization_solver = 'CE_Taliro';
+    end
+    opt.optim_params.n_tests = config.maxEpisodes;
+    [results, ~, ~] = staliro(config.mdl,[], config.input_range, ...
+        repelem(config.stopTime / config.sampleTime, length(config.input_range)),...
+        config.targetFormula, config.preds, config.stopTime, opt);
+    numEpisode = results.run.nTests;
+    elapsedTime = results.run.time;
+    bestRob = results.run.bestRob;
+    bestXout = results.run.bestSample;
+    bestYout = [];
+end
+
+function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_breach(config)
+    mdl = BreachSimulinkSystem(config.mdl, 'all', [], {}, [], 'Verbose', 0);
+    br_model = mdl.copy();
+    in_dim = size(config.input_range, 1);
+    siggens = {};
+    inputs = {};
+    params = {};
+    params_range = [];
+    for i = 1:in_dim
+       name = ['Input', num2str(i)];
+       times = config.stopTime / config.sampleTime;
+       inputs = [inputs, name];
+       siggen = fixed_cp_signal_gen({name}, times, {'linear'});
+       siggens = [siggens, siggen];
+       param_names = cellfun(@(num) [name, '_u', num2str(num)], num2cell(0:(times-1)), 'UniformOutput', false);
+       params = [params, param_names];
+       params_range = [params_range, repmat(transpose(config.input_range(i,:)), [1, times])];
+    end
+    InputGen = BreachSignalGen(num2cell(siggens));
+    br_model.SetInputGen(InputGen);
+    br_model.SetParamRanges(params, params_range');
+    pb = FalsificationProblem(br_model, config.br_formula);
+    falsify_pb = pb.copy();
+    falsify_pb.max_time = 600;
+    falsify_pb.max_obj_eval = config.maxEpisodes;
+    falsify_pb.setup_solver(config.option);
+    falsify_pb.solve();
+    numEpisode = falsify_pb.nb_obj_eval;
+    elapsedTime = falsify_pb.time_spent;
+    bestRob = falsify_pb.obj_best;
+    bestXout = falsify_pb.BrSet_Best;
+    bestYout = [];
+end
+>>>>>>> Stashed changes
