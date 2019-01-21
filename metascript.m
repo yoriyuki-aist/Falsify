@@ -458,9 +458,6 @@ end
 
 if do_insulin
     do_experiment('insulin', insulin_configs, {});
-<<<<<<< Updated upstream
-end
-=======
 end
 
 
