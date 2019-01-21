@@ -1,18 +1,19 @@
-% Configurations
+pwd% Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
-staliro_dir = '../s-taliro_public/';
+workers_num = 1;
+staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
-maxEpisodes = 200;
+maxIter = 1;
+maxEpisodes = 20;
 do_arch2014 = false;
 do_ptc = true;
 do_insulin = false;
 
 config_tmpl = struct('maxIter', maxIter,...
-                'maxEpisodes', maxEpisodes);
+                'maxEpisodes', maxEpisodes,...
+                'agentName', '/RL agent');
             
 % Initialization
 %%%%%%%%%%%%%%%%
@@ -387,10 +388,10 @@ ptc_fml34.init_opts = {{'simTime', 50}, {'en_speed', 1000},...
     {'measureTime', 1}, {'fault_time', 15}, {'spec_num', 1},...
     {'fuel_inj_tol', 1.0}, {'MAF_sensor_tol', 1.0}, {'AF_sensor_tol', 1.0}};
 
-ptc_formulas = {ptc_fml26, ptc_fml27, ptc_fml27_fall, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
+ptc_formulas = {ptc_fml26, ptc_fml27, ptc_fml30, ptc_fml31, ptc_fml32, ptc_fml33, ptc_fml34};
 
-ptc_algomdls = {{'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'},...
-    {'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'}};
+ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}, {'RL', 'DDQN', 'PTC_M1_RL'}, {'RL', 'RAND', 'PTC_M1_RL'},...
+    {'s-taliro', 'SA', 'PTC_M1'}, {'s-taliro', 'CE', 'PTC_M1'}};
 %ptc_algomdls = {{'RL', 'A3C', 'PTC_M1_RL'}};
 
 ptc_sampleTimes = [5];

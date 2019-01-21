@@ -21,9 +21,10 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
 
     function [tout, xout, yout] = runsim(config, normal_preds)
         %mws = get_param(config.mdl, 'modelworkspace');
-        assignin('base', 'Phi', config.monitoringFormula);
-        assignin('base', 'Pred', normal_preds);
-        disp([config.mdl, config.agentName]);
+        system_dimension = size(config.output_range, 1);
+        assignin('base', 'SystemDimension', system_dimension);
+        assignin('base', 'Formula', config.monitoringFormula);
+        assignin('base', 'Preds', normal_preds);
         set_param([config.mdl, config.agentName], 'sample_time', num2str(config.sampleTime));
         set_param([config.mdl, config.agentName], 'input_range', mat2str(config.input_range));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
