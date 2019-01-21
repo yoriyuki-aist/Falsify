@@ -1,7 +1,7 @@
 pwd% Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
@@ -280,23 +280,23 @@ ptc_fml26.targetFormula = '[]_[11,50](pl /\ pu)';
 ptc_fml26.monitoringFormula = 'pl /\ pu';
 ptc_fml26.preds(1).str = 'pl';
 ptc_fml26.preds(1).A = [1 0 0 0];
-ptc_fml26.preds(1).b = 0.2;
+ptc_fml26.preds(1).b = 0.25;
 ptc_fml26.preds(2).str = 'pu';
 ptc_fml26.preds(2).A = [-1 0 0 0];
-ptc_fml26.preds(2).b = 0.2;
+ptc_fml26.preds(2).b = 0.25;
 ptc_fml26.stopTime = 50;
 
 ptc_fml27 = struct(ptc_tmpl);
-ptc_fml27.expName = 'ptc_fml27-rise';
+ptc_fml27.expName = 'ptc_fml27';
 ptc_fml27.input_range = [8.8 69.9; 900.0 1100.0];
 ptc_fml27.targetFormula = '[]_[11,50](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
 ptc_fml27.monitoringFormula = '[.]_[5,5](((r1  /\ <>_[0,0.1] r2) \/ (r2  /\ <>_[0,0.1] r1)) -> []_[1,5](pl /\ pu))';
 ptc_fml27.preds(1).str = 'pl';
 ptc_fml27.preds(1).A = [1 0 0 0];
-ptc_fml27.preds(1).b = 0.1;
+ptc_fml27.preds(1).b = 0.2;
 ptc_fml27.preds(2).str = 'pu';
 ptc_fml27.preds(2).A = [-1 0 0 0];
-ptc_fml27.preds(2).b = 0.1;
+ptc_fml27.preds(2).b = 0.2;
 ptc_fml27.preds(3).str = 'r1';
 ptc_fml27.preds(3).A = [0 0 1 0];
 ptc_fml27.preds(3).b = 25.0;
@@ -338,10 +338,10 @@ ptc_fml32.targetFormula = '[]_[11,50]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl
 ptc_fml32.monitoringFormula = '[.]_[5,5]((power /\ <>_[0,0.1]normal) -> []_[1,5](pl /\ pu))';
 ptc_fml32.preds(1).str = 'pl';
 ptc_fml32.preds(1).A = [1 0 0 0];
-ptc_fml32.preds(1).b = 0.1;
+ptc_fml32.preds(1).b = 0.2;
 ptc_fml32.preds(2).str = 'pu';
 ptc_fml32.preds(2).A = [-1 0 0 0];
-ptc_fml32.preds(2).b = 0.1;
+ptc_fml32.preds(2).b = 0.2;
 ptc_fml32.preds(3).str = 'power';
 ptc_fml32.preds(3).A = [0 -1 0 0];
 ptc_fml32.preds(3).b = -0.51;
