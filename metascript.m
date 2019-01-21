@@ -2,7 +2,7 @@
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
 workers_num = 10;
-staliro_dir = '../s-taliro/';
+staliro_dir = '../s-taliro_public/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
