@@ -1,5 +1,6 @@
 % (C) 2019 National Institute of Advanced Industrial Science and Technology
 % (AIST)
+% (C) 2015 General Electic Global Research - all rights reserved
 
 %% ========================================================================
 clear all
@@ -109,7 +110,7 @@ fml3.preds(1).A = [0 0 0 1 0 0];
 fml3.preds(1).b = 1500.0;
 fml3.preds(2).str = 'p2';
 fml3.preds(2).A = [0 0 0 -1 0 0];
-fml3.preds(2).b = -900.0;
+fml3.preds(2).b = -800.0;
 fml3.stopTime = Parameter.Time.TMax;
 
 % Formula 4, rotor speed
