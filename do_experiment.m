@@ -11,7 +11,7 @@ function do_experiment(name, configs, br_configs)
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
  h = waitbar(0,'Waiting for experiments to complete...');
  if workers_num > 1
-     for retry_num = 1:10
+     for retry_num = 1:100
          delete(gcp('nocreate'));
          parpool(workers_num);
          p = gcp();
@@ -23,7 +23,7 @@ function do_experiment(name, configs, br_configs)
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
-                if idx > 500
+                if idx > 50
                     exc = MException();
                     throw(exc);
                 end
