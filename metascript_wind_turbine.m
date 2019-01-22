@@ -25,7 +25,6 @@ config_tmpl = struct('maxIter', maxIter,...
 % Initialization
 %%%%%%%%%%%%%%%%
 initialization
-SimplifiedTurbine_Config;
 
 addpath('wind-turbine')
 % add some paths
@@ -35,6 +34,7 @@ addpath(config.wafo_path)
 %load wind files
 load('ClassA.mat')
 load('ClassA_config.mat')
+SimplifiedTurbine_Config;
 
 load('aeromaps3.mat');
 Parameter.InitialConditions = load('InitialConditions');
