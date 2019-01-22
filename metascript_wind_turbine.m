@@ -74,6 +74,8 @@ tmpl.init_opts = {};
 tmpl.interpolation = {'linear'};
 tmpl.agentName = '/RL agent';
 tmpl.stopTime = 630;
+tmpl.init_opts = {{'Parameter', Parameter}, {'cT_modelrm', cT_modelrm},...
+    {'cP_modelrm', cP_modelrm}};
 
 % Formula 1, mnimum pitch angle
 fml1 = struct(tmpl);
@@ -143,9 +145,9 @@ fml5.stopTime = Parameter.Time.TMax;
 fmls = {fml1, fml2, fml3, fml4, fml5};
 
 % Algorithms
-%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
-algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'},...
-    {'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'RAND', 'SimplifiedWTModelRL'}};
+algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
+%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'},...
+%    {'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'RAND', 'SimplifiedWTModelRL'}};
 
 % Other parameters
 sampleTime = 10;
