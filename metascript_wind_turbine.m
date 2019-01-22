@@ -10,13 +10,13 @@ close all
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 4;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 
-maxIter = 1;
-maxEpisodes = 1;
+maxIter = 20;
+maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
@@ -139,12 +139,12 @@ fml5.preds(2).b = 1.0;
 fml5.stopTime = Parameter.Time.TMax;
 
 
-fmls = {fml1, fml3, fml4, fml5};
+fmls = {fml1, fml2, fml3, fml4, fml5};
 
 % Algorithms
-algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
-%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'},...
-%    {'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'RAND', 'SimplifiedWTModelRL'}};
+%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
+algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'},...
+    {'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'RAND', 'SimplifiedWTModelRL'}};
 
 % Other parameters
 sampleTime = 10;
