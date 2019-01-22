@@ -1,4 +1,7 @@
-pwd% Configurations
+% (C) 2019 National Institute of Advanced Industrial Science and Technology
+% (AIST)
+
+% Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
 workers_num = 10;
@@ -7,10 +10,6 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 1;
 maxEpisodes = 20;
-do_arch2014 = false;
-do_ptc = true;
-do_insulin = false;
-
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'agentName', '/RL agent');
