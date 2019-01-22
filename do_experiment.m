@@ -9,12 +9,13 @@ function do_experiment(name, configs, br_configs)
  [~,git_hash_string] = system('git rev-parse HEAD');
  git_hash_string = strrep(git_hash_string,newline,'');
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
+ h = waitbar(0,'Waiting for experiments to complete...');
  if workers_num > 1
-     for retry_num = 1:10
+     for retry_num = 1:100
          delete(gcp('nocreate'));
          parpool(workers_num);
          p = gcp();
-         h = waitbar(0,'Waiting for experiments to complete...');
+         disp(size(configs, 2));
          for idx = 1:size(configs, 2)
             F(idx) = parfeval(p, @falsify_any,3,configs{idx});
          end
@@ -22,6 +23,10 @@ function do_experiment(name, configs, br_configs)
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
+                if idx > 50
+                    exc = MException();
+                    throw(exc);
+                end
                 [completedIdx, ...
                     numEpisode, elapsedTime, bestRob] ...
                     = fetchNext(F);
@@ -52,7 +57,6 @@ function do_experiment(name, configs, br_configs)
 
      delete(gcp('nocreate'));
  else
-     h = waitbar(0,'Please wait...');
      for i = 1:size(configs, 2)
         config = configs{i};
         [numEpisode, elapsedTime, bestRob] = ...
