@@ -30,11 +30,12 @@ addpath('wind-turbine')
 % add some paths
 addpath('wind-turbine/tools/')
 addpath('wind-turbine/wind/')
+SimplifiedTurbine_Config;
 addpath(config.wafo_path)
 %load wind files
 load('ClassA.mat')
 load('ClassA_config.mat')
-SimplifiedTurbine_Config;
+
 
 load('aeromaps3.mat');
 Parameter.InitialConditions = load('InitialConditions');
