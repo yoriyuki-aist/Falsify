@@ -1,7 +1,10 @@
+% (C) 2019 National Institute of Advanced Industrial Science and Technology
+% (AIST)
+
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
