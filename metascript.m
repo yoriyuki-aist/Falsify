@@ -1,3 +1,6 @@
+% (C) 2019 National Institute of Advanced Industrial Science and Technology
+% (AIST)
+
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
