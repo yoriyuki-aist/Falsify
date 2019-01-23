@@ -16,6 +16,7 @@ function do_experiment(name, configs, br_configs)
          parpool(workers_num);
          p = gcp();
          disp(size(configs, 2));
+         clear F;
          for idx = 1:size(configs, 2)
             F(idx) = parfeval(p, @falsify_any,3,configs{idx});
          end
@@ -29,7 +30,9 @@ function do_experiment(name, configs, br_configs)
                 [completedIdx, ...
                     numEpisode, elapsedTime, bestRob] ...
                     = fetchNext(F);
-             catch
+             catch ME
+                 disp(ME.identifier);
+                 disp(ME.message);
                  break;
              end
             % store the result
@@ -40,7 +43,7 @@ function do_experiment(name, configs, br_configs)
             writetable(results, logFile);
             returned = [returned; completedIdx];
             % update waitbar
-            waitbar(idx/total,h);
+            waitbar(idx/total);
          end
          old_configs = configs;
          configs = {};
