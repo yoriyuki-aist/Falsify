@@ -24,7 +24,7 @@ function do_experiment(name, configs, br_configs)
          % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
-                if idx > 50
+                if idx > 10
                     exc = MException();
                     throw(exc);
                 end
