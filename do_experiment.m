@@ -9,7 +9,6 @@ function do_experiment(name, configs, br_configs)
  [~,git_hash_string] = system('git rev-parse HEAD');
  git_hash_string = strrep(git_hash_string,newline,'');
  logFile = fullfile(logDir, [name, '-', datestr(datetime('now'), 'yyyy-mm-dd-HH-MM'), '-', git_hash_string, '.csv']);
- h = waitbar(0,'Waiting for experiments to complete...');
  if workers_num > 1
      for retry_num = 1:100
          delete(gcp('nocreate'));
@@ -44,7 +43,6 @@ function do_experiment(name, configs, br_configs)
             writetable(results, logFile);
             returned = [returned; completedIdx];
             % update waitbar
-            waitbar(idx/total);
          end
          old_configs = configs;
          configs = {};
@@ -57,7 +55,6 @@ function do_experiment(name, configs, br_configs)
             break;
          end
      end
-
      delete(gcp('nocreate'));
  else
      for i = 1:size(configs, 2)
@@ -68,7 +65,6 @@ function do_experiment(name, configs, br_configs)
             numEpisode, elapsedTime, bestRob};
         results = [results; result];
         writetable(results, logFile);
-        waitbar(i / total)
      end
  end
  for i = 1:size(br_configs, 2)
@@ -79,9 +75,7 @@ function do_experiment(name, configs, br_configs)
                 numEpisode, elapsedTime, bestRob};
     results = [results; result];
     writetable(results, logFile);
-    waitbar((no_br + i) / total)
  end
- close(h);
 end
 
 function [numEpisode, elapsedTime, bestRob] = falsify_any(config)
