@@ -85,7 +85,7 @@ fml1.monitoringFormula = 'p2 -> p1';
 
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [0 0 0 0 0 -1];
-fml1.preds(1).b = -5.0;
+fml1.preds(1).b = -10.0;
 fml1.preds(2).str = 'p2';
 fml1.preds(2).A = [0 -1 0 0 0 0];
 fml1.preds(2).b = -2.99;
@@ -142,7 +142,7 @@ fml5.preds(2).b = 2.0;
 fml5.stopTime = Parameter.Time.TMax;
 
 
-fmls = {fml2, fml4, fml5};
+fmls = {fml1, fml2, fml4, fml5};
 
 % Algorithms
 %algorithms = { {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}};
