@@ -96,7 +96,7 @@ fml2.monitoringFormula = 'p1';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 0 0 0 0 1];
-fml2.preds(1).b = 15.0;
+fml2.preds(1).b = 13.0;
 fml2.stopTime = Parameter.Time.TMax;
 
 % Formula 3, gnerator torque
@@ -121,7 +121,7 @@ fml4.monitoringFormula = 'p1';
 
 fml4.preds(1).str = 'p1';
 fml4.preds(1).A = [0 0 0 0 1 0];
-fml4.preds(1).b = 15.0;
+fml4.preds(1).b = 13.0;
 fml4.stopTime = Parameter.Time.TMax;
 
 % Formula 5, difference between the command pitch and the measuread pitch
@@ -142,9 +142,10 @@ fml5.stopTime = Parameter.Time.TMax;
 fmls = {fml1, fml3, fml4, fml5};
 
 % Algorithms
-algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
-%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'},...
-%    {'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'RAND', 'SimplifiedWTModelRL'}};
+%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
+algorithms = {{'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'},...
+    {'RL', 'RAND', 'SimplifiedWTModelRL'},{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'},...
+    {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'}};
 
 % Other parameters
 sampleTime = 10;
