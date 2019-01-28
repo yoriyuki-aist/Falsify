@@ -20,7 +20,6 @@ function do_experiment(name, configs, br_configs)
             F(idx) = parfeval(p, @falsify_any,3,configs{idx});
          end
          returned = [ ];
-         % Build a waitbar to track progress
          for idx = 1:size(configs, 2)
              try
                 if idx > 10
