@@ -53,7 +53,8 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     bestRob = inf;
     normal_preds = normalize_pred(config.preds, config.output_range);
     py.driver.start_learning(config.option,...
-        size(config.output_range, 1), size(config.input_range, 1));
+        size(config.output_range, 1) * config.multiplicity,...
+        size(config.input_range, 1));
     tic;
   
 

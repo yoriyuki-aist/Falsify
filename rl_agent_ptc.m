@@ -22,6 +22,7 @@ classdef rl_agent_ptc < matlab.System & matlab.system.mixin.Propagates ...
 
     properties(DiscreteState)
        action;
+       state;
        last_t;
     end
 
@@ -54,6 +55,7 @@ classdef rl_agent_ptc < matlab.System & matlab.system.mixin.Propagates ...
             middle = (lower + upper)/2.0;
             obj.action = (action_normalized .* (upper - middle) + middle);
             obj.last_t = 0;
+            obj.state = zeros(1, 10);
         end
         
         function setupImpl(obj)
@@ -69,8 +71,11 @@ classdef rl_agent_ptc < matlab.System & matlab.system.mixin.Propagates ...
             coder.extrinsic('py.driver.driver')
             action_normalized = [0 0];
             t = getCurrentTime(obj);
-            if floor(t ./ obj.sample_time) ~= floor(obj.last_t ./ obj.sample_time)
-                action_normalized = double(py.driver.driver(state', reward(1)));
+            count = floor(t ./ obj.sample_time * 5);
+            obj.state(mod(2*count + 8, 10)+1) = state(1);
+            obj.state(mod(2*count + 9, 10)+1) = state(2);
+            if floor(t ./ obj.saple_time) ~= floor(obj.last_t ./ obj.sample_time)
+                action_normalized = double(py.driver.driver(obj.state, reward(1)));
                 action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
                 lower = obj.input_range(:,1)';
                 upper = obj.input_range(:,2)';
@@ -131,7 +136,11 @@ classdef rl_agent_ptc < matlab.System & matlab.system.mixin.Propagates ...
                    sz = [1];
                    dt = 'double';
                    cp = false;
-           end
+               case 'state'
+                   sz = [1 10];
+                   dt = 'double';
+                   cp = false;
+            end
         end
 
         function flag = isInputSizeMutableImpl(~,~)
