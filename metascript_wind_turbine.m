@@ -10,13 +10,13 @@ close all
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 1;
+workers_num = 10;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 
-maxIter = 1;
-maxEpisodes = 1;
+maxIter = 20;
+maxEpisodes = 100;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
@@ -68,8 +68,8 @@ Parameter = SimplifiedTurbine_ParamterFile(Parameter);
 %%%%%%%%%%%%%%%
 
 tmpl = struct(config_tmpl);
-tmpl.input_range = [8.0 24.0];
-tmpl.output_range = [0.0 13.0; 1.0 3.0; 2.80*10^4 5.0*10^4; 1000.0 1300.0; 0.0 13.0;10.0 13.0];
+tmpl.input_range = [8.0 16.0];
+tmpl.output_range = [0.0 13.0; 1.0 3.0; 2.50*10^4 5.0*10^4; 1000.0 1300.0; 10.0 13.0;0.0 13.0];
 tmpl.init_opts = {};
 tmpl.interpolation = {'linear'};
 tmpl.agentName = '/RL agent';
@@ -85,10 +85,10 @@ fml1.monitoringFormula = 'p2 -> p1';
 
 fml1.preds(1).str = 'p1';
 fml1.preds(1).A = [0 0 0 0 0 -1];
-fml1.preds(1).b = -5.0;
+fml1.preds(1).b = -0.001;
 fml1.preds(2).str = 'p2';
-fml1.preds(2).A = [0 1 0 0 0 0];
-fml1.preds(2).b = 2.5;
+fml1.preds(2).A = [0 -1 0 0 0 0];
+fml1.preds(2).b = -2.99;
 fml1.stopTime = Parameter.Time.TMax;
 
 % Formula 2, maximum pitch angle
@@ -99,7 +99,7 @@ fml2.monitoringFormula = 'p1';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 0 0 0 0 1];
-fml2.preds(1).b = 13.0;
+fml2.preds(1).b = 14.2;
 fml2.stopTime = Parameter.Time.TMax;
 
 % Formula 3, gnerator torque
@@ -110,10 +110,10 @@ fml3.monitoringFormula = 'p1 /\ p2';
 
 fml3.preds(1).str = 'p1';
 fml3.preds(1).A = [0 0 1 0 0 0];
-fml3.preds(1).b = 1500.0;
+fml3.preds(1).b = 4.75*10^4;
 fml3.preds(2).str = 'p2';
 fml3.preds(2).A = [0 0 -1 0 0 0];
-fml3.preds(2).b = -800.0;
+fml3.preds(2).b = -2.10*10^4;
 fml3.stopTime = Parameter.Time.TMax;
 
 % Formula 4, rotor speed
@@ -124,34 +124,35 @@ fml4.monitoringFormula = 'p1';
 
 fml4.preds(1).str = 'p1';
 fml4.preds(1).A = [0 0 0 0 1 0];
-fml4.preds(1).b = 13.0;
+fml4.preds(1).b = 14.3;
 fml4.stopTime = Parameter.Time.TMax;
 
 % Formula 5, difference between the command pitch and the measuread pitch
 fml5 = struct(tmpl);
 fml5.expName = 'fml5';
-fml5.targetFormula = '[]_[30, 630](<>_[0, 10](p1 /\ p2))';
-fml5.monitoringFormula = 'p1 /\ p2';
+fml5.targetFormula = '[]_[30, 630](<>_[0,5](p1 /\ p2))';
+fml5.monitoringFormula = '[.]_[0, 5][.]_[5, 5](<>_[0,5](p1 /\ p2))';
 
 fml5.preds(1).str = 'p1';
 fml5.preds(1).A = [-1 0 0 0 0 1];
-fml5.preds(1).b = 1.0;
+fml5.preds(1).b = 1.6;
 fml5.preds(2).str = 'p2';
 fml5.preds(2).A = [1 0 0 0 0 -1];
-fml5.preds(2).b = 1.0;
+fml5.preds(2).b = 1.6;
 fml5.stopTime = Parameter.Time.TMax;
 
 
-fmls = {fml1, fml2, fml3, fml4, fml5};
+fmls = {fml2, fml3, fml4, fml5};
 
 % Algorithms
-%algorithms = {{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
-algorithms = {{'RL', 'A3C', 'SimplifiedWTModelRL'}, {'RL', 'DDQN', 'SimplifiedWTModelRL'},...
-    {'RL', 'RAND', 'SimplifiedWTModelRL'},{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}};
-    %{'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'}};
+%algorithms = { {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
+%, {'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'}};
+algorithms = {{'RL', 'DDQN', 'SimplifiedWTModelRL'}, {'RL', 'A3C', 'SimplifiedWTModelRL'},...
+    {'RL', 'RAND', 'SimplifiedWTModelRL'},{'s-taliro', 'SA', 'SimplifiedWTModelSTaLiRo'},...
+    {'s-taliro', 'CE', 'SimplifiedWTModelSTaLiRo'}};
 
 % Other parameters
-sampleTime = 10;
+sampleTime = 5;
 
 % Generate configurations
 configs = {};
