@@ -16,7 +16,7 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 
 maxIter = 20;
-maxEpisodes = 100;
+maxEpisodes = 200;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
