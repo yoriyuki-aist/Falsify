@@ -4,12 +4,12 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 20;
-maxEpisodes = 200;
+maxIter = 1;
+maxEpisodes = 20;
 do_arch2014 = false;
 do_ptc = true;
 do_insulin = false;
