@@ -22,7 +22,7 @@ function do_experiment(name, configs, br_configs)
          returned = [ ];
          for idx = 1:size(configs, 2)
              try
-                if idx > 10
+                if idx > 18
                     exc = MException();
                     throw(exc);
                 end
