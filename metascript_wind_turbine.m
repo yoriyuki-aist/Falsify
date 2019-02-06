@@ -131,18 +131,19 @@ fml4.stopTime = Parameter.Time.TMax;
 fml5 = struct(tmpl);
 fml5.expName = 'fml5';
 fml5.targetFormula = '[]_[30, 630](<>_[0,5](p1 /\ p2))';
-fml5.monitoringFormula = '[.]_[0, 5][.]_[5, 5](<>_[0,5](p1 /\ p2))';
+fml5.monitoringFormula = '[.]_[50, 50](<>_[0,50](p1 /\ p2))';
 
 fml5.preds(1).str = 'p1';
 fml5.preds(1).A = [-1 0 0 0 0 1];
-fml5.preds(1).b = 1.6;
+fml5.preds(1).b = 1.62;
 fml5.preds(2).str = 'p2';
 fml5.preds(2).A = [1 0 0 0 0 -1];
-fml5.preds(2).b = 1.6;
+fml5.preds(2).b = 1.62;
 fml5.stopTime = Parameter.Time.TMax;
 
 
-fmls = {fml2, fml3, fml4, fml5};
+%fmls = {fml2, fml3, fml4, fml5};
+fmls = {fml5};
 
 % Algorithms
 %algorithms = { {'RL', 'DDQN', 'SimplifiedWTModelRL'}};
