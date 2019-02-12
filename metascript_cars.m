@@ -30,7 +30,6 @@ cars_tmpl.output_range = [0 100; 0 100; 0 100; 0 100];
 cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
             
-algoFullmdls = {};
 algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'SA', 'cars'}};
 algoBlackboxmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
