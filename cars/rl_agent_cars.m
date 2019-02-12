@@ -48,7 +48,7 @@ classdef rl_agent_cars < matlab.System & matlab.system.mixin.Propagates ...
         function resetImpl(obj)
             action_normalized = [0 0];
             coder.extrinsic('py.driver.act')
-            action_normalized = double(py.driver.act([-1 -1 -1]));
+            action_normalized = double(py.driver.act([-0.90, -0.90, -0.90, -0.90    ]));
             action_normalized = min([1.0 1.0], max([-1.0 -1.0], action_normalized));
             lower = obj.input_range(:,1)';
             upper = obj.input_range(:,2)';

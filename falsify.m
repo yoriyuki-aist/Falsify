@@ -63,7 +63,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         rob = dp_taliro(config.targetFormula, normal_preds, Y, T, [], [], []);
         py.driver.stop_episode_and_train(Y(end, :), exp(- R(end, 1)) - 1);
         disp(['Current iteration: ', num2str(numEpisode), ', rob = ', num2str(rob)])
-        if rob < bestRob
+        if rob <= bestRob
             bestRob = rob;
             bestYout = yout;
             bestXout = xout;
