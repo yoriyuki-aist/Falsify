@@ -29,10 +29,14 @@ cars_tmpl.input_range = [0.0 1.0; 0.0 1.0];
 cars_tmpl.output_range = [0 100; 0 100; 0 100; 0 100];
 cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
-            
+
+%algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
+algoBlackboxmdls = {};
+
+
 algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'SA', 'cars'}};
-algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
+%algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
 %     {'RL', 'RAND', 'autotrans_mod04'},...
 %     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
 %    {'s-taliro', 'SA', 'cars_staliro'}, {'s-taliro', 'CE', 'cars_staliro'}};
@@ -59,7 +63,7 @@ fml2.monitoringFormula = '[.]_[20,20]<>_[0, 20]p1';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 0 0 -1];
-fml2.preds(1).b = -5.0;
+fml2.preds(1).b = -10.0;
 
 fml2.stopTime = 100;
 
@@ -94,19 +98,18 @@ fml4.stopTime = 100;
 %Reactivity
 fml5 = struct(cars_tmpl);
 fml5.expName = 'fml5';
-fml5.targetFormula = '[]<>_[0,20]([]_[0,20]p1 -> []_[20,40]p2)';
-fml5.monitoringFormula = '[.]_[40,40]<>_[0,20]([]_[0,20]p1 -> []_[20,40]p2)';
+fml5.targetFormula = '[]<>_[0,5]([]_[0,5]p1 -> []_[10,20]p2)';
+fml5.monitoringFormula = '[.]_[20,20]<>_[0,5]([]_[0,5]p1 -> []_[10,20]p2)';
 fml5.stopTime = 30;
 fml5.preds(1).str = 'p1';
 fml5.preds(1).A = [-1 0 0 0];
-fml5.preds(1).b = -20;
+fml5.preds(1).b = -10;
 fml5.preds(2).str = 'p2';
 fml5.preds(2).A = [0 0 0 -1];
-fml5.preds(2).b = -40;
+fml5.preds(2).b = -10;
 
 
 formulas = {fml1, fml2, fml3, fml4, fml5 };
-%formulas = {fml1};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
