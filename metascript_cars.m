@@ -109,7 +109,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -10;
 
 
-formulas = {fml1, fml2, fml3, fml4, fml5 };
+formulas = {fml2, fml5};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
