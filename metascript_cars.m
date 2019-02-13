@@ -33,10 +33,10 @@ cars_tmpl.interpolation = {'linear'};
 %algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
 algoBlackboxmdls = {};
 
-
-algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
+algoFullmdls = {};
+%algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'SA', 'cars'}};
-%algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
+algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
 %     {'RL', 'RAND', 'autotrans_mod04'},...
 %     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
 %    {'s-taliro', 'SA', 'cars_staliro'}, {'s-taliro', 'CE', 'cars_staliro'}};
@@ -109,7 +109,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -10;
 
 
-formulas = {fml2, fml5};
+formulas = {fml2, fml3, fml4, fml5};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
