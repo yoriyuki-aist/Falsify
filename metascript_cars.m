@@ -31,7 +31,7 @@ cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
 
 %algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
-algoBlackboxmdls = {};
+%algoBlackboxmdls = {};
 
 algoFullmdls = {};
 %algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
