@@ -30,10 +30,10 @@ cars_tmpl.output_range = [0 100; 0 100; 0 100; 0 100];
 cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
 
-%algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
+algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {};
 
-algoFullmdls = {};
+%algoFullmdls = {};
 %algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'SA', 'cars'}};
 algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
@@ -58,8 +58,8 @@ fml1.stopTime = 100;
 % Guarantee
 fml2 = struct(cars_tmpl);
 fml2.expName = 'fml2';
-fml2.targetFormula = '[]<>_[0,20]p1';
-fml2.monitoringFormula = '[.]_[20,20]<>_[0, 20]p1';
+fml2.targetFormula = '[]<>_[0,30]p1';
+fml2.monitoringFormula = '[.]_[30,30]<>_[0, 30]p1';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 0 0 -1];
@@ -87,8 +87,8 @@ fml3.stopTime = 100;
 %Persistence
 fml4 = struct(cars_tmpl);
 fml4.expName = 'fml4';
-fml4.targetFormula = '[]<>_[0,20][]_[0,20]p1';
-fml4.monitoringFormula = '[.]_[40,40]<>_[0,20][]_[0,20]p1';
+fml4.targetFormula = '[]<>_[0,30][]_[0,10]p1';
+fml4.monitoringFormula = '[.]_[40,40]<>_[0,30][]_[0,10]p1';
 fml4.preds(1).str = 'p1';
 fml4.preds(1).A = [0 0 0 -1];
 fml4.preds(1).b = -10;
@@ -98,8 +98,8 @@ fml4.stopTime = 100;
 %Reactivity
 fml5 = struct(cars_tmpl);
 fml5.expName = 'fml5';
-fml5.targetFormula = '[]<>_[0,5]([]_[0,5]p1 -> []_[10,20]p2)';
-fml5.monitoringFormula = '[.]_[20,20]<>_[0,5]([]_[0,5]p1 -> []_[10,20]p2)';
+fml5.targetFormula = '[]<>_[0,10]([]_[0,5]p1 -> []_[10,20]p2)';
+fml5.monitoringFormula = '[.]_[25,25]<>_[0,10]([]_[0,5]p1 -> []_[10,20]p2)';
 fml5.stopTime = 30;
 fml5.preds(1).str = 'p1';
 fml5.preds(1).A = [-1 0 0 0];
@@ -109,7 +109,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -10;
 
 
-formulas = {fml2, fml3, fml4, fml5};
+formulas = {fml1, fml2, fml3, fml4, fml5};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
