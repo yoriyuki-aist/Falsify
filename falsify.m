@@ -3,7 +3,10 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     function [Y, T, R] = yout2TY(yout)
             Y = yout.getElement(2).Values.Data;
             T = yout.getElement(2).Values.Time;
+            [T,ia,~] = unique(T,'first');
+            Y = Y(ia,:);
             R = yout.getElement(1).Values.Data;
+            R = R(end,1);
     end
 
     function [normal_preds] = normalize_pred(preds, range)
@@ -60,8 +63,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     for numEpisode=1:config.maxEpisodes
         [~, xout, yout] = runsim(config, normal_preds);
         [Y, T, R] = yout2TY(yout);
+        plot(T, Y);
         rob = dp_taliro(config.targetFormula, normal_preds, Y, T, [], [], []);
-        py.driver.stop_episode_and_train(Y(end, :), exp(- R(end, 1)) - 1);
+        py.driver.stop_episode_and_train(Y(end, :), exp(- R) - 1);
         disp(['Current iteration: ', num2str(numEpisode), ', rob = ', num2str(rob)])
         if rob <= bestRob
             bestRob = rob;

@@ -93,6 +93,7 @@ end
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
     opt = staliro_options();
     opt.interpolationtype = config.interpolation;
+    opt.fals_at_zero = 0;
     if strcmp(config.option, 'CE')
         opt.optimization_solver = 'CE_Taliro';
     end
