@@ -1,46 +1,37 @@
-# Falsify
+# Falsification of Cyber Physical Systems by Deep Reinforcement Learning
 
-Falsify Simulink models using deep reinforcement learning
+## What is this?
+
+This package is to evaluate deep reinforcement learning technology for falsification of cyber-physical systems.  It contains four models (an auto-transmission model, a wind turbine model, a power train control model and an insulin model.  The insulin model currently does not work.
+
+## Audience
+
+This package is for researchers and developpers who evaluates the technology.
+
 
 ## Reqiurment
 
-- s-taliro
 - MATLAB
 - Simulink
 - Stateflow
 - Decent distribution of Python
 - ChainerRL
+- s-taliro
+- breach
 
-## Setup
+## Agenda
 
-Clone the repository
-```
-$ git clone git@bitbucket.org:yoriyuki-aist/s-taliro.git
-$ git clone git@bitbucket.org:yoriyuki-aist/falsify.git
-```
-Install Anaconda or miniconda from https://www.continuum.io/downloads and follow the instruction.
-Create your own environment
-````
-conda create -n <env-name> python=3
-source activate <env-name>
-````
-Install ChainerRL
-````
-pip install chainerrl
-````
-Run matlab using the current Python environment
-```
-<path-to-MATLAB>/matlab
-```
-Inside the matlab, go to `s-taliro` directory and
-```
->> setup_staliro
->> cd monitor
->> setup_monitor
-```
-Go to `falsify` directory
-```
->> cd ../../falsify
->> falsify
-```
-If you open autotorans_mod04 model by Simulink, then you can use the scope to inspect the change of values.
+- metascript.m : scripts for autotransmission, powertrain and insulin models
+- metascript_wind_turbine.m : scripts for the wind turbine model.
+
+## License
+
+(C) 2019 National Institute of Advanced Industrial Science and Technology (AIST)
+
+The contents under the wind-turbine directory is copyrighted by the respective authors.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.                                    
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.                           
+
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA

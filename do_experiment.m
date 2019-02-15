@@ -22,7 +22,7 @@ function do_experiment(name, configs, br_configs)
          returned = [ ];
          for idx = 1:size(configs, 2)
              try
-                if idx > 18
+                if idx > 10
                     exc = MException();
                     throw(exc);
                 end
@@ -93,6 +93,7 @@ end
 function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify_staliro(config)
     opt = staliro_options();
     opt.interpolationtype = config.interpolation;
+    opt.fals_at_zero = 0;
     if strcmp(config.option, 'CE')
         opt.optimization_solver = 'CE_Taliro';
     end
