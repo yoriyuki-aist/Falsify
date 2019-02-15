@@ -1,3 +1,5 @@
+addpath('autotrans', 'cars', 'insulin', 'PTC');
+
 % Initialization
 %%%%%%%%%%%%%%%%
 if exist('dp_taliro.m', 'file') == 0

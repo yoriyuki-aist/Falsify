@@ -3,7 +3,10 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     function [Y, T, R] = yout2TY(yout)
             Y = yout.getElement(2).Values.Data;
             T = yout.getElement(2).Values.Time;
+            [T,ia,~] = unique(T,'first');
+            Y = Y(ia,:);
             R = yout.getElement(1).Values.Data;
+            R = R(end,1);
     end
 
     function [normal_preds] = normalize_pred(preds, range)
@@ -26,8 +29,8 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         assignin('base', 'SystemDimension', system_dimension);
         assignin('base', 'Formula', config.monitoringFormula);
         assignin('base', 'Preds', normal_preds);
-        set_param([config.mdl, config.agentName], 'sample_time', num2str(config.sampleTime));
-        set_param([config.mdl, config.agentName], 'input_range', mat2str(config.input_range));
+      set_param([config.mdl, config.agentName], 'sample_time', num2str(config.sampleTime));
+      set_param([config.mdl, config.agentName], 'input_range', mat2str(config.input_range));
         simOut = sim(config.mdl,'SimulationMode','normal','AbsTol','1e-5',...
                      'CaptureErrors', 'on',...
                      'SaveTime', 'on', 'TimeSaveName', 'tout',...
@@ -52,8 +55,8 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     load_system(config.mdl);
     bestRob = inf;
     normal_preds = normalize_pred(config.preds, config.output_range);
-    py.driver.start_learning(config.option,...
-        size(config.output_range, 1), size(config.input_range, 1));
+   py.driver.start_learning(config.option,...
+       size(config.output_range, 1), size(config.input_range, 1));
     tic;
   
 
@@ -61,9 +64,9 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
         [~, xout, yout] = runsim(config, normal_preds);
         [Y, T, R] = yout2TY(yout);
         rob = dp_taliro(config.targetFormula, normal_preds, Y, T, [], [], []);
-        py.driver.stop_episode_and_train(Y(end, :), exp(- R(end, 1)) - 1);
+        py.driver.stop_episode_and_train(Y(end, :), exp(- R) - 1);
         disp(['Current iteration: ', num2str(numEpisode), ', rob = ', num2str(rob)])
-        if rob < bestRob
+        if rob <= bestRob
             bestRob = rob;
             bestYout = yout;
             bestXout = xout;
