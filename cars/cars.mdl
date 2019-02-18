@@ -1,6 +1,6 @@
 Model {
   Name			  "cars"
-  Version		  9.1
+  Version		  9.2
   SavedCharacterEncoding  "Shift_JIS"
   GraphicalInterface {
     NumRootInports	    2
@@ -48,7 +48,7 @@ Model {
       UnitExpr		      "inherit"
     }
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.63"
+    ComputedModelVersion    "1.64"
     NumModelReferences	    0
     NumTestPointedSignals   4
     TestPointedSignal {
@@ -88,11 +88,13 @@ Model {
     NumResetEvents	    0
     HasInitializeEvent	    0
     HasTerminateEvent	    0
+    PreCompExecutionDomainType "Unset"
     IsExportFunctionModel   0
     NumParameterArguments   0
     NumExternalFileReferences 0
     OrderedModelArguments   1
   }
+  WebScopes_FoundationPlugin "on"
   DiagnosticSuppressor	  "on"
   SLCCPlugin		  "on"
   NotesPlugin		  "on"
@@ -138,29 +140,17 @@ Model {
 	$ObjectID		5
 	$ClassName		"Simulink.EditorInfo"
 	IsActive		[1]
-	ViewObjType		"SimulinkTopLevel"
-	LoadSaveID		"0"
+	ViewObjType		"StateflowChart"
+	LoadSaveID		"1"
 	Extents			[2217.0, 1271.0]
-	ZoomFactor		[2.5]
-	Offset			[-233.6166071836455, -217.18497744403834]
+	ZoomFactor		[3.0030030030030028]
+	Offset			[121.31299999999999, 88.711000000000013]
       }
       Array {
 	Type			"Simulink.DockComponentInfo"
 	Dimension		2
 	Object {
 	  $ObjectID		  6
-	  Type			  "GLUE2:DDG Component"
-	  ID			  "SymbolManager"
-	  Visible		  [0]
-	  CreateCallback	  "Stateflow.Interface.Panel.createSymbolManagerComponent"
-	  UserData		  "0"
-	  Floating		  [0]
-	  DockPosition		  "Right"
-	  Width			  [300]
-	  Height		  [351]
-	}
-	Object {
-	  $ObjectID		  7
 	  Type			  "GLUE2:PropertyInspector"
 	  ID			  "Property Inspector"
 	  Visible		  [1]
@@ -169,7 +159,19 @@ Model {
 	  Floating		  [0]
 	  DockPosition		  "Right"
 	  Width			  [300]
-	  Height		  [1272]
+	  Height		  [1052]
+	}
+	Object {
+	  $ObjectID		  7
+	  Type			  "GLUE2:DDG Component"
+	  ID			  "SymbolManager"
+	  Visible		  [1]
+	  CreateCallback	  "Stateflow.Interface.Panel.createSymbolManagerComponent"
+	  UserData		  "0"
+	  Floating		  [0]
+	  DockPosition		  "Right"
+	  Width			  [300]
+	  Height		  [191]
 	}
 	PropName		"DockComponentsInfo"
       }
@@ -177,8 +179,8 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAP///wAAAAEAAAEwAAAFFPwCA"
       "AAAAvsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAQAAAEYAAAUUAAAAmgD////7AAAAQgBHAEwAVQBFADIAOgBEAEQARwAgAEMAbwBtAHAAbwBuAGUAbgB0AC8AUwB5AG0AYgBvAGwAT"
-      "QBhAG4AYQBnAGUAcgAAAARSAAABCAAAACAA////AAAIzwAABRQAAAABAAAAAgAAAAEAAAAC/AAAAAEAAAACAAAAD/////8AAAAAAP////8AAAAAA"
+      "QBjAHQAbwByAQAAAEYAAAQ4AAAAmgD////7AAAAQgBHAEwAVQBFADIAOgBEAEQARwAgAEMAbwBtAHAAbwBuAGUAbgB0AC8AUwB5AG0AYgBvAGwAT"
+      "QBhAG4AYQBnAGUAcgEAAAR/AAAA2wAAACAA////AAAIzwAABRQAAAABAAAAAgAAAAEAAAAC/AAAAAEAAAACAAAAD/////8AAAAAAP////8AAAAAA"
       "AAAAP////8BAAAAAP////8AAAAAAAAAAP////8AAAAAAP////8AAAAAAAAAAP////8AAAAAAP////8AAAAAAAAAAP////8AAAAAAP////8AAAAAA"
       "AAAAP////8BAAAAhP////8AAAAAAAAAAP////8BAAAA9v////8AAAAAAAAAAP////8AAAAAAP////8AAAAAAAAAAP////8BAAABev////8AAAAAA"
       "AAAAP////8AAAAAAP////8AAAAAAAAAAP////8AAAAAAP////8AAAAAAAAAAP////8AAAAAAP////8AAAAAAAAAAP////8BAAADof////8AAAAAA"
@@ -192,15 +194,16 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "yoriyuki"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Feb 14 16:20:09 2019"
-  RTWModifiedTimeStamp	  472062009
-  ModelVersionFormat	  "1.%<AutoIncrement:63>"
+  LastModifiedDate	  "Mon Feb 18 20:11:22 2019"
+  RTWModifiedTimeStamp	  472421481
+  ModelVersionFormat	  "1.%<AutoIncrement:64>"
   SampleTimeColors	  on
   SampleTimeAnnotations	  on
   LibraryLinkDisplay	  "disabled"
   WideLines		  off
   ShowLineDimensions	  off
   ShowPortDataTypes	  off
+  ShowAllPropagatedSignalLabels	off
   PortDataTypeDisplayFormat "AliasTypeOnly"
   ShowEditTimeErrors	  on
   ShowEditTimeWarnings	  on
@@ -295,6 +298,7 @@ Model {
 	  }
 	  PropName		  "DomainParams_"
 	}
+	VisualType_		""
       }
       PropName		      "Persistence"
     }
@@ -328,7 +332,7 @@ Model {
     Dimension		    1
     Simulink.ConfigSet {
       $ObjectID		      10
-      Version		      "1.18.0"
+      Version		      "1.18.1"
       DisabledProps	      []
       Description	      ""
       Array {
@@ -336,7 +340,7 @@ Model {
 	Dimension		9
 	Simulink.SolverCC {
 	  $ObjectID		  11
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  ""
 	  StartTime		  "0"
@@ -377,7 +381,7 @@ Model {
 	}
 	Simulink.DataIOCC {
 	  $ObjectID		  12
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  ""
 	  Decimation		  "1"
@@ -418,7 +422,7 @@ Model {
 	}
 	Simulink.OptimizationCC {
 	  $ObjectID		  13
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    8
@@ -485,7 +489,7 @@ Model {
 	}
 	Simulink.DebuggingCC {
 	  $ObjectID		  14
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    1
@@ -569,6 +573,7 @@ Model {
 	  SimStateOlderReleaseMsg "error"
 	  ChecksumConsistencyForSSReuse	"none"
 	  LibraryContextMissingDiagnostic "warning"
+	  MatchCodeGenerationContextForUpdateDiagram "none"
 	  InitInArrayFormatMsg	  "warning"
 	  StrictBusMsg		  "ErrorLevel1"
 	  BusNameAdapt		  "WarnAndRepair"
@@ -599,10 +604,11 @@ Model {
 	  RCSCObservableMsg	  "warning"
 	  ForceCombineOutputUpdateInSim	off
 	  UnitDatabase		  ""
+	  UnderSpecifiedDimensionMsg "none"
 	}
 	Simulink.HardwareCC {
 	  $ObjectID		  15
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  ""
 	  ProdBitPerChar	  8
@@ -650,7 +656,7 @@ Model {
 	}
 	Simulink.ModelReferenceCC {
 	  $ObjectID		  16
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  ""
 	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
@@ -669,7 +675,7 @@ Model {
 	}
 	Simulink.SFSimCC {
 	  $ObjectID		  17
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  ""
 	  SimCustomSourceCode	  ""
@@ -688,6 +694,7 @@ Model {
 	  SimIntegrity		  on
 	  SimUseLocalCustomCode	  off
 	  SimParseCustomCode	  on
+	  SimAnalyzeCustomCode	  off
 	  SimBuildMode		  "sf_incremental_build"
 	  SimGenImportedTypeDefs  off
 	  ModelFunctionsGlobalVisibility "on"
@@ -695,11 +702,13 @@ Model {
 	  EnableRuntimeRecursion  on
 	  MATLABDynamicMemAlloc	  on
 	  MATLABDynamicMemAllocThreshold 65536
+	  CustomCodeFunctionArrayLayout	[]
+	  DefaultCustomCodeFunctionArrayLayout "NotSpecified"
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
 	  $ObjectID		  18
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    16
@@ -748,6 +757,7 @@ Model {
 	  CustomSource		  ""
 	  CustomLibrary		  ""
 	  CustomDefine		  ""
+	  CustomBLASCallback	  ""
 	  CustomLAPACKCallback	  ""
 	  CustomFFTCallback	  ""
 	  CustomInitializer	  ""
@@ -762,7 +772,7 @@ Model {
 	  CodeExecutionProfiling  off
 	  CodeExecutionProfileVariable "executionProfile"
 	  CodeProfilingSaveOptions "SummaryOnly"
-	  CodeProfilingInstrumentation off
+	  CodeProfilingInstrumentation "off"
 	  SILDebugging		  off
 	  TargetLang		  "C"
 	  IncludeBusHierarchyInRTWFileBlockHierarchyMap	off
@@ -785,7 +795,7 @@ Model {
 	    Dimension		    2
 	    Simulink.CodeAppCC {
 	      $ObjectID		      19
-	      Version		      "1.18.0"
+	      Version		      "1.18.1"
 	      Array {
 		Type			"Cell"
 		Dimension		30
@@ -875,7 +885,7 @@ Model {
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
 	      $ObjectID		      20
-	      Version		      "1.18.0"
+	      Version		      "1.18.1"
 	      Array {
 		Type			"Cell"
 		Dimension		16
@@ -921,6 +931,7 @@ Model {
 	      GeneratePreprocessorConditionals "Use local settings"
 	      CombineOutputUpdateFcns on
 	      CombineSignalStateStructs	off
+	      GroupInternalDataByFunction off
 	      SuppressErrorStatus     off
 	      IncludeFileDelimiter    "Auto"
 	      ERTCustomFileBanners    off
@@ -929,9 +940,9 @@ Model {
 	      MatFileLogging	      on
 	      MultiInstanceERTCode    off
 	      CodeInterfacePackaging  "Nonreusable function"
+	      PurelyIntegerCode	      off
 	      SupportNonFinite	      on
 	      SupportComplex	      on
-	      PurelyIntegerCode	      off
 	      SupportContinuousTime   on
 	      SupportNonInlinedSFcns  on
 	      RemoveDisableFunc	      off
@@ -939,6 +950,7 @@ Model {
 	      SupportVariableSizeSignals off
 	      ParenthesesLevel	      "Nominal"
 	      CastingMode	      "Nominal"
+	      PreserveStateflowLocalDataDimensions off
 	      MATLABClassNameForMDSCustomization "Simulink.SoftwareTarget.GRTCustomization"
 	      ModelStepFunctionPrototypeControlCompliant off
 	      CPPClassGenCompliant    on
@@ -954,6 +966,7 @@ Model {
 	      LUTObjectStructOrderExplicitValues "Size,Breakpoints,Table"
 	      LUTObjectStructOrderEvenSpacing "Size,Breakpoints,Table"
 	      ArrayLayout	      "Column-major"
+	      UnsupportedSFcnMsg      "error"
 	      ERTHeaderFileRootName   "$R$E"
 	      ERTSourceFileRootName   "$R$E"
 	      ERTDataFileRootName     "$R_data"
@@ -978,7 +991,7 @@ Model {
 	}
 	SlCovCC.ConfigComp {
 	  $ObjectID		  21
-	  Version		  "1.18.0"
+	  Version		  "1.18.1"
 	  DisabledProps		  []
 	  Description		  "Simulink Coverage Configuration Component"
 	  Name			  "Simulink Coverage"
@@ -1178,6 +1191,7 @@ Model {
       Opaque		      off
       MaskHideContents	      off
       SFBlockType	      "NONE"
+      VariantControlMode      "Expression"
       Variant		      off
       GeneratePreprocessorConditionals off
       AllowZeroVariantControls off
@@ -1185,6 +1199,10 @@ Model {
       TreatAsGroupedWhenPropagatingVariantConditions on
       ContentPreviewEnabled   off
       IsWebBlock	      off
+      IsObserver	      off
+      Latency		      "0"
+      AutoFrameSizeCalculation off
+      IsWebBlockPanel	      off
     }
     Block {
       BlockType		      Terminator
@@ -1195,8 +1213,8 @@ Model {
     Location		    [-2560, 23, 0, 1440]
     Open		    off
     PortBlocksUseCompactNotation off
-    SetDomainSpec	    off
-    DomainSpecType	    "Deduce"
+    SetExecutionDomain	    off
+    ExecutionDomainType	    "Deduce"
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
     ScreenColor		    "white"
@@ -1207,7 +1225,7 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "250"
+    ZoomFactor		    "300"
     ReportName		    "simulink-default.rpt"
     SIDHighWatermark	    "36"
     Block {
@@ -1242,11 +1260,11 @@ Model {
       ContentPreviewEnabled   on
       System {
 	Name			"Car 1"
-	Location		[-2551, 23, 9, 1440]
+	Location		[-2560, 23, 0, 1440]
 	Open			off
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1372,11 +1390,11 @@ Model {
       SFBlockType	      "Chart"
       System {
 	Name			"Car 2"
-	Location		[-2551, 23, 9, 1440]
-	Open			off
+	Location		[-2560, 23, 0, 1440]
+	Open			on
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1489,8 +1507,8 @@ Model {
 	Location		[-2551, 23, 9, 1440]
 	Open			off
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1603,8 +1621,8 @@ Model {
 	Location		[-2551, 23, 9, 1440]
 	Open			off
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1717,8 +1735,8 @@ Model {
 	Location		[-2551, 23, 9, 1463]
 	Open			off
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -1831,8 +1849,8 @@ Model {
 	Location		[223, 338, 826, 833]
 	Open			off
 	PortBlocksUseCompactNotation off
-	SetDomainSpec		off
-	DomainSpecType		"Deduce"
+	SetExecutionDomain	off
+	ExecutionDomainType	"Deduce"
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
 	ScreenColor		"white"
@@ -2237,11 +2255,14 @@ Stateflow {
     machine		    1
     name		    "Car 1"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [560.75 1669.25 280.5 927.5]
-    zoomFactor		    0.5
+    viewLimits		    [872.47 1094.17 377.125 504.225]
+    zoomFactor		    0.1
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 3 0 0]
     viewObj		    2
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    8
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -2257,7 +2278,7 @@ Stateflow {
   state {
     id			    3
     labelString		    "Run\nduring:\nv_dot = -Throttle - Brake * v;\nx_dot = v;\nx_out = x;\n"
-    position		    [883 417 464 374]
+    position		    [883 417 200.6399 83.3504]
     fontSize		    13
     chart		    2
     treeNode		    [2 0 0 0]
@@ -2398,18 +2419,18 @@ Stateflow {
   transition {
     id			    9
     labelString		    ""
-    labelPosition	    [988.947 402 0 0]
+    labelPosition	    [928.813 402 0 0]
     fontSize		    13
     src {
-      intersection	      [0 0 1 0 988.9467 387 0 0]
+      intersection	      [0 0 1 0 928.8128 387 0 0]
     }
     dst {
       id		      3
-      intersection	      [1 0 -1 0.2283 988.9467 417 0 0]
+      intersection	      [1 0 -1 0.2283 928.8128 417 0 0]
     }
-    midPoint		    [988.9467 402]
+    midPoint		    [928.8128 402]
     chart		    2
-    dataLimits		    [986.547 991.347 387 417]
+    dataLimits		    [926.413 931.213 387 417]
     subviewer		    2
     drawStyle		    SMART
     slide {
@@ -2737,7 +2758,7 @@ Stateflow {
     machine		    1
     name		    "Car 2"
     windowPosition	    [199.5 216.75 417 348.75]
-    viewLimits		    [121.313 859.574 88.711 519.613]
+    viewLimits		    [121.313 859.574 88.711 511.954]
     zoomFactor		    0.333
     transitionColor	    [0.3215686274509804 0.5450980392156862 0.7725490196078432]
     transitionLabelColor    [0.3215686274509804 0.5450980392156862 0.7725490196078432]
@@ -2746,6 +2767,9 @@ Stateflow {
     screen		    [1 1 3200 1200 1.25]
     treeNode		    [0 26 0 0]
     viewObj		    25
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    30
     decomposition	    CLUSTER_CHART
     updateMethod	    CONTINUOUS
@@ -2933,8 +2957,8 @@ Stateflow {
   }
   transition {
     id			    34
-    labelString		    "[x - x_in <= 10]\n% [transition condition]{action}"
-    labelPosition	    [355.021 127.028 184.141 38]
+    labelString		    "[x - x_in <= 10]"
+    labelPosition	    [355.021 127.028 81.297 14]
     fontSize		    12
     src {
       id		      26
