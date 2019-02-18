@@ -30,8 +30,8 @@ cars_tmpl.output_range = [0 100; 0 100; 0 100; 0 100];
 cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
 
-%algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
-algoFullmdls = {};
+algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
+%algoFullmdls = {};
 
 %algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'CE', 'cars'}};
@@ -58,7 +58,7 @@ fml1.stopTime = 100;
 fml2 = struct(cars_tmpl);
 fml2.expName = 'fml2';
 fml2.targetFormula = '[]_[0,70]<>_[0,30]p1';
-fml2.monitoringFormula = '[.]_[30,30]<>_[0,30]p1';
+fml2.monitoringFormula = '[.]_[300,300]<>_[0,300]p1';
 
 fml2.preds(1).str = 'p1';
 fml2.preds(1).A = [0 0 0 -1];
@@ -71,7 +71,7 @@ fml2.stopTime = 100;
 fml3 = struct(cars_tmpl);
 fml3.expName = 'fml3';
 fml3.targetFormula = '[]_[0,80](([]_[0,20]p1) \/ (<>_[0,20]p2))';
-fml3.monitoringFormula = '[.]_[20.0,20.0]((([]_[0,20]p1) \/ (<>_[0,20]p2)))';
+fml3.monitoringFormula = '[.]_[200.0,200.0]((([]_[0,200]p1) \/ (<>_[0,200]p2)))';
 
 fml3.preds(1).str = 'p1';
 fml3.preds(1).A = [1 0 0 0];
@@ -87,7 +87,7 @@ fml3.stopTime = 100;
 fml4 = struct(cars_tmpl);
 fml4.expName = 'fml4';
 fml4.targetFormula = '[]_[0,65]<>_[0,30][]_[0,5]p1';
-fml4.monitoringFormula = '[.]_[35,35]<>_[0,30][]_[0,5]p1';
+fml4.monitoringFormula = '[.]_[350,350]<>_[0,300][]_[0,50]p1';
 fml4.preds(1).str = 'p1';
 fml4.preds(1).A = [0 0 0 -1];
 fml4.preds(1).b = -8;
@@ -98,7 +98,7 @@ fml4.stopTime = 100;
 fml5 = struct(cars_tmpl);
 fml5.expName = 'fml5';
 fml5.targetFormula = '[]_[0,72]<>_[0,8]([]_[0,5]p1 -> []_[5,20]p2)';
-fml5.monitoringFormula = '[.]_[28,28]<>_[0,8]([]_[0,5]p1 -> []_[5,20]p2)';
+fml5.monitoringFormula = '[.]_[280,280]<>_[0,80]([]_[0,50]p1 -> []_[50,200]p2)';
 fml5.stopTime = 100;
 fml5.preds(1).str = 'p1';
 fml5.preds(1).A = [-1 0 0 0];
@@ -108,7 +108,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -9;
 
 %formulas = {fml1};
-formulas = {fml3, fml4, fml5};
+formulas = {fml1, fml2, fml3, fml4, fml5};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
