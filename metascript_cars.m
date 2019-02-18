@@ -31,9 +31,8 @@ cars_tmpl.init_opts = {};
 cars_tmpl.interpolation = {'linear'};
 
 %algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
-%algoBlackboxmdls = {};
+algoFullmdls = {};
 
-algoFullmdls = {{'RL', 'A3C', 'carsRLFull'},{'RL', 'DDQN', 'carsRLFull'}};
 %algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'CE', 'cars'}};
 algoBlackboxmdls = {{'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}, {'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}};
@@ -109,7 +108,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -9;
 
 %formulas = {fml1};
-formulas = {fml1, fml2, fml3, fml4, fml5};
+formulas = {fml3, fml4, fml5};
 
 configsFull = { };
 for k = 1:size(formulas, 2)

@@ -12,6 +12,7 @@ function do_experiment(name, configs, br_configs)
  if workers_num > 1
      for retry_num = 1:100
          delete(gcp('nocreate'));
+         Simulink.sdi.clear
          parpool(workers_num);
          p = gcp();
          disp(size(configs, 2));
