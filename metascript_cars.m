@@ -4,8 +4,8 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 18;
-staliro_dir = '../s_taliro/trunk/';
+workers_num = 10;
+staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 100;
@@ -15,11 +15,11 @@ do_cars = true;
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'agentName', '/RL agent');
-            
+
 % Initialization
 %%%%%%%%%%%%%%%%
 initialization
-            
+
 % cars Benchmark
 %%%%%%%%%%%%%%%%%%%%
 
@@ -108,7 +108,7 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -9;
 
 %formulas = {fml1};
-formulas = {fml1, fml2, fml3, fml4, fml5};
+formulas = {fml5, fml4, fml3, fml2, fml1};
 
 configsFull = { };
 for k = 1:size(formulas, 2)
