@@ -108,7 +108,12 @@ fml5.preds(2).A = [0 0 0 -1];
 fml5.preds(2).b = -9;
 
 %formulas = {fml1};
+<<<<<<< HEAD
 formulas = {fml5, fml4, fml3, fml2, fml1};
+=======
+%formulas = {fml1, fml2, fml3, fml4, fml5};
+formulas = {fml4};
+>>>>>>> eb66516af2f464d8c2761f1c2d6e6b531610e04e
 
 configsFull = { };
 for k = 1:size(formulas, 2)
