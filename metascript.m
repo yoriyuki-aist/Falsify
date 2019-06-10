@@ -10,18 +10,18 @@ breach_dir = '../breach';
 logDir = '../falsify-data/';
 maxIter = 20;
 maxEpisodes = 200;
-do_arch2014 = false;
+do_arch2014 = true;
 do_ptc = true;
 do_insulin = false;
 
 config_tmpl = struct('maxIter', maxIter,...
                 'maxEpisodes', maxEpisodes,...
                 'agentName', '/RL agent');
-            
+
 % Initialization
 %%%%%%%%%%%%%%%%
 initialization
-            
+
 % ARCH2014 Benchmark
 %%%%%%%%%%%%%%%%%%%%
 
@@ -31,12 +31,11 @@ arch2014_tmpl.input_range = [0.0 100.0; 0.0 500.0];
 arch2014_tmpl.output_range = [0.0 5000.0;0.0 160.0;1.0 4.0];
 arch2014_tmpl.init_opts = {};
 arch2014_tmpl.interpolation = {'linear'};
-            
+
 %algomdls = {{'RL', 'CONST', 'autotrans_mod04'}};
-algomdls = {{'RL', 'RANDEXT', 'autotrans_mod04'}};
-%     {'RL', 'RAND', 'autotrans_mod04'},...
-%     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
-%    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
+algomdls = {{'RL', 'RAND', 'autotrans_mod04'},...
+     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
+    {'s-taliro', 'SA', 'arch2014_staliro'}, {'s-taliro', 'CE', 'arch2014_staliro'}};
 br_algomdls = {};
 cmaes_algomdls = {{'breach', 'cmaes', 'arch2014_staliro'}};
 basic_algomdls = {{'breach', 'basic', 'arch2014_staliro'}};
@@ -122,10 +121,10 @@ fml4.stopTime = 30;
 fml5 = struct(arch2014_tmpl);
 fml5.expName = 'fml5';
 fml5.targetFormula = ['[]_[0,29]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
-'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
+'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ...
 '[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4))'];
 fml5.monitoringFormula = ['[.]_[1.0,1.0]( ((!g1 /\ <>_[0,0.1] g1) -> []_[0.1,1.0]g1) /\ ((!(g2L/\g2U) /\ <>_[0,0.1] (g2L/\g2U)) ->' ...
-'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ... 
+'[]_[0.1,1.0](g2L/\g2U)) /\ ((!(g3L/\g3U) /\ <>_[0,0.1] (g3L/\g3U)) ->' ...
 '[]_[0.1,1.0](g3L/\g3U)) /\ ((!g4 /\ <>_[0,0.1] g4) -> []_[0.1,1.0]g4))'];
 fml5.br_formula = STL_Formula('fml5',...
     ['alw_[0, 29.0](', ...
