@@ -8,8 +8,8 @@ workers_num = 10;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 1;
-maxEpisodes = 20;
+maxIter = 100;
+maxEpisodes = 200;
 do_arch2014 = true;
 do_ptc = true;
 do_insulin = false;
@@ -417,7 +417,7 @@ for k = 1:size(ptc_formulas, 2)
 end
 
 if do_ptc
-    do_experiment('PTC', ptc_configs);
+    do_experiment('PTC', shuffle_cell_array(ptc_configs));
 end
 % Insulin Benchmark Model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

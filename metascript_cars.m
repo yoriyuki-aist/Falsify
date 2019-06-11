@@ -145,6 +145,6 @@ for k = 1:size(formulas, 2)
 end
 
 if do_cars
-    do_experiment('cars_full', configsFull, {});
-    do_experiment('cars_blackbox', configsBlackbox, {});
+    do_experiment('cars_full', shuffle_cell_array(configsFull));
+    do_experiment('cars_blackbox', shuffle_cell_array(configsBlackbox));
 end
