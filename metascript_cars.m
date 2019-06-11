@@ -4,7 +4,7 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 18;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
