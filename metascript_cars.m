@@ -4,16 +4,12 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-<<<<<<< HEAD
-workers_num = 1;
-=======
-workers_num = 18;
->>>>>>> a994b14489bafa0affcef3cb07ce99f1da8077a2
+workers_num = 10;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
-logDir = '../falsify-data/';
-maxIter = 1;
-maxEpisodes = 1;
+logDir = '~/OneDrive/Projects/Falsification/TSE/data/alpha';
+maxIter = 100;
+maxEpisodes = 200;
 do_cars = true;
 
 config_tmpl = struct('maxIter', maxIter,...
@@ -46,7 +42,7 @@ algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}, {'RL', 'A3C', 'carsRLFull'}};
 algoBlackboxmdls = {};
 sampleTimes = [5];
-alphas = {0.25 0.5 1 2 4};
+alphas = [0.125, 0.25, 0.5, 1, 2, 4];
 
 % Formula 1
 % Invariant
