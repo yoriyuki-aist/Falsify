@@ -4,12 +4,12 @@
 % Configurations
 %%%%%%%%%%%%%%%%
 global workers_num logDir;
-workers_num = 10;
+workers_num = 1;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
 logDir = '../falsify-data/';
-maxIter = 100;
-maxEpisodes = 200;
+maxIter = 1;
+maxEpisodes = 1;
 do_cars = true;
 
 config_tmpl = struct('maxIter', maxIter,...
@@ -35,11 +35,14 @@ algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 
 %algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}};
 %algoBlackboxmdls = {{'s-taliro', 'CE', 'cars'}};
-algoBlackboxmdls = {{'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}, {'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}};
+%algoBlackboxmdls = {{'s-taliro', 'CE', 'cars'}, {'s-taliro', 'SA', 'cars'}, {'RL', 'A3C', 'carsRLBlackbox'}, {'RL', 'DDQN', 'carsRLBlackbox'}, {'RL', 'RAND', 'carsRLBlackbox'}};
 %     {'RL', 'RAND', 'autotrans_mod04'},...
 %     {'RL', 'A3C', 'autotrans_mod04'}, {'RL', 'DDQN', 'autotrans_mod04'},...
 %    {'s-taliro', 'SA', 'cars_staliro'}, {'s-taliro', 'CE', 'cars_staliro'}};
+algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}, {'RL', 'A3C', 'carsRLFull'}};
+algoBlackboxmdls = {};
 sampleTimes = [5];
+alphas = {0.25 0.5 1 2 4};
 
 % Formula 1
 % Invariant
@@ -114,14 +117,17 @@ configsFull = { };
 for k = 1:size(formulas, 2)
     for i = 1:size(algoFullmdls, 2)
         for j = 1:size(sampleTimes, 2)
-            config = struct(formulas{k});
-            config.mdl = algoFullmdls{i}{3};
-            config.algoName = [algoFullmdls{i}{1}, '-', algoFullmdls{i}{2}];
-            config.sampleTime = sampleTimes(j);
-            config.engine = algoFullmdls{i}{1};
-            config.option = algoFullmdls{i}{2};
-            for l = 1:maxIter
-              configsFull = [configsFull, config];
+            for r = 1:size(alphas, 2)
+                config = struct(formulas{k});
+                config.mdl = algoFullmdls{i}{3};
+                config.algoName = [algoFullmdls{i}{1}, '-', algoFullmdls{i}{2}];
+                config.sampleTime = sampleTimes(j);
+                config.engine = algoFullmdls{i}{1};
+                config.option = algoFullmdls{i}{2};
+                config.alpha = alphas(r);
+                for l = 1:maxIter
+                  configsFull = [configsFull, config];
+                end
             end
         end
     end
@@ -131,14 +137,17 @@ configsBlackbox = { };
 for k = 1:size(formulas, 2)
     for i = 1:size(algoBlackboxmdls, 2)
         for j = 1:size(sampleTimes, 2)
-            config = struct(formulas{k});
-            config.mdl = algoBlackboxmdls{i}{3};
-            config.algoName = [algoBlackboxmdls{i}{1}, '-', algoBlackboxmdls{i}{2}];
-            config.sampleTime = sampleTimes(j);
-            config.engine = algoBlackboxmdls{i}{1};
-            config.option = algoBlackboxmdls{i}{2};
-            for l = 1:maxIter
-              configsBlackbox = [configsBlackbox, config];
+            for r = 1:size(alphas, 2)
+                config = struct(formulas{k});
+                config.mdl = algoBlackboxmdls{i}{3};
+                config.algoName = [algoBlackboxmdls{i}{1}, '-', algoBlackboxmdls{i}{2}];
+                config.sampleTime = sampleTimes(j);
+                config.engine = algoBlackboxmdls{i}{1};
+                config.option = algoBlackboxmdls{i}{2};
+                config.alpha = alphas(r);
+                for l = 1:maxIter
+                  configsBlackbox = [configsBlackbox, config];
+                end
             end
         end
     end

@@ -55,10 +55,16 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     load_system(config.mdl);
     bestRob = inf;
     normal_preds = normalize_pred(config.preds, config.output_range);
-   py.driver.start_learning(config.option,...
-       size(config.output_range, 1), size(config.input_range, 1));
+    if isfield(config, 'alpha')
+        py.driver.start_learning(config.option,...
+            size(config.output_range, 1), size(config.input_range, 1),...
+            config.alpha);
+    else
+        py.driver.start_learning(config.option,...
+            size(config.output_range, 1), size(config.input_range, 1), 1);
+    end
     tic;
-  
+
 
     for numEpisode=1:config.maxEpisodes
         [~, xout, yout] = runsim(config, normal_preds);
@@ -70,7 +76,7 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
             bestRob = rob;
             bestYout = yout;
             bestXout = xout;
-            if rob < 0 
+            if rob < 0
                 break;
             end
         end
@@ -81,4 +87,3 @@ function [numEpisode, elapsedTime, bestRob, bestXout, bestYout] = falsify(config
     rmpath(currDir);
     close_system(config.mdl, 0);
 end
-

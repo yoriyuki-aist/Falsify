@@ -243,8 +243,10 @@ def make_a3c_agent(obs_space_dim, action_space_dim):
 
 agent = None
 
-def start_learning(algo, obs_space_dim, action_space_dim):
+def start_learning(algo, obs_space_dim, action_space_dim, alpha_arg):
     global agent
+    global alpha
+    alpha = alpha_arg
     obs_space_dim = int(obs_space_dim)
     action_space_dim = int(action_space_dim)
     if algo == 'A3C':
@@ -263,7 +265,7 @@ def start_learning(algo, obs_space_dim, action_space_dim):
         sys.exit('unknown algo')
 
 def driver(state, r):
-    reward = math.exp( - r) - 1.0
+    reward = math.exp( - alpha * r) - 1.0
     state = np.array(state, np.float32)
     action = agent.act_and_train(state, reward)
     action = np.minimum(1.0, np.maximum(-1.0, action))
