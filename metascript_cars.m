@@ -7,7 +7,7 @@ global workers_num logDir;
 workers_num = 10;
 staliro_dir = '../s-taliro_public/trunk/';
 breach_dir = '../breach';
-logDir = '~/OneDrive/Projects/Falsification/TSE/data/alpha';
+logDir = '~/OneDrive/Projects/Falsification/TSE/data/alpha0';
 maxIter = 100;
 maxEpisodes = 200;
 do_cars = true;
@@ -42,7 +42,7 @@ algoFullmdls = {{'RL', 'A3C', 'carsRLFull'}, {'RL', 'DDQN', 'carsRLFull'}};
 algoFullmdls = {{'RL', 'DDQN', 'carsRLFull'}, {'RL', 'A3C', 'carsRLFull'}};
 algoBlackboxmdls = {};
 sampleTimes = [5];
-alphas = [0.125, 0.25, 0.5, 1, 2, 4];
+alphas = [0];
 
 % Formula 1
 % Invariant
