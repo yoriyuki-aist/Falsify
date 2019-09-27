@@ -6,8 +6,7 @@ This package is to evaluate deep reinforcement learning technology for falsifica
 
 ## Audience
 
-This package is for researchers and developpers who evaluates the technology.
-
+This package is for researchers and developers who evaluates the technology.
 
 ## Reqiurment
 
@@ -15,14 +14,15 @@ This package is for researchers and developpers who evaluates the technology.
 - Simulink
 - Stateflow
 - Decent distribution of Python
-- ChainerRL
+- ChainerRL 0.2.0
 - s-taliro
 - breach
 
 ## Agenda
 
-- metascript.m : scripts for autotransmission, powertrain and insulin models
-- metascript_wind_turbine.m : scripts for the wind turbine model.
+- metascript.m : scripts for AT and PTC model. An insulin model is included but not working.
+- metascript_cars.m : a script for CARS model
+- metascript_wind_turbine.m : a script for the wind turbine model.
 
 ## License
 
@@ -35,3 +35,7 @@ This program is free software; you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.                           
 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+## Usage
+
+Edit the section named "Configuration" and run the script
