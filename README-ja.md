@@ -1,14 +1,14 @@
-# Falsification of Cyber Physical Systems by Deep Reinforcement Learning
+# 深層強化学習によるサイバーフィジカルシステムの改竄
 
-## What is this?
+## 導入
 
-This package is to evaluate deep reinforcement learning technology for falsification of cyber-physical systems.  It contains four models (an auto-transmission model, a wind turbine model, a power train control model and an insulin model.  The insulin model currently does not work.
+このコンテンツは、サイバーフィジカルシステムの改竄に対する深層強化学習技術を評価するためのものである。4 つのモデル (自動変速機モデル、風力タービンモデル、パワートレイン制御モデル、インスリンモデル) が含まれている。インスリンモデルは現在機能しない。
 
-## Audience
+## 対象
 
-This package is for researchers and developers who evaluates the technology.
+このコンテンツは、技術を評価する研究者や開発者向けである。
 
-## Reqiurment
+## 環境要件
 
 - MATLAB
 - Simulink
