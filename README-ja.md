@@ -36,9 +36,21 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
+(C) 2019 産業技術総合研究所（AIST）
+
+Wind-Turbine ディレクトリ内のコンテンツは、それぞれの作成者に著作権があります。
+
+このプログラムはフリーソフトウェアです。Free Software Foundation によって公開されている GNU General Public License の条件に基づいて、再配布したり変更したりすることができます。ライセンスのバージョン 2、または (オプションで) それ以降のバージョンのいずれか。
+
+このプログラムは役立つことを期待して配布されていますが、いかなる保証もありません。商品性や特定目的への適合性についての暗黙の保証もありません。詳細については、GNU 一般公衆利用許諾書を参照してください。
+
+このプログラムと一緒に GNU 一般公衆利用許諾書のコピーも受け取っているはずです。そうでない場合は、Free Software Foundation, Inc. (59 Temple Place, Suite 330, Boston, MA 02111-1307 USA) までご連絡ください。
+
 ## Usage
 
 Edit the section named "Configuration" and run the script
+
+"Configuration" という名前のセクションを編集し、スクリプトを実行します。
 
 ### - テストをしたものの各バージョンは下記の通りになります。
 - Package            Version
@@ -49,8 +61,6 @@ Edit the section named "Configuration" and run the script
 - chainerrl          0.8.0
 - gym                0.22.0
 - 
-filelock           3.12.4
-future             0.18.3
 
 ### s-taliroに付随して必須及びオプションのMATLABパッケージ [s-taliroダウンロードページ](https://sites.google.com/a/asu.edu/s-taliro/s-taliro/download)。
 
