@@ -2,7 +2,7 @@
 
 ## 導入
 
-このコンテンツは、サイバーフィジカルシステムの改竄に対する深層強化学習技術を評価するためのものである。4 つのモデル (自動変速機モデル、風力タービンモデル、パワートレイン制御モデル、インスリンモデル) が含まれている。インスリンモデルは現在機能しない。
+このコンテンツは、サイバーフィジカルシステムの改竄に対する深層強化学習技術を評価するためのものである。4 つのモデル (自動変速機モデル、風力タービンモデル、パワートレイン制御モデル、インスリンモデル) が含まれている。インスリンモデルは現在機能しません。
 
 ## 対象
 
@@ -20,11 +20,11 @@
 
 ## Agenda
 
-- metascript.m : scripts for AT and PTC model. An insulin model is included but not working.
-- metascript_cars.m : a script for CARS model
-- metascript_wind_turbine.m : a script for the wind turbine model.
+- metascript.m : ATおよびPTCモデル用のスクリプト。インスリンモデルは現在機能しません。
+- metascript_cars.m : CARSモデル用のスクリプト
+- metascript_wind_turbine.m : 風力タービンモデルのスクリプト。
 
-## License
+## ライセンス
 
 (C) 2019 National Institute of Advanced Industrial Science and Technology (AIST)
 
