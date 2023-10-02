@@ -36,10 +36,10 @@
 - 作業ディレクトリにPython仮想環境を構築
 >詳しくは[Python virtual environments with MATLAB](https://jp.mathworks.com/matlabcentral/answers/1750425-python-virtual-environments-with-matlab)を参照
 
-`falsify-data`フォルダーに`sldemo_autotrans_data`を追加
+- `falsify-data`フォルダーに`sldemo_autotrans_data`を追加
 >`sldemo_autotrans_data`については[こちら](https://jp.mathworks.com/help/simulink/slref/modeling-an-automatic-transmission-controller.html)を参照
 
-- - 実行
+### 実行
 "Configuration" という名前のセクションを編集、スクリプトを実行
 
 
