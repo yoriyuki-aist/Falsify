@@ -17,8 +17,8 @@
 - Optimization Toolbox (9.5)
 - Parallel Computing Toolbox (7.8)
 - Python (3.8.9)
+- Chainer (7.8.1)
 - ChainerRL (0.8.0)
-- ChainerRL (7.8.1)
 - Gym (0.22.0)
 - s-taliro
 - breach
