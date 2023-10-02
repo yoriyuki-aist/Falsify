@@ -26,9 +26,9 @@
 
 ## コンテンツ
 
-- metascript.m : ATおよびPTCモデル用のスクリプト。インスリンモデルは現在機能しません。
-- metascript_cars.m : CARSモデル用のスクリプト。
-- metascript_wind_turbine.m : 風力タービンモデルのスクリプト。
+- metascript.m : ATおよびPTCモデル用のスクリプト(インスリンモデルは現在機能しません)
+- metascript_cars.m : CARSモデル用のスクリプト
+- metascript_wind_turbine.m : 風力タービンモデルのスクリプト
 
 
 ## 実行例
